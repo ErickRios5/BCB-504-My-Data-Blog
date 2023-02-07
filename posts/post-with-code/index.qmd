@@ -60,3 +60,13 @@ Attributes <- read.csv("MyData/Column_Descriptions.csv")
 
 knitr::kable(Attributes)
 ```
+
+# 1st Action-Target pair: Search:Explore - Extremes
+
+Now that we have an understanding of the data we are working with. It is time to start using this data to answer a variety of questions related to my research. One of the most well known things in my field, is that perturbing Hsp90 function could affect the steady state levels of gene products (proteins) directly and indirectly. Therefore, first question is:
+
+## How many, if any, proteins had a significant change in their steady-state levels across all mutants?
+
+```{r}
+Gene <- unique(Proteomic.Data$Gene[abs(Proteomic.Data$logFC) >= 1.5])
+```
