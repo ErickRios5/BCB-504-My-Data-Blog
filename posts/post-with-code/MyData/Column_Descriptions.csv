@@ -1,0 +1,15 @@
+Column names,Data.type,Attribute.type,Description
+Systemic.name,Item,NA,Unique ID for gene
+contrast,Attribute,Categorical,Pair-wise comparison between wild type and each yeast mutant
+UniprotID,Item,NA,Unique ID for gene
+Gene,Item,NA,Common name given to gene
+logFC,Attribute,Quantitative,Relative protein abundance between mutant yeast to wildtype on log base 2 scale; negative values signify increase in abundance and positive values signify decrease in abundace
+P.Value,Attribute,Quantitative,Stastical significance of measurements (3 biological replicates)
+Length,Attribute,Quantitative,The number of amino acid residues in protein sequence
+Mass,Attribute,Quantitative,the calculated mass of protein sequence
+Hsc82_phys,Attribute,Quantitative,If it is known to physically interact with Hsc82 protein; 1 means physical interaction; 0 means no physical interaction
+Gravy Score,Attribute,Quantitative,"Is a estimation of how hydrophobic a protein is overall, more positive equals more hydrophobic, but does not take into account 3D structure."
+Half-life,Attribute,Quantitative,The time it takes in minutes for the cell to turn-over/degrade half the protein population
+Instability Index,Attribute,Quantitative,"Estimation whether protein is stable in a test tube, values less than 40 are more stable than proteins with values greater than 40"
+Protein-Abundance-Median-Absolute-Deviation,Attribute,Quantitative,Calculated estimate of protein molecules per cell
+Aliphatic Index,Attribute,Quantitative,"The amount of volume occupied by aliphatic side chains such as Alanine, valine, isoleucine, and leucine; greater values may be indicative of thermostability."

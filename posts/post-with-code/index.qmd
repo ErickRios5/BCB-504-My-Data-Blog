@@ -1,6 +1,6 @@
 ---
 title: "Post With Code"
-author: "Harlow Malloc"
+author: "Erick Rios"
 date: "2023-02-06"
 categories: [news, code, analysis]
 image: "image.jpg"
@@ -10,4 +10,53 @@ This is a post with executable code.
 
 ```{r}
 1 + 1
+```
+
+::: callout-note
+Nice work in general. Some minor editing of your section titles and some of the text. Added a hyperlink to the relevant online database. You've done a good job adding explanation to the code. A new person could read this and understand (and use) the data.
+:::
+
+# Goal of Assignment 2
+
+In the quest to ensure data reproducibility, my goals are to:
+
+1.  Collect data of interest.
+2.  Import my data of interest into Rstudio.
+3.  Describe the data.
+4.  If time permits, host the data on a repository; probably github.
+
+```{r}
+#| output: false
+library(tidyverse)
+```
+
+# Importation of 'Proteomic' Data
+
+```{r}
+Proteomic.Data <- read.csv("MyData/2022-03-21_trim-stacked.csv")
+head(Proteomic.Data)
+
+```
+
+# Data Collection
+
+The 'proteomic' data are the processed results of Data Independent Acquisition Mass Spectrometry experiments that quantified the relative protein abundances in cell lysates of mutant yeast compared to those of wild-type yeast. After processing the signal intensities of the 2 spectra (mutant vs wildtype), the calculated measurement is presented as Log base 2 Fold Change. Resources and information regarding proteins detected in our experiments are available at [Saccharomyces Genome Database](https://www.yeastgenome.org).
+
+# Summary of Proteomic Data
+
+An advantage of the glimpse command is a neater output of the dataframe dimensions, column names, column class type, and 'sample' view of the actual data in the columns.
+
+```{r}
+glimpse(Proteomic.Data)
+
+```
+
+# Data Dictionary
+
+What are these columns and what do the values contained in them even represent? What on earth is a 'Gravy.Score'? Fortunately, I have created a legend containing variable (attribute) descriptions.
+
+```{r}
+Attributes <- read.csv("MyData/Column_Descriptions.csv")
+
+knitr::kable(Attributes)
 ```
