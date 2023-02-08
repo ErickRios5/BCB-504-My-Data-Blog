@@ -72,7 +72,9 @@ Gene <- unique(Proteomic.Data$Gene[abs(Proteomic.Data$logFC) >= 1.5 & Proteomic.
 
 print( paste(length(Gene), "out of", length(unique(Proteomic.Data$Gene)), "proteins were significantly affected in at least one mutant condition; Here we consider any protein whose steady state level changed by at least 1.5 (|Log2FC|)" ))
 ```
+
 Considering we found these genes of interest using the attributes 'logFC' and 'P.Value'; lets use these attributes to visualize our findings.
+
 ```{r}
 x <- Proteomic.Data$logFC
 y <- -log10(Proteomic.Data$P.Value)
@@ -98,5 +100,5 @@ text(x = -1.45, y = 22, labels = "Increased steady state levels \n p value < 0. 
 text(x = -4, y = -log10(0.055), labels = "p value > 0.055", pos = 1, offset = .5)
 text(x = 4, y = -log10(0.055), labels = "p value > 0.055", pos = 1, offset = .5)
 ```
-With this 'volcano' plot we visualized what was done prior when we searched for any proteins that met our criteria for significance. Those that met our criteria were marked pink and those that did not meet our criteria were marked black or light green. To better visualize the 'barriers' for significance, red-dashed lines were added. Proteins with positive logFC values had decreased levels and those with negative logFC values had increased levels. Although not relevant for future analysis, we can spot proteins with large changes in steady state levels, but unfortunately did not meet our threshold for statistical significance (light green) and this is was due to too much variance between the 3 biological replicates in the measurement of that protein.
 
+With this 'volcano' plot we visualized what was done prior when we searched for any proteins that met our criteria for significance. Those that met our criteria were marked pink and those that did not meet our criteria were marked black or light green. To better visualize the 'barriers' for significance, red-dashed lines were added. Proteins with positive logFC values had decreased levels and those with negative logFC values had increased levels. Although not relevant for future analysis, we can spot proteins with large changes in steady state levels, but unfortunately did not meet our threshold for statistical significance (light green) and this is was due to too much variance between the 3 biological replicates in the measurement of that protein.
