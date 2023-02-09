@@ -79,16 +79,13 @@ Considering we found these genes of interest using the attributes 'logFC' and 'P
 
 
 ```{r}
+#| code-fold: true
 x <- Proteomic.Data$logFC
 y <- -log10(Proteomic.Data$P.Value)
 
 group <- rep(1, nrow(Proteomic.Data))               # Create group variable
 group[abs(x) >= 1.5 & y >= -log10(0.055)] <- 2
 group[abs(x) >= 1.5 & y <= -log10(0.055)] <- 3
-
-```
-
-```{r}
 
 plot(x, y, 
      col = group, 
