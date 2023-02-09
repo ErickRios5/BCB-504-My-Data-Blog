@@ -97,9 +97,9 @@ plot(x, y,
 )
 abline(v = c(1.5, -1.5), col = "red", lty = 2)
 abline(h = -log10(0.055), col = "red", lty = 2)
-text(x = 1.45, y = 24, labels = "Decreased steady state levels \n p value < 0. 55",
+text(x = 1.45, y = 24, labels = "Decreased steady state levels \n p value < 0.055",
      pos = 4, offset = .5)
-text(x = -1.45, y = 24, labels = "Increased steady state levels \n p value < 0. 55",
+text(x = -1.45, y = 24, labels = "Increased steady state levels \n p value < 0.055",
      pos = 2, offset = .5)
 text(x = -4, y = -log10(0.055), labels = "p value > 0.055", pos = 1, offset = .5)
 text(x = 4, y = -log10(0.055), labels = "p value > 0.055", pos = 1, offset = .5)
