@@ -1,0 +1,12 @@
+---
+title: ASSIGNMENT 4
+subtitle: Marks and Channels
+author: Erick Rios
+date: 2023-02-14
+date-modified: 2023-02-14
+categories: [Assignment, DataViz, Knowledge]
+image: Yeasteatssugar.jpg
+code-fold: true
+code-tools: true
+description: This post contains knowledge and fuel units for your yeast
+---

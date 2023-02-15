@@ -1,6 +1,7 @@
 ---
-title: "Erick Rios"
-image: profile.jpg
+title: "About"
+subtitle: "Erick Rios"
+image: Canned_bread.jpg
 about:
   template: jolla
   links:
@@ -15,4 +16,4 @@ about:
       href: https://github.com
 ---
 
-About this blog
+Hello all who visit. This blog is intended to showcase my work as a graduate student involved in understanding the Hsp90 chaperone, it's client-chaperone folding cycle, and client specificity. One of the main goals of my research is to selectively modulate Hsp90 chaperone function to selectively impace its downstream client targets by mutation or allosteric small molecule binders.

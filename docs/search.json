@@ -2,28 +2,28 @@
   {
     "objectID": "about.html",
     "href": "about.html",
-    "title": "Erick Rios",
+    "title": "About",
     "section": "",
-    "text": "About this blog"
+    "text": "Hello all who visit. This blog is intended to showcase my work as a graduate student involved in understanding the Hsp90 chaperone, it’s client-chaperone folding cycle, and client specificity. One of the main goals of my research is to selectively modulate Hsp90 chaperone function to selectively impace its downstream client targets by mutation or allosteric small molecule binders."
   },
   {
     "objectID": "index.html",
     "href": "index.html",
     "title": "BCB 504 My Data Blog",
     "section": "",
-    "text": "Post With Code\n\n\n\n\n\n\n\nnews\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\n\n\nFeb 6, 2023\n\n\nErick Rios\n\n\n\n\n\n\n  \n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\n\n\nFeb 3, 2023\n\n\nTristan O’Malley\n\n\n\n\n\n\nNo matching items"
+    "text": "ASSIGNMENT 4\n\n\nMarks and Channels\n\n\n\n\nAssignment\n\n\nDataViz\n\n\nKnowledge\n\n\n\n\nThis post contains knowledge and fuel units for your yeast\n\n\n\n\n\n\nFeb 14, 2023\n\n\nErick Rios\n\n\n\n\n\n\n  \n\n\n\n\nAssignments 2 and 3\n\n\n\n\n\n\n\ncode\n\n\nanalysis\n\n\n\n\nInsert witty description\n\n\n\n\n\n\nFeb 6, 2023\n\n\nErick Rios\n\n\n\n\n\n\n  \n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\n\n\nFeb 3, 2023\n\n\nErick Rios\n\n\n\n\n\n\nNo matching items"
   },
   {
-    "objectID": "posts/post-with-code/index.html",
-    "href": "posts/post-with-code/index.html",
-    "title": "Post With Code",
+    "objectID": "posts/Assignment 2 and 3/index.html",
+    "href": "posts/Assignment 2 and 3/index.html",
+    "title": "Assignments 2 and 3",
     "section": "",
-    "text": "Note\n\n\n\nNice work in general. Some minor editing of your section titles and some of the text. Added a hyperlink to the relevant online database. You’ve done a good job adding explanation to the code. A new person could read this and understand (and use) the data."
+    "text": "In the quest to ensure data reproducibility, my goals are to:\n\nCollect data of interest.\nImport my data of interest into Rstudio.\nDescribe the data.\nIf time permits, host the data on a repository; probably github.\n\n\nlibrary(tidyverse)"
   },
   {
-    "objectID": "posts/post-with-code/index.html#how-many-if-any-proteins-had-a-significant-change-in-their-steady-state-levels-in-at-least-one-mutant-condition",
-    "href": "posts/post-with-code/index.html#how-many-if-any-proteins-had-a-significant-change-in-their-steady-state-levels-in-at-least-one-mutant-condition",
-    "title": "Post With Code",
+    "objectID": "posts/Assignment 2 and 3/index.html#how-many-if-any-proteins-had-a-significant-change-in-their-steady-state-levels-in-at-least-one-mutant-condition",
+    "href": "posts/Assignment 2 and 3/index.html#how-many-if-any-proteins-had-a-significant-change-in-their-steady-state-levels-in-at-least-one-mutant-condition",
+    "title": "Assignments 2 and 3",
     "section": "How many, if any, proteins had a significant change in their steady-state levels in at least one mutant condition?",
     "text": "How many, if any, proteins had a significant change in their steady-state levels in at least one mutant condition?\n\nGene <- unique(Proteomic.Data$Gene[abs(Proteomic.Data$logFC) >= 1.5 &\n                                     Proteomic.Data$P.Value <= 0.055])\n\n\n\nCode\nHits <- paste(length(Gene), \"out of\", length(unique(Proteomic.Data$Gene)), \"proteins were significantly affected in at least one mutant condition; Here we consider any protein whose steady state level changed by at least 1.5 (|Log2FC|)\" )\n\nknitr::kable(Hits)\n\n\n\n\n\n\n\n\nx\n\n\n\n\n350 out of 2482 proteins were significantly affected in at least one mutant condition; Here we consider any protein whose steady state level changed by at least 1.5 (|Log2FC|)\n\n\n\n\n\nConsidering we found these genes of interest using the attributes ‘logFC’ and ‘P.Value’; lets use these attributes to visualize our findings.\n\n\nCode\nx <- Proteomic.Data$logFC\ny <- -log10(Proteomic.Data$P.Value)\n\ngroup <- rep(1, nrow(Proteomic.Data))               # Create group variable\ngroup[abs(x) >= 1.5 & y >= -log10(0.055)] <- 2\ngroup[abs(x) >= 1.5 & y <= -log10(0.055)] <- 3\n\nplot(x, y, \n     col = group, \n     pch = 20,\n     ylim = c(0,25),\n     xlim = c(-6.5, 6.5),\n     xlab = expression(\"Log\"[2]*\"Fold Change\"),\n     ylab = expression(\"-Log\"[10]*\"(P.Value)\")\n)\nabline(v = c(1.5, -1.5), col = \"red\", lty = 2)\nabline(h = -log10(0.055), col = \"red\", lty = 2)\ntext(x = 1.45, y = 24, labels = \"Decreased steady state levels \\n p value < 0.055\",\n     pos = 4, offset = .5)\ntext(x = -1.45, y = 24, labels = \"Increased steady state levels \\n p value < 0.055\",\n     pos = 2, offset = .5)\ntext(x = -4, y = -log10(0.055), labels = \"p value > 0.055\", pos = 1, offset = .5)\ntext(x = 4, y = -log10(0.055), labels = \"p value > 0.055\", pos = 1, offset = .5)\n\n\n\n\n\nWith this ‘volcano’ plot we visualized what was done prior when we searched for any proteins that met our criteria for significance. Those that met our criteria were marked pink and those that did not meet our criteria were marked black or light green. To better visualize the ‘barriers’ for significance, red-dashed lines were added. Proteins with positive logFC values had decreased levels and those with negative logFC values had increased levels. Although not relevant for future analysis, we can spot proteins with large changes in steady state levels, but unfortunately did not meet our threshold for statistical significance (light green) and this is was due to too much variance between the 3 biological replicates in the measurement of that protein."
   },
@@ -32,6 +32,6 @@
     "href": "posts/welcome/index.html",
     "title": "Welcome To My Blog",
     "section": "",
-    "text": "This is the first post in a Quarto blog. Welcome!\n\nSince this post doesn’t specify an explicit image, the first image in the post will be used in the listing page of posts.\nIn this blog I hope to enlighten the world about the Hsp90 protein and how it impacts your life!"
+    "text": "This is the first post in a Quarto blog. Welcome!\nIn this blog I hope to enlighten the world about the Hsp90 protein and how it impacts your cells!"
   }
 ]

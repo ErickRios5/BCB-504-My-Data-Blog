@@ -1,14 +1,13 @@
 ---
 title: "Welcome To My Blog"
-author: "Tristan O'Malley"
+author: "Erick Rios"
 date: "2023-02-03"
+date-modified: "2023-02-14"
 categories: [news]
 ---
 
 This is the first post in a Quarto blog. Welcome!
 
-![](thumbnail.jpg)
+In this blog I hope to enlighten the world about the Hsp90 protein and how it impacts your cells!
 
-Since this post doesn't specify an explicit `image`, the first image in the post will be used in the listing page of posts.
-
-In this blog I hope to enlighten the world about the Hsp90 protein and how it impacts your life!
+![](Hsp90.jpg)
