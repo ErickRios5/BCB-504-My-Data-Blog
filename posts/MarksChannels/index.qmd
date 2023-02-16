@@ -10,3 +10,44 @@ code-fold: true
 code-tools: true
 description: This post contains knowledge and fuel units for your yeast
 ---
+
+Every time you create a figure, it needs a caption. 
+The text in that section of your assignment should also briefly describe the data set you are using, especially the attributes used for the visualization.
+
+In addition, make sure the visualization task actually requires the particular concept.
+
+For example, don’t just make a scatterplot with one red dot for the Popout exercise.
+
+You need to describe a task that requires we IDENTIFY that point.
+
+```{r}
+stack <- read.csv("2022-03-21_trim-stacked.csv")
+
+hist(stack$logFC)
+hist(stack$logFC, breaks = 100)
+```
+
+
+The goal of figure 1 is to summarize the distribution of log fold changes observed across all mutant samples. A description of the results would be the majority of proteins detected and quantified did not have its steady-state levels impacted by at least one mutant condition. Using only this figure, it appears that only a small percentile of proteins detected had there steady-state levels impacted in at least one mutant condition.
+
+A limitation of histograms is it does not show the precise number of proteins with log fold changes between 1.5 and 1.7 for example. In an attempt to answer this pressing question, the second figure has an increased number of bins to narrow in the 1.5-1.7 log fold change region, but I still do not know the exact answer.
+
+```{r}
+p350 <- read.csv("350_matrix_LogFC.csv")
+
+plot(p350$R46G, p350$A583T)
+
+```
+instead of position, use saturation on y axis.
+
+```{r}
+
+plot(stack$logFC[stack$P.Value <= .055 & stack$contrast == "WTHsc82_vs_R46G"], 
+     log(stack$Half.life[stack$P.Value <= .055 & stack$contrast == "WTHsc82_vs_R46G"]))
+
+plot(stack$logFC[stack$P.Value <= .055 & stack$contrast == "WTHsc82_vs_R46G"], 
+     log(stack$Half.life[stack$P.Value <= .055 & stack$contrast == "WTHsc82_vs_R46G"]),
+     col = colorRampPalette("red")
+     )
+
+```
