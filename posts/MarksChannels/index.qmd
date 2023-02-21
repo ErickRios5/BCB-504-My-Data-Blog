@@ -37,6 +37,12 @@ p350 <- read.csv("350_matrix_LogFC.csv")
 
 plot(p350$R46G, p350$A583T)
 
+colors <- colorRampPalette(c("red", "blue"))
+
+p350$color.order <- findInterval(p350$A583T, sort(p350$A583T))
+
+plot(x = p350$R46G,
+     col = colors(nrow(p350))[p350$color.order])
 ```
 instead of position, use saturation on y axis.
 
@@ -45,9 +51,6 @@ instead of position, use saturation on y axis.
 plot(stack$logFC[stack$P.Value <= .055 & stack$contrast == "WTHsc82_vs_R46G"], 
      log(stack$Half.life[stack$P.Value <= .055 & stack$contrast == "WTHsc82_vs_R46G"]))
 
-plot(stack$logFC[stack$P.Value <= .055 & stack$contrast == "WTHsc82_vs_R46G"], 
-     log(stack$Half.life[stack$P.Value <= .055 & stack$contrast == "WTHsc82_vs_R46G"]),
-     col = colorRampPalette("red")
-     )
+
 
 ```

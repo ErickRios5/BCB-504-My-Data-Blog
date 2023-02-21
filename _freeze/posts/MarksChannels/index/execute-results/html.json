@@ -1,0 +1,16 @@
+{
+  "hash": "1477a4deaaf60b465f9c7fb60e10443e",
+  "result": {
+    "markdown": "---\ntitle: ASSIGNMENT 4\nsubtitle: Marks and Channels\nauthor: Erick Rios\ndate: 2023-02-14\ndate-modified: 2023-02-14\ncategories: [Assignment, DataViz, Knowledge]\nimage: Yeasteatssugar.jpg\ncode-fold: true\ncode-tools: true\ndescription: This post contains knowledge and fuel units for your yeast\n---\n\n\nEvery time you create a figure, it needs a caption. \nThe text in that section of your assignment should also briefly describe the data set you are using, especially the attributes used for the visualization.\n\nIn addition, make sure the visualization task actually requires the particular concept.\n\nFor example, don’t just make a scatterplot with one red dot for the Popout exercise.\n\nYou need to describe a task that requires we IDENTIFY that point.\n\n\n::: {.cell}\n\n```{.r .cell-code}\nstack <- read.csv(\"2022-03-21_trim-stacked.csv\")\n\nhist(stack$logFC)\n```\n\n::: {.cell-output-display}\n![](index_files/figure-html/unnamed-chunk-2-1.png){width=672}\n:::\n\n```{.r .cell-code}\nhist(stack$logFC, breaks = 100)\n```\n\n::: {.cell-output-display}\n![](index_files/figure-html/unnamed-chunk-2-2.png){width=672}\n:::\n:::\n\n\n\nThe goal of figure 1 is to summarize the distribution of log fold changes observed across all mutant samples. A description of the results would be the majority of proteins detected and quantified did not have its steady-state levels impacted by at least one mutant condition. Using only this figure, it appears that only a small percentile of proteins detected had there steady-state levels impacted in at least one mutant condition.\n\nA limitation of histograms is it does not show the precise number of proteins with log fold changes between 1.5 and 1.7 for example. In an attempt to answer this pressing question, the second figure has an increased number of bins to narrow in the 1.5-1.7 log fold change region, but I still do not know the exact answer.\n\n\n::: {.cell}\n\n```{.r .cell-code}\np350 <- read.csv(\"350_matrix_LogFC.csv\")\n\nplot(p350$R46G, p350$A583T)\n```\n\n::: {.cell-output-display}\n![](index_files/figure-html/unnamed-chunk-4-1.png){width=672}\n:::\n\n```{.r .cell-code}\ncolors <- colorRampPalette(c(\"red\", \"blue\"))\n\np350$color.order <- findInterval(p350$A583T, sort(p350$A583T))\n\nplot(x = p350$R46G,\n     col = colors(nrow(p350))[p350$color.order])\n```\n\n::: {.cell-output-display}\n![](index_files/figure-html/unnamed-chunk-4-2.png){width=672}\n:::\n:::\n\ninstead of position, use saturation on y axis.\n\n\n::: {.cell}\n\n```{.r .cell-code}\nplot(stack$logFC[stack$P.Value <= .055 & stack$contrast == \"WTHsc82_vs_R46G\"], \n     log(stack$Half.life[stack$P.Value <= .055 & stack$contrast == \"WTHsc82_vs_R46G\"]))\n```\n\n::: {.cell-output-display}\n![](index_files/figure-html/unnamed-chunk-6-1.png){width=672}\n:::\n:::",
+    "supporting": [
+      "index_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
