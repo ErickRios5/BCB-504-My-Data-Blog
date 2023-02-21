@@ -39,7 +39,7 @@ colors <- colorRampPalette(c("red", "blue"))
 
 p350$color.order <- findInterval(p350$A583T, sort(p350$A583T))
 
-plot(x = p350$R46G,
+plot(x = p350$R46G[order(p350$R46G)],
      col = colors(nrow(p350))[p350$color.order])
 ```
 
