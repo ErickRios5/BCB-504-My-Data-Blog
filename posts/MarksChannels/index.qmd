@@ -23,7 +23,7 @@ You need to describe a task that requires we IDENTIFY that point.
 stack <- read.csv("2022-03-21_trim-stacked.csv")
 
 hist(stack$logFC)
-hist(stack$logFC, breaks = 100)
+hist(stack$logFC, breaks = 1000)
 ```
 
 The goal of figure 1 is to summarize the distribution of log fold changes observed across all mutant samples. A description of the results would be the majority of proteins detected and quantified did not have its steady-state levels impacted by at least one mutant condition. Using only this figure, it appears that only a small percentile of proteins detected had there steady-state levels impacted in at least one mutant condition.
