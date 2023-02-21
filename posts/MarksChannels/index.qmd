@@ -43,7 +43,9 @@ plot(x = p350$R46G,
      col = colors(nrow(p350))[p350$color.order])
 ```
 
-instead of position, use saturation on y axis.
+The goal of these figures is to display if these two mutants (R46G vs A583T) affect the same proteins/genes similarly, correlation suggests these mutants are doing similar things in vivo.
+
+Instead of position,I used hue for A583T mutant logFC numbers. Solid red is lowest LogFC in the A583T mutation, with purple representing Log FC numbers near zero (Wild-type levels) and Blue is the highest log FC values.
 
 ```{r}
 

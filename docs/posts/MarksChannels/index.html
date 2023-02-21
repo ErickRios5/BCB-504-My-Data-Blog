@@ -268,7 +268,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><img src="index_files/figure-html/unnamed-chunk-4-2.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>instead of position, use saturation on y axis.</p>
+<p>The goal of these figures is to display if these two mutants (R46G vs A583T) affect the same proteins/genes similarly, correlation suggests these mutants are doing similar things in vivo.</p>
+<p>Instead of position,I used hue for A583T mutant logFC numbers. Solid red is lowest LogFC in the A583T mutation, with purple representing Log FC numbers near zero (Wild-type levels) and Blue is the highest log FC values.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
@@ -514,15 +515,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="fu">colors</span>(<span class="fu">nrow</span>(p350))[p350<span class="sc">$</span>color.order])</span>
 <span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a>instead of position, use saturation on y axis.</span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a>The goal of these figures is to display if these two mutants (R46G vs A583T) affect the same proteins/genes similarly, correlation suggests these mutants are doing similar things in vivo.</span>
 <span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(stack<span class="sc">$</span>logFC[stack<span class="sc">$</span>P.Value <span class="sc">&lt;=</span> .<span class="dv">055</span> <span class="sc">&amp;</span> stack<span class="sc">$</span>contrast <span class="sc">==</span> <span class="st">"WTHsc82_vs_R46G"</span>], </span>
-<span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a>     <span class="fu">log</span>(stack<span class="sc">$</span>Half.life[stack<span class="sc">$</span>P.Value <span class="sc">&lt;=</span> .<span class="dv">055</span> <span class="sc">&amp;</span> stack<span class="sc">$</span>contrast <span class="sc">==</span> <span class="st">"WTHsc82_vs_R46G"</span>]))</span>
-<span id="cb6-57"><a href="#cb6-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-58"><a href="#cb6-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a>Instead of position,I used hue for A583T mutant logFC numbers. Solid red is lowest LogFC in the A583T mutation, with purple representing Log FC numbers near zero (Wild-type levels) and Blue is the highest log FC values.</span>
+<span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb6-57"><a href="#cb6-57" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(stack<span class="sc">$</span>logFC[stack<span class="sc">$</span>P.Value <span class="sc">&lt;=</span> .<span class="dv">055</span> <span class="sc">&amp;</span> stack<span class="sc">$</span>contrast <span class="sc">==</span> <span class="st">"WTHsc82_vs_R46G"</span>], </span>
+<span id="cb6-58"><a href="#cb6-58" aria-hidden="true" tabindex="-1"></a>     <span class="fu">log</span>(stack<span class="sc">$</span>Half.life[stack<span class="sc">$</span>P.Value <span class="sc">&lt;=</span> .<span class="dv">055</span> <span class="sc">&amp;</span> stack<span class="sc">$</span>contrast <span class="sc">==</span> <span class="st">"WTHsc82_vs_R46G"</span>]))</span>
 <span id="cb6-59"><a href="#cb6-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-60"><a href="#cb6-60" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb6-60"><a href="#cb6-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-61"><a href="#cb6-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-62"><a href="#cb6-62" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
