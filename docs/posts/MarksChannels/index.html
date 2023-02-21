@@ -482,48 +482,47 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> This post contains knowledge and fuel units for your yeast</span></span>
 <span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
 <span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>Every time you create a figure, it needs a caption. </span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>The text in that section of your assignment should also briefly describe the data set you are using, especially the attributes used for the visualization.</span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>In addition, make sure the visualization task actually requires the particular concept.</span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>For example, don’t just make a scatterplot with one red dot for the Popout exercise.</span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>You need to describe a task that requires we IDENTIFY that point.</span>
-<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>stack <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"2022-03-21_trim-stacked.csv"</span>)</span>
-<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(stack<span class="sc">$</span>logFC)</span>
-<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(stack<span class="sc">$</span>logFC, <span class="at">breaks =</span> <span class="dv">100</span>)</span>
-<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>Every time you create a figure, it needs a caption. The text in that section of your assignment should also briefly describe the data set you are using, especially the attributes used for the visualization.</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>In addition, make sure the visualization task actually requires the particular concept.</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>For example, don't just make a scatterplot with one red dot for the Popout exercise.</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>You need to describe a task that requires we IDENTIFY that point.</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>stack <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"2022-03-21_trim-stacked.csv"</span>)</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(stack<span class="sc">$</span>logFC)</span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(stack<span class="sc">$</span>logFC, <span class="at">breaks =</span> <span class="dv">100</span>)</span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>The goal of figure 1 is to summarize the distribution of log fold changes observed across all mutant samples. A description of the results would be the majority of proteins detected and quantified did not have its steady-state levels impacted by at least one mutant condition. Using only this figure, it appears that only a small percentile of proteins detected had there steady-state levels impacted in at least one mutant condition.</span>
 <span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>The goal of figure 1 is to summarize the distribution of log fold changes observed across all mutant samples. A description of the results would be the majority of proteins detected and quantified did not have its steady-state levels impacted by at least one mutant condition. Using only this figure, it appears that only a small percentile of proteins detected had there steady-state levels impacted in at least one mutant condition.</span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>A limitation of histograms is it does not show the precise number of proteins with log fold changes between 1.5 and 1.7 for example. In an attempt to answer this pressing question, the second figure has an increased number of bins to narrow in the 1.5-1.7 log fold change region, but I still do not know the exact answer.</span>
 <span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>A limitation of histograms is it does not show the precise number of proteins with log fold changes between 1.5 and 1.7 for example. In an attempt to answer this pressing question, the second figure has an increased number of bins to narrow in the 1.5-1.7 log fold change region, but I still do not know the exact answer.</span>
-<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>p350 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"350_matrix_LogFC.csv"</span>)</span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>p350 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"350_matrix_LogFC.csv"</span>)</span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(p350<span class="sc">$</span>R46G, p350<span class="sc">$</span>A583T)</span>
 <span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(p350<span class="sc">$</span>R46G, p350<span class="sc">$</span>A583T)</span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>colors <span class="ot">&lt;-</span> <span class="fu">colorRampPalette</span>(<span class="fu">c</span>(<span class="st">"red"</span>, <span class="st">"blue"</span>))</span>
 <span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>colors <span class="ot">&lt;-</span> <span class="fu">colorRampPalette</span>(<span class="fu">c</span>(<span class="st">"red"</span>, <span class="st">"blue"</span>))</span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>p350<span class="sc">$</span>color.order <span class="ot">&lt;-</span> <span class="fu">findInterval</span>(p350<span class="sc">$</span>A583T, <span class="fu">sort</span>(p350<span class="sc">$</span>A583T))</span>
 <span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a>p350<span class="sc">$</span>color.order <span class="ot">&lt;-</span> <span class="fu">findInterval</span>(p350<span class="sc">$</span>A583T, <span class="fu">sort</span>(p350<span class="sc">$</span>A583T))</span>
-<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> p350<span class="sc">$</span>R46G,</span>
-<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="fu">colors</span>(<span class="fu">nrow</span>(p350))[p350<span class="sc">$</span>color.order])</span>
-<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a>instead of position, use saturation on y axis.</span>
-<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(stack<span class="sc">$</span>logFC[stack<span class="sc">$</span>P.Value <span class="sc">&lt;=</span> .<span class="dv">055</span> <span class="sc">&amp;</span> stack<span class="sc">$</span>contrast <span class="sc">==</span> <span class="st">"WTHsc82_vs_R46G"</span>], </span>
-<span id="cb6-57"><a href="#cb6-57" aria-hidden="true" tabindex="-1"></a>     <span class="fu">log</span>(stack<span class="sc">$</span>Half.life[stack<span class="sc">$</span>P.Value <span class="sc">&lt;=</span> .<span class="dv">055</span> <span class="sc">&amp;</span> stack<span class="sc">$</span>contrast <span class="sc">==</span> <span class="st">"WTHsc82_vs_R46G"</span>]))</span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> p350<span class="sc">$</span>R46G,</span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="fu">colors</span>(<span class="fu">nrow</span>(p350))[p350<span class="sc">$</span>color.order])</span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a>instead of position, use saturation on y axis.</span>
+<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(stack<span class="sc">$</span>logFC[stack<span class="sc">$</span>P.Value <span class="sc">&lt;=</span> .<span class="dv">055</span> <span class="sc">&amp;</span> stack<span class="sc">$</span>contrast <span class="sc">==</span> <span class="st">"WTHsc82_vs_R46G"</span>], </span>
+<span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a>     <span class="fu">log</span>(stack<span class="sc">$</span>Half.life[stack<span class="sc">$</span>P.Value <span class="sc">&lt;=</span> .<span class="dv">055</span> <span class="sc">&amp;</span> stack<span class="sc">$</span>contrast <span class="sc">==</span> <span class="st">"WTHsc82_vs_R46G"</span>]))</span>
+<span id="cb6-57"><a href="#cb6-57" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-58"><a href="#cb6-58" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-59"><a href="#cb6-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-60"><a href="#cb6-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-61"><a href="#cb6-61" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb6-60"><a href="#cb6-60" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

@@ -11,12 +11,11 @@ code-tools: true
 description: This post contains knowledge and fuel units for your yeast
 ---
 
-Every time you create a figure, it needs a caption. 
-The text in that section of your assignment should also briefly describe the data set you are using, especially the attributes used for the visualization.
+Every time you create a figure, it needs a caption. The text in that section of your assignment should also briefly describe the data set you are using, especially the attributes used for the visualization.
 
 In addition, make sure the visualization task actually requires the particular concept.
 
-For example, don’t just make a scatterplot with one red dot for the Popout exercise.
+For example, don't just make a scatterplot with one red dot for the Popout exercise.
 
 You need to describe a task that requires we IDENTIFY that point.
 
@@ -26,7 +25,6 @@ stack <- read.csv("2022-03-21_trim-stacked.csv")
 hist(stack$logFC)
 hist(stack$logFC, breaks = 100)
 ```
-
 
 The goal of figure 1 is to summarize the distribution of log fold changes observed across all mutant samples. A description of the results would be the majority of proteins detected and quantified did not have its steady-state levels impacted by at least one mutant condition. Using only this figure, it appears that only a small percentile of proteins detected had there steady-state levels impacted in at least one mutant condition.
 
@@ -44,6 +42,7 @@ p350$color.order <- findInterval(p350$A583T, sort(p350$A583T))
 plot(x = p350$R46G,
      col = colors(nrow(p350))[p350$color.order])
 ```
+
 instead of position, use saturation on y axis.
 
 ```{r}
