@@ -85,14 +85,14 @@ As you can see, the players drafted in June of 2022 haven't played much this sea
 
 If one of the issues is the ability to distinguish between players (stacked data points), then why not separate by players? Also turn 'round' into a channel: shade/saturation.
 
-
 ```{r}
 ggplot(draft2022, aes(x= reorder(name, overall), y=NHLgames)) +
-  geom_point(aes(colour = round))+
-  xlab("Eager players") + ylab("# of first year games")
+  geom_point(aes(colour = as.factor(round)))+
+  xlab("Eager players") + ylab("# games played in first year")
 ```
 
 Unfortunately, there are too many names on the X-axis and this is due to 225 unique player's name showing up. Maybe we should go back to focusing on the round they were picked, since our ultimate goal to visualize if round picks are a predictor of good performance or not. However, to resolve the issue of over plotting, we can try reduction (or derive?) of data. To keep things simple lets take the average games played by players in each round. That should ensure 1 data point for each round. You can't have over plotting with only 1 data point per category!
+
 ```{r}
 Ave.column <- NULL
 
@@ -110,10 +110,7 @@ ggplot(DF, aes(x=Round, y=Average))+
   xlab("Rounds") + ylab("Average # of first year games")
 ```
 
-Caption: Interesting based on this plot/data, it appears that 1st round picks, on average, are more likely to play games in there first year.
-Marks: points
-Channels: Length
-Key-value pairs: In this case Round # is a key? and average # games played by players in that round is the value?
+Caption: Interesting based on this plot/data, it appears that 1st round picks, on average, are more likely to play games in there first year. Marks: points Channels: Length Key-value pairs: In this case Round \# is a key? and average \# games played by players in that round is the value?
 
 ## EXPANDED SCATTERPLOT
 
@@ -149,9 +146,7 @@ Fine, I guess, but we still have to deal with overplotting, and think about whet
 
 1.  **Overplotting.** All those points on the y=0 line represent about 32 players each. Can you you think of a way that adding extra channels might help?
 
-
 2.  **Labelling.** Can we create a solid figure caption and better axis labels for this figure? In your caption, please specify the task(s) the visualizaiton is intended to facilitate, as well as the marks, channels, and key-value pairs used.
-
 
 3.  **Key-Value pairs:** Looks like we are using "round" as a continuous variable. Can we change this to an ordered factor?
 
