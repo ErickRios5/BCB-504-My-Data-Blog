@@ -4,7 +4,7 @@ subtitle: "Gun violence in the US"
 author: "Erick Rios"
 date: "2023-03-21"
 categories: [Midterm, Data, Exploration, Violence, Guns]
-image: "Scary gun.png"
+image: "Gun.png"
 code-fold: true
 code-tools: true
 description: "What trend, if any, in gun violence is there in the US? "
@@ -16,10 +16,25 @@ This midterm assignment I will be doing an exploratory analysis on gun violence 
 
 ## Preamble
 
+Pundits are tasked with providing unbiased reporting on new information, as it develops to inform their audiences, in order for society to adapt or adjust to the developing situation. To aid in this effort, many institutions or groups exist to aggregate data on various topics of interest such as gun violence and is often widely available for academics or internet sleuths to analyze, visualize, and interpret. The culmination of these efforts is often a report to answer pertinent questions to topics societies are concerned with.
+
+Here in the U.S. any citizen has the right to own firearms. However, the proliferation of firearms has many concerned on public safety and crimes committed with firearms. From your average Joe to politicians at the federal level, opinions differ on the threats posed and consequences of wide-spread availability of firearms, ability to conceal or openly carry a firearm. The the advent of social media has increased the flow of information and based on increased reporting of gun related crimes, the topic of firearms back into the forefront of average citizens and policy-makers. However, some people consider the increased reporting on crimes a product of increased flow of information and could mislead society and policy makers into believing crime, in particular gun crime is out of control.
+
+Therefore in an effort to inform those concerned on the topic of firearms, I will present and interpret the data set described below in an intuitive and discernible manner. One of the main overarching question(s) that will be addressed is:
+
+1.  Has there been a significant increase gun violence?
+2.  
+
 ## Data
+
+Figures made and presented in this post will be based mainly on a U.S. Gun Violence Data set containing gun violence incidents, retrieved from Kaggle.com on 3/21/2023. However, the data set was originally collected from gunviolencearchive.org.
+
+To help the reader understand the keys and attributes available in the data set, an example of the data is displayed and each column header is defined to ensure understanding what values and observations mean.
+
+If any additional or supplemental data used in any visualizations will be mentioned in figure description.
 
 ## Visualizations
 
-Summary
+## Summary
 
-Conclusions
+## Conclusions
