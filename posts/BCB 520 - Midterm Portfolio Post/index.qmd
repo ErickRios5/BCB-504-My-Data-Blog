@@ -33,7 +33,53 @@ To help the reader understand the keys and attributes available in the data set,
 
 If any additional or supplemental data used in any visualizations will be mentioned in figure description.
 
+```{r}
+library(tidyverse)
+```
+
+```{r}
+gundata <- read.csv("Gun violence data 1.csv")
+glimpse(gundata)
+gundata_attributes <- read.csv("Gun_violence_data_descriptions.csv")
+knitr::kable(gundata_attributes)
+```
+
 ## Visualizations
+We are working with 1 key that identifies each separate gun incident, the dates when incidents occurred, and several position-type data where the incident takes place. 
+
+Given we are interested in whether there has been an increase in gun violence/crimes within the recent years, it seems only natural to derive total the number of incidents for each year, across the US.
+
+```{r}
+gundata <- gundata %>%
+  separate(Incident_Date, sep="/", into = c("month", "day", "year"))
+
+total_by_year <- summarise(group_by(gundata, Year = year), Incidents = n())
+
+ggplot(total_by_year, aes(x= Year, y= Incidents, group = 1)) +
+  geom_line() + geom_point()
+
+```
+Interestingly, from the year 2014 there was an increase of gun incidents up until 2020, then there was a sharp decline in gun violence to levels less than 2014. Although all violence is tragic, fortunately not every incident results in casualties, but injuries or sometimes neither! Compared to 2014 the amount of gun violence appears to be dropping, but for the incidents that do occur: are more people dying, or getting injured? Lets have a look at whether there was an increase in either deaths, injuries or neither.
+
+```{r}
+Totals <- total_by_year
+
+Casualties_by_year <- aggregate(gundata["Killed"],by=gundata["year"],sum)
+colnames(Casualties_by_year)<- c("Year", "Incidents")
+
+Injuries_by_year <- aggregate(gundata["Injured"],by=gundata["year"],sum)
+colnames(Injuries_by_year) <- c("Year", "Incidents")
+
+neither_by_year <- summarise(group_by(gundata[gundata$Killed == 0 & gundata$Injured == 0,], Year = year), Incidents = n())
+
+
+Totals <- bind_rows(Totals, Casualties_by_year, Injuries_by_year, neither_by_year)
+Totals$Type <- c(rep_len("Incidents", 9), rep("Killed", 9), rep("Injured", 9), rep("Neither", 9))
+
+
+ggplot(Totals, aes(x= Year, y= Incidents, group = Type, color = Type)) +
+  geom_line() + geom_point()
+```
 
 ## Summary
 

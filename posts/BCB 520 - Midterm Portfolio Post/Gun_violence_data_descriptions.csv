@@ -1,0 +1,8 @@
+Column names,Data Type,Description
+Incident ID,Item,Unique identifier for each incident
+Incident Date,Attribute,"The month, day, and year the incident occurred"
+State_Code,Position,2 letter code representing states where incident occurred
+City_or_County,Position,The city or county where an incident occurred
+Address,Position,Physical location within a city or county where an incident occurred
+Killed,Attribute,Number of people killed in the incident
+Injured,Attribute,Number of people injured in the incident
