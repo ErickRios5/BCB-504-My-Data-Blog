@@ -64,21 +64,81 @@ Interestingly, from the year 2014 there was an increase of gun incidents up unti
 ```{r}
 Totals <- total_by_year
 
-Casualties_by_year <- aggregate(gundata["Killed"],by=gundata["year"],sum)
-colnames(Casualties_by_year)<- c("Year", "Incidents")
+Both_by_year <- summarise(group_by(gundata[gundata$Killed == 1 & gundata$Injured == 1,], Year = year), Incidents = n())
 
-Injuries_by_year <- aggregate(gundata["Injured"],by=gundata["year"],sum)
-colnames(Injuries_by_year) <- c("Year", "Incidents")
+Casualties_by_year <- summarise(group_by(gundata[gundata$Killed == 1 & gundata$Injured == 0,], Year = year), Incidents = n())
+
+Injuries_by_year <- summarise(group_by(gundata[gundata$Killed == 0 & gundata$Injured == 1,], Year = year), Incidents = n())
 
 neither_by_year <- summarise(group_by(gundata[gundata$Killed == 0 & gundata$Injured == 0,], Year = year), Incidents = n())
 
 
-Totals <- bind_rows(Totals, Casualties_by_year, Injuries_by_year, neither_by_year)
-Totals$Type <- c(rep_len("Incidents", 9), rep("Killed", 9), rep("Injured", 9), rep("Neither", 9))
+Totals <- bind_rows(Totals, Casualties_by_year, Injuries_by_year, neither_by_year, Both_by_year)
+Totals$Type <- c(rep_len("Total Incidents", 9), rep("Death", 9), rep("Injured", 9), rep("Neither", 9), rep("Death and Injuries", 9))
 
 
 ggplot(Totals, aes(x= Year, y= Incidents, group = Type, color = Type)) +
   geom_line() + geom_point()
+```
+
+
+```{r}
+# test: use this as point size? instead of mean or median? 
+Totals2 <- gundata %>% 
+  group_by(year) %>%
+  summarise(Total = sum(c(Killed, Injured)))
+
+Casualties_by_year2 <- gundata %>% 
+  group_by(year) %>%
+  summarise(Total = sum(Killed))
+
+Injuries_by_year2 <- gundata %>% 
+  group_by(year) %>%
+  summarise(Total = sum(Injured))
+
+# neither_by_year <- summarise(group_by(gundata[gundata$Killed == 0 & gundata$Injured == 0,], Year = year), Incidents = n())
+# 
+# Both_by_year <- gundata %>% 
+#   group_by(year) %>%
+#   summarise(Total = sum(c(Killed, Injured)))
+
+Totals2 <- bind_rows(Totals2, Casualties_by_year2, Injuries_by_year2)
+Totals2$Type <- c(rep_len("Deaths and Injuries", 9), rep("Deaths", 9), rep("Injuries", 9))
+
+
+ggplot(Totals2, aes(x= year, y= Total, group = Type, color = Type)) +
+  geom_line() + geom_point()
+```
+This is interesting, but perhaps worrying as the data first suggested the U.S. was experiencing less gun violence nationwide. Despite, the total number of violent gun incidents drastically decreased between the years 2020 and 2022, to underneath 2014 levels. However, the amount of deaths and/or injuries per year increased, or at the very least stayed constant! The apparentw decrease in gun incidents is a result of non-casualty incidents decreasing.
+
+It could suggest the likelihood of a death and/or injury occurring per incident is increasing each year, could we possibly reflect that by introducing a new channel like size of each point based on the average number of deaths and/or injuries per incident for each year?
+
+```{r}
+M_KIT_per_year <- gundata %>% # median of total killed and/or injured (including no casualty incidents)
+  group_by(year) %>%
+  summarise(mean = mean(c(Killed, Injured)))
+
+M_K_per_year <- gundata %>% # Median of kills per year
+  group_by(year) %>%
+  summarise(mean = mean(Killed))
+
+M_I_per_year <- gundata %>%
+  group_by(year) %>%
+  summarise(mean = mean(Injured))
+
+Neither <- rep(0, 9)
+
+M_KI_per_year <- gundata %>% 
+  group_by(year) %>%
+  summarise(mean = mean(c(Killed, Injured)))
+
+Mean <- c(M_KIT_per_year$mean, M_K_per_year$mean, M_I_per_year$mean, Neither, M_KI_per_year$mean)
+
+Totals$Mean <- Mean
+
+ggplot(Totals, aes(x= Year, y= Incidents, group = Type, color = Type)) +
+  geom_line() + geom_point(aes(size = Mean)) +
+  scale_size(range = c(1, 5), breaks = c(0, .50, .75))
 ```
 
 ## Summary
