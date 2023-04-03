@@ -34,6 +34,7 @@ To help the reader understand the keys and attributes available in the data set,
 If any additional or supplemental data used in any visualizations will be mentioned in figure description.
 
 ```{r}
+#| output: false
 library(tidyverse)
 ```
 
@@ -141,6 +142,106 @@ ggplot(Totals, aes(x= Year, y= Incidents, group = Type, color = Type)) +
   scale_size(range = c(1, 5), breaks = c(0, .50, .75))
 ```
 
+Although we were able to visually observe some interesting details about the data using line scatter plot idiom, I believe we have reached a limit. We could continue to add additional channels to convey more information, but the last addition of point size to convey number of deaths/injuries per incident works but not very well and arguably cognitively taxing (expressivity or separability?) on the reader to process and interpret.
+
+Lets see if a different idiom, best suits the information we want to convey
+
+```{r}
+
+```
+
+On top of that, we are not taking advantage of the postion data. U.S. is a very large and diverse country, are the trends applicable to the entire country? or is each state have its own pattern? what about the county level?
+
+```{r}
+#| output: false
+library(maps)
+```
+
+```{r}
+# Load the map data
+counties <- map_data("county")
+
+# Create the plot
+ggplot() +
+  # Add the map data for the lower 48 states
+  geom_polygon(data = counties, aes(x = long, y = lat, group = group, fill = region), color = "black") +
+  # Add the map data for Alaska
+  geom_polygon(data = subset(counties, region == "alaska"), aes(x = long, y = lat, group = group), color = "red", fill = "black") +
+  coord_map("albers", lat0 = 39, lat1 = 45) +  # Center and zoom the map
+  # Add the map data for Hawaii
+  geom_polygon(data = subset(counties, region == "hawaii"), aes(x = long, y = lat, group = group), color = "red", fill = "black") +
+  # Customize the plot
+  theme_void() +
+  ggtitle("United States Map by County") +
+  labs(caption = "Source: U.S. Census Bureau") +
+  theme(plot.title = element_text(size = 16, hjust = 0.5),
+        plot.caption = element_text(size = 8, hjust = 0),
+        legend.position = "bottom")
+
+```
+```{r}
+# library(sf)
+# 
+# # Download the TIGER/Line shapefile for Alaska counties
+# download.file("https://www2.census.gov/geo/tiger/TIGER2020/COUNTY/tl_2020_us_co20.zip", "tl_2020_us_co20.zip")
+# unzip("tl_2020_us_co20.zip")
+# 
+# # Read the shapefile into R using sf
+# alaska_counties <- st_read("tl_2020_us_co20.shp")
+# 
+# # Plot the map
+# ggplot() +
+#   geom_sf(data = alaska_counties) +
+#   theme_void() +
+#   ggtitle("Alaska Map by County")
+
+```
+
+```{r}
+# # Get county-level data for the United States
+# counties <- map_data("county")
+# 
+# # Get map data for Alaska and Hawaii
+# alaska <- map_data("state", region = "ak")
+# hawaii <- map_data("state", region = "hi")
+# 
+# # Define colors for each region
+# region_colors <- c(
+#   "northeast" = "#0072B2",
+#   "midwest" = "#009E73",
+#   "south" = "#D55E00",
+#   "west" = "#CC79A7"
+# )
+# 
+# # Create the plot
+# ggplot() +
+#   # Add the map data
+#   geom_polygon(data = counties, aes(x = long, y = lat, group = group, fill = region), color = "white") +
+#   # Add the polygons for Alaska and Hawaii
+#   geom_polygon(data = alaska, aes(x = long, y = lat, group = group), color = "white", fill = "transparent") +
+#   geom_polygon(data = hawaii, aes(x = long, y = lat, group = group), color = "white", fill = "transparent") +
+#   # Customize the plot
+#   theme_void() +
+#   scale_fill_manual(values = region_colors, name = "Region") +
+#   ggtitle("United States Map by County") +
+#   labs(caption = "Source: U.S. Census Bureau") +
+#   theme(plot.title = element_text(size = 16, hjust = 0.5),
+#         plot.caption = element_text(size = 8, hjust = 0),
+#         legend.position = "bottom") +
+#   scale_x_continuous(limits = c(-180, -50)) +
+#   scale_y_continuous(limits = c(15, 75))
+# 
+
+```
+
 ## Summary
 
+When only taking into account the number of isolated incidents, there has been a sharp decrease in gun violence across the entire U.S. 
+
+However, when incidents are separated by whether death, injury, both, or neither occurred, revealed the decrease in total incidents is mostly due to non-casualty incidents plummeting, while death, injury, or both increased (or at least stayed constant).
+
+
+
 ## Conclusions
+
+Gun violence is getting rarer, but deadlier
