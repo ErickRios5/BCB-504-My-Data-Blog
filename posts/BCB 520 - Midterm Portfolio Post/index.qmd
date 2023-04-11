@@ -65,11 +65,11 @@ Interestingly, from the year 2014 there was an increase of gun incidents up unti
 ```{r}
 Totals <- total_by_year
 
-Both_by_year <- summarise(group_by(gundata[gundata$Killed == 1 & gundata$Injured == 1,], Year = year), Incidents = n())
+Both_by_year <- summarise(group_by(gundata[gundata$Killed >= 1 & gundata$Injured >= 1,], Year = year), Incidents = n())
 
-Casualties_by_year <- summarise(group_by(gundata[gundata$Killed == 1 & gundata$Injured == 0,], Year = year), Incidents = n())
+Casualties_by_year <- summarise(group_by(gundata[gundata$Killed >= 1 & gundata$Injured == 0,], Year = year), Incidents = n())
 
-Injuries_by_year <- summarise(group_by(gundata[gundata$Killed == 0 & gundata$Injured == 1,], Year = year), Incidents = n())
+Injuries_by_year <- summarise(group_by(gundata[gundata$Killed == 0 & gundata$Injured >= 1,], Year = year), Incidents = n())
 
 neither_by_year <- summarise(group_by(gundata[gundata$Killed == 0 & gundata$Injured == 0,], Year = year), Incidents = n())
 
@@ -147,6 +147,15 @@ Although we were able to visually observe some interesting details about the dat
 Lets see if a different idiom, best suits the information we want to convey
 
 ```{r}
+
+ggplot(Totals, aes(x= Year, y= Incidents, group = Type, color = Type)) +
+  geom_line() + geom_point()
+
+ggplot(Totals[10:45,], aes(x = Year, y= Incidents, fill=as.factor(Type)))+
+  geom_col(position = "stack")
+
+ggplot(Totals[10:45,], aes(x = Year, y= Incidents, fill=as.factor(Type)))+
+  geom_col(position = "fill")
 
 ```
 
