@@ -24,13 +24,13 @@ Therefore in an effort to inform those concerned on the topic of firearms, I wil
 
 Has there been an increase or decrease in gun violence?
 
+Definition: Here I consider a change in the number of casualties, as a measure of increasing/decreasing gun violence.
+
 ## Data
 
 Figures made and presented in this post will be based mainly on a U.S. Gun Violence Data set containing gun violence incidents, retrieved from Kaggle.com on 3/21/2023. However, the data set was originally collected from gunviolencearchive.org.
 
 To help the reader understand the keys and attributes available in the data set, an example of the data is displayed and each column header is defined to ensure understanding what values and observations mean.
-
-If any additional or supplemental data used in any visualizations will be mentioned in figure description.
 
 ```{r}
 #| output: false
@@ -39,7 +39,7 @@ library(tidyverse)
 ```
 
 ```{r}
-gundata <- read.csv("Gun violence data 1.csv")
+gundata <- read.csv("Gun violence data 1.csv", stringsAsFactors = FALSE)
 glimpse(gundata)
 gundata_attributes <- read.csv("Gun_violence_data_descriptions.csv")
 knitr::kable(gundata_attributes)
@@ -138,90 +138,92 @@ Although no new information was added based on the scatter plot, the stacked bar
 
 If you recall, we have position data in the form of States, down to the county level. The U.S. is a very large and diverse country, are the trends observed so far applicable to the entire country? or does each state have its own 'pattern' of gun violence?
 
-```{r}
-#| output: false
-#| echo: false
-library(maps)
-```
+[Long story short I tried really hard to utilize the county data, but after a few hours I had to throw in the towel! I even had help from ChatGPT, Stack overflow, Github documentation on relevant packages, and I even ended up signing up with Google Maps API and no avail. I will just make things simpler for myself and stick to State level.]
+
+Let us keep things simple and start by summarizing the entire gun violence data set from the years 2014 to 2022 by summing up all the gun deaths and injuries together as 'casualties' and utilize the State-level position data.
 
 ```{r}
-# Load the map data
-counties <- map_data("county")
-
-# Create the plot
-ggplot() +
-  # Add the map data for the lower 48 states
-  geom_polygon(data = counties, aes(x = long, y = lat, group = group, fill = region), color = "black") +
-  # Add the map data for Alaska
-  geom_polygon(data = subset(counties, region == "alaska"), aes(x = long, y = lat, group = group), color = "red", fill = "black") +
-  coord_map("albers", lat0 = 39, lat1 = 45) +  # Center and zoom the map
-  # Add the map data for Hawaii
-  geom_polygon(data = subset(counties, region == "hawaii"), aes(x = long, y = lat, group = group), color = "red", fill = "black") +
-  # Customize the plot
-  theme_void() +
-  ggtitle("United States Map by County") +
-  labs(caption = "Source: U.S. Census Bureau") +
-  theme(plot.title = element_text(size = 16, hjust = 0.5),
-        plot.caption = element_text(size = 8, hjust = 0),
-        legend.position = "none")
-
-```
-
-```{r}
-library(tidyverse)
 library(urbnmapr)
-library(sf)
 
-counties_sf <- get_urbn_map("counties", sf = TRUE)
+Casualties_by_state_all_data <- gundata %>% 
+  group_by(State_Code) %>%
+  summarise(sum = sum(c(Killed, Injured)))
 
-counties_sf %>% 
-  ggplot(aes()) +
-  geom_sf(fill = "grey", color = "#ffffff")
+colnames(Casualties_by_state_all_data)[colnames(Casualties_by_state_all_data) == "State_Code"] <- "state_abbv"
+
+spatial_data <- left_join(get_urbn_map(map = "states", sf = TRUE),
+                          Casualties_by_state_all_data,
+                          by = "state_abbv")
+
+ggplot() +
+  geom_sf(spatial_data,
+          mapping = aes(fill = sum),
+          color = "#ffffff", size = 0.25) +
+  labs(fill = "All Casualties 2014 to 2022")
 ```
+Well that is interesting, it appears that the vast majority of casualties are clearly occurring in California, Texas, and Illinois, with runner-ups being Pennsylvania, New York, and Florida. 
+
+Albeit interesting, it is important to remember a few things.
+
+1. The above-mentioned states are the most populous states in the country. Logically, more incidents occur (thus more casualties) where there are more people present. Vice-versa, less populated places will result in less crime due to less people interacting and resulting in less altercations. Unfortunately, that is a limitation of the dataset, as it does not include population size or density to normalize between states. 
+
+[After spending so much time trying to work with county level data, I could not be bothered to find a whole new data set and add more complexity to this assignment!]
+
+2. This does not address the main question of whether there has been an increase/decrease in gun violence across the entire country or only some states.
+
+Again, to keep things simple, since we care if there was an overall increase/decreases in gun violence, lets derive a new attribute: "Ratio". Where Ratio is the ratio of casualties between the years 2022 and 2014 (2022/2014).
+
 ```{r}
-library(tidycensus)
 
-# example data with county names in a column called "county"
-county_data <- data.frame(
-  county = c("Los Angeles County", "Cook County", "Harris County")
-)
+# Filter for 2014 and 2022 and group by state
+ratio <- gundata %>%
+  filter(year %in% c(2014, 2022)) %>%
+  group_by(State_Code) %>%
+  # Sum killed and injured for each year and calculate ratio
+  summarize(casualties_2014 = sum(c(Killed[year == 2014], Injured[year == 2014])),
+            casualties_2022 = sum(c(Killed[year == 2022], Injured[year == 2022])),
+            ratio = casualties_2022 / casualties_2014)
 
-# use tidycensus to get county FIPS codes
-county_data$county_fips <- countycode(state = "*", county = county_data$county, 
-                                      vintage = "acs5", year = 2019)
+colnames(ratio)[colnames(ratio) == "State_Code"] <- "state_abbv"
+
+spatial_data <- left_join(get_urbn_map(map = "states", sf = TRUE),
+                          ratio,
+                          by = "state_abbv")
+
+ggplot() +
+  geom_sf(spatial_data,
+          mapping = aes(fill = ratio),
+          color = "#ffffff", size = 0.5) +
+  labs(fill = "Ratio (2022/2014)") +
+  ggtitle("Ratio of 2022:2014 Casualties") + 
+  geom_sf_text(data = get_urbn_labels(map = "states", sf = TRUE), 
+                aes(label = state_abbv), 
+            size = 3)+
+  theme(panel.grid = element_blank()) +
+  labs(x = NULL, y = NULL) + 
+  coord_sf(datum = NA) +   scale_fill_gradientn(colors = c("green", "red"))
 
 ```
-
-```{r}
-counties_sf <- get_urbn_map(map = "counties", sf = TRUE)
-counties_sf$county_name <- gsub("\\s\\w+$", "", counties_sf$county_name)
-counties_sf$county_name <-tolower(counties_sf$county_name)
-
-gundata$City_Or_County <- tolower(gundata$City_Or_County)
-colnames(gundata)[colnames(gundata) == "City_Or_County"] <- "county_name"
-
-countydata <- countydata
-
-county_groups <- countydata %>% 
-  mutate(cat_var = paste0("Group ",
-                          sample(1:4, nrow(countydata), replace = TRUE)))
-
-gundata <- left_join(gundata, counties_sf, by = "county_name")
-
-household_data <- left_join(county_groups, counties_sf, by = "county_fips")
-
-household_data %>%
-  ggplot() +
-  geom_sf(data = household_data, aes(geometry = geometry, fill = cat_var)) +
-  labs(fill = "Categorical variable")
-```
+Although we do not have information to deal with population density issue, by taking the ratio of casualties in 2022 to 2014, we can clearly see that the states in red/orange (Minnesota, Colorado, New Mexico) had ratios of at least a 2, suggesting a 2 fold increase in gun related casualties. The greener states (For example, Florida, Nebraska, California) had ratios of less than 1, suggesting a decrease in gun casualties.
 
 ## Summary
 
 When only taking into account the number of isolated incidents, there has been a sharp decrease in gun violence across the entire U.S.
 
-However, when incidents are separated by whether death, injury, both, or neither occurred, revealed the decrease in total incidents is mostly due to non-casualty incidents plummeting, while death, injury, or both increased (or at least stayed constant).
+However, when incidents are separated by whether death, injury, both, or neither occurred, the scatter plot and stacked bar plot idioms revealed the decrease in total incidents is mostly due to non-casualty incidents plummeting, while death, injury, or both increased (or at least stayed constant).
+
+When breaking down the data by state, we observed initially the most populous states like California, Texas, and Illinois constituted a bulk of the casualties that have occurred between the years 2014 and 2022.
+
+Given the limitations and biases against populous states, to help provide a more meaningful comparison between states taking the ratio of 2022 to 2014 casualties for each state reveals that each state is experiencing its own unique trend in gun violence. Therefore, suggesting other variables not accounted for in the data set are at play on a by-state basis, suggesting a more nuanced conversation is needed.
 
 ## Conclusions
 
-Gun violence is getting rarer, but deadlier
+Between the years 2014 and 2022, has there been a meaningful change in gun violence in the United States?
+
+1. On a nation-wide basis there are more casualties (deaths and/or Injuries), despite less individual gun incidents occurring in 2022 compared to 2014.
+
+2. On a by state basis, the data suggests a few states, for some unknown reason given the available data, are experiencing a surge in gun violence, while other states had less violence and most hover in-between. 
+
+It is important to note the population densities of each state were not accounted for and a 2-fold change in populous state is a lot more casualties than the same fold change in a low population state.
+
+Therefore, without more data to be more confident on a state by state basis to have a more nuanced conversation, there has been an increase in gun violence in the United States in the form of casualties.
