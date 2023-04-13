@@ -20,10 +20,9 @@ Pundits are tasked with providing unbiased reporting on new information, as it d
 
 Here in the U.S. any citizen has the right to own firearms. However, the proliferation of firearms has many concerned on public safety and crimes committed with firearms. From your average Joe to politicians at the federal level, opinions differ on the threats posed and consequences of wide-spread availability of firearms, ability to conceal or openly carry a firearm. The the advent of social media has increased the flow of information and based on increased reporting of gun related crimes, the topic of firearms back into the forefront of average citizens and policy-makers. However, some people consider the increased reporting on crimes a product of increased flow of information and could mislead society and policy makers into believing crime, in particular gun crime is out of control.
 
-Therefore in an effort to inform those concerned on the topic of firearms, I will present and interpret the data set described below in an intuitive and discernible manner. One of the main overarching question(s) that will be addressed is:
+Therefore in an effort to inform those concerned on the topic of firearms, I will present and interpret the data set described below in an intuitive and discernible manner. The main overarching question that will be addressed is:
 
-1.  Has there been a significant increase gun violence?
-2.  
+Has there been an increase or decrease in gun violence?
 
 ## Data
 
@@ -35,6 +34,7 @@ If any additional or supplemental data used in any visualizations will be mentio
 
 ```{r}
 #| output: false
+#|echo: false 
 library(tidyverse)
 ```
 
@@ -115,33 +115,32 @@ ggplot(Totals, aes(x= Year, y= Incidents, group = Type, color = Type)) +
   geom_line() + geom_point(aes(size = Mean)) +
   scale_size(range = c(1, 10), breaks = c(0, .50, .75, .9))
 ```
+
 Although we were able to visually observe some interesting details about the data using line scatter plot idiom, I believe we have reached a limit. We could continue to add additional channels to convey more information, but the last addition of point size to convey the average number of deaths/injuries per incident does not work very well. This due to the average number of deaths or injuries per year being fairly constant and outliers have negligible impact on the point size when there are 40000+ incidents with only death or injury each year.
 
-Let us try to stacked bar plot idiom, I think it will be an improvement over the scatterplot, mostly because we can normalize the data to utilizes percentages and describe each category as parts of a whole. When dealing with large numbers, they tend to lose meaning when comparing, thus viewing things as percentage increases or decreases is more important than the raw numbers.
-
+Let us try to stacked bar plot idiom, I think it will be an improvement over the scatter plot describe each category as parts of a whole.
 ```{r}
-
-ggplot(Totals, aes(x= Year, y= Incidents, group = Type, color = Type)) +
-  geom_line() + geom_point()
 
 ggplot(Totals[10:45,], aes(x = Year, y= Incidents, fill=as.factor(Type)))+
   geom_col(position = "stack")+
   labs(fill = "Casualty Type") +
   geom_text(aes(label = Incidents), position = position_stack(vjust = .5))
 
-ggplot(Totals[10:45,], aes(x = Year, y= Incidents, fill=as.factor(Type)))+
-  geom_col(position = "fill") +
-  labs(fill = "Casualty Type")
+# ggplot(Totals[10:45,], aes(x = Year, y= Incidents, fill=as.factor(Type)))+
+#   geom_col(position = "fill") +
+#   labs(fill = "Casualty Type")
 
 ```
+
 Between the years 2014 and 2022, we can more clearly observe a decrease in total incidents, however the amount of incidents resulting in death, injury, or both increased when comparing 2014 and 2022 specifically. Despite the apparent down trend in total incidents, it appears the each incident that does occur is more likely to result in at least one casualty.
 
 Although no new information was added based on the scatter plot, the stacked bar plot idiom seems to be better, even if only slightly. Using length on the Y axis to represent the total incidents per year is better than having it be its own category on the scatter plot, in theory this should reduce the cognitive demands on the reader. Also, the connecting lines are not necessary to expressing the order of time.
 
-If you recall, we have position data in the form of States, down to the county level. The U.S. is a very large and diverse country, are the trends observed so far applicable to the entire country? or does each state have its own pattern of gun violence?
+If you recall, we have position data in the form of States, down to the county level. The U.S. is a very large and diverse country, are the trends observed so far applicable to the entire country? or does each state have its own 'pattern' of gun violence?
 
 ```{r}
 #| output: false
+#| echo: false
 library(maps)
 ```
 
@@ -169,7 +168,52 @@ ggplot() +
 ```
 
 ```{r}
+library(tidyverse)
+library(urbnmapr)
+library(sf)
 
+counties_sf <- get_urbn_map("counties", sf = TRUE)
+
+counties_sf %>% 
+  ggplot(aes()) +
+  geom_sf(fill = "grey", color = "#ffffff")
+```
+```{r}
+library(tidycensus)
+
+# example data with county names in a column called "county"
+county_data <- data.frame(
+  county = c("Los Angeles County", "Cook County", "Harris County")
+)
+
+# use tidycensus to get county FIPS codes
+county_data$county_fips <- countycode(state = "*", county = county_data$county, 
+                                      vintage = "acs5", year = 2019)
+
+```
+
+```{r}
+counties_sf <- get_urbn_map(map = "counties", sf = TRUE)
+counties_sf$county_name <- gsub("\\s\\w+$", "", counties_sf$county_name)
+counties_sf$county_name <-tolower(counties_sf$county_name)
+
+gundata$City_Or_County <- tolower(gundata$City_Or_County)
+colnames(gundata)[colnames(gundata) == "City_Or_County"] <- "county_name"
+
+countydata <- countydata
+
+county_groups <- countydata %>% 
+  mutate(cat_var = paste0("Group ",
+                          sample(1:4, nrow(countydata), replace = TRUE)))
+
+gundata <- left_join(gundata, counties_sf, by = "county_name")
+
+household_data <- left_join(county_groups, counties_sf, by = "county_fips")
+
+household_data %>%
+  ggplot() +
+  geom_sf(data = household_data, aes(geometry = geometry, fill = cat_var)) +
+  labs(fill = "Categorical variable")
 ```
 
 ## Summary
