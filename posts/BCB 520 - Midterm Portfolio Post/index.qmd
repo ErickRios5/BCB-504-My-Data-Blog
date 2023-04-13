@@ -46,7 +46,8 @@ knitr::kable(gundata_attributes)
 ```
 
 ## Visualizations
-We are working with 1 key that identifies each separate gun incident, the dates when incidents occurred, and several position-type data where the incident takes place. 
+
+We are working with 1 key that identifies each separate gun incident, the dates when incidents occurred, and several position-type data where the incident takes place.
 
 Given we are interested in whether there has been an increase in gun violence/crimes within the recent years, it seems only natural to derive total the number of incidents for each year, across the US.
 
@@ -60,6 +61,7 @@ ggplot(total_by_year, aes(x= Year, y= Incidents, group = 1)) +
   geom_line() + geom_point()
 
 ```
+
 Interestingly, from the year 2014 there was an increase of gun incidents up until 2020, then there was a sharp decline in gun violence to levels less than 2014. Although all violence is tragic, fortunately not every incident results in casualties, but injuries or sometimes neither! Compared to 2014 the amount of gun violence appears to be dropping, but for the incidents that do occur: are more people dying, or getting injured? Lets have a look at whether there was an increase in either deaths, injuries or neither.
 
 ```{r}
@@ -82,44 +84,16 @@ ggplot(Totals, aes(x= Year, y= Incidents, group = Type, color = Type)) +
   geom_line() + geom_point()
 ```
 
+This is interesting, but perhaps worrying as the data first suggested the U.S. was experiencing less gun violence nationwide. Despite, the total number of violent gun incidents drastically decreased between the years 2020 and 2022, to underneath 2014 levels. However, the amount of deaths and/or injuries per year increased, or at the very least stayed constant! The apparent decrease in gun incidents is a result of non-casualty incidents decreasing.
+
+Even though there is an apparent decrease in gun violence incidents, it appears the likelihood of a death and/or injury occurring per incident is increasing each year. Could we possibly reflect that by introducing a new channel like size of each point based on the average number of deaths and/or injuries per incident for each year?
 
 ```{r}
-# test: use this as point size? instead of mean or median? 
-Totals2 <- gundata %>% 
-  group_by(year) %>%
-  summarise(Total = sum(c(Killed, Injured)))
-
-Casualties_by_year2 <- gundata %>% 
-  group_by(year) %>%
-  summarise(Total = sum(Killed))
-
-Injuries_by_year2 <- gundata %>% 
-  group_by(year) %>%
-  summarise(Total = sum(Injured))
-
-# neither_by_year <- summarise(group_by(gundata[gundata$Killed == 0 & gundata$Injured == 0,], Year = year), Incidents = n())
-# 
-# Both_by_year <- gundata %>% 
-#   group_by(year) %>%
-#   summarise(Total = sum(c(Killed, Injured)))
-
-Totals2 <- bind_rows(Totals2, Casualties_by_year2, Injuries_by_year2)
-Totals2$Type <- c(rep_len("Deaths and Injuries", 9), rep("Deaths", 9), rep("Injuries", 9))
-
-
-ggplot(Totals2, aes(x= year, y= Total, group = Type, color = Type)) +
-  geom_line() + geom_point()
-```
-This is interesting, but perhaps worrying as the data first suggested the U.S. was experiencing less gun violence nationwide. Despite, the total number of violent gun incidents drastically decreased between the years 2020 and 2022, to underneath 2014 levels. However, the amount of deaths and/or injuries per year increased, or at the very least stayed constant! The apparentw decrease in gun incidents is a result of non-casualty incidents decreasing.
-
-It could suggest the likelihood of a death and/or injury occurring per incident is increasing each year, could we possibly reflect that by introducing a new channel like size of each point based on the average number of deaths and/or injuries per incident for each year?
-
-```{r}
-M_KIT_per_year <- gundata %>% # median of total killed and/or injured (including no casualty incidents)
+M_KIT_per_year <- gundata %>% 
   group_by(year) %>%
   summarise(mean = mean(c(Killed, Injured)))
 
-M_K_per_year <- gundata %>% # Median of kills per year
+M_K_per_year <- gundata %>% 
   group_by(year) %>%
   summarise(mean = mean(Killed))
 
@@ -139,12 +113,11 @@ Totals$Mean <- Mean
 
 ggplot(Totals, aes(x= Year, y= Incidents, group = Type, color = Type)) +
   geom_line() + geom_point(aes(size = Mean)) +
-  scale_size(range = c(1, 5), breaks = c(0, .50, .75))
+  scale_size(range = c(1, 10), breaks = c(0, .50, .75, .9))
 ```
+Although we were able to visually observe some interesting details about the data using line scatter plot idiom, I believe we have reached a limit. We could continue to add additional channels to convey more information, but the last addition of point size to convey the average number of deaths/injuries per incident does not work very well. This due to the average number of deaths or injuries per year being fairly constant and outliers have negligible impact on the point size when there are 40000+ incidents with only death or injury each year.
 
-Although we were able to visually observe some interesting details about the data using line scatter plot idiom, I believe we have reached a limit. We could continue to add additional channels to convey more information, but the last addition of point size to convey number of deaths/injuries per incident works but not very well and arguably cognitively taxing (expressivity or separability?) on the reader to process and interpret.
-
-Lets see if a different idiom, best suits the information we want to convey
+Let us try to stacked bar plot idiom, I think it will be an improvement over the scatterplot, mostly because we can normalize the data to utilizes percentages and describe each category as parts of a whole. When dealing with large numbers, they tend to lose meaning when comparing, thus viewing things as percentage increases or decreases is more important than the raw numbers.
 
 ```{r}
 
@@ -152,14 +125,20 @@ ggplot(Totals, aes(x= Year, y= Incidents, group = Type, color = Type)) +
   geom_line() + geom_point()
 
 ggplot(Totals[10:45,], aes(x = Year, y= Incidents, fill=as.factor(Type)))+
-  geom_col(position = "stack")
+  geom_col(position = "stack")+
+  labs(fill = "Casualty Type") +
+  geom_text(aes(label = Incidents), position = position_stack(vjust = .5))
 
 ggplot(Totals[10:45,], aes(x = Year, y= Incidents, fill=as.factor(Type)))+
-  geom_col(position = "fill")
+  geom_col(position = "fill") +
+  labs(fill = "Casualty Type")
 
 ```
+Between the years 2014 and 2022, we can more clearly observe a decrease in total incidents, however the amount of incidents resulting in death, injury, or both increased when comparing 2014 and 2022 specifically. Despite the apparent down trend in total incidents, it appears the each incident that does occur is more likely to result in at least one casualty.
 
-On top of that, we are not taking advantage of the postion data. U.S. is a very large and diverse country, are the trends applicable to the entire country? or is each state have its own pattern? what about the county level?
+Although no new information was added based on the scatter plot, the stacked bar plot idiom seems to be better, even if only slightly. Using length on the Y axis to represent the total incidents per year is better than having it be its own category on the scatter plot, in theory this should reduce the cognitive demands on the reader. Also, the connecting lines are not necessary to expressing the order of time.
+
+If you recall, we have position data in the form of States, down to the county level. The U.S. is a very large and diverse country, are the trends observed so far applicable to the entire country? or does each state have its own pattern of gun violence?
 
 ```{r}
 #| output: false
@@ -185,71 +164,19 @@ ggplot() +
   labs(caption = "Source: U.S. Census Bureau") +
   theme(plot.title = element_text(size = 16, hjust = 0.5),
         plot.caption = element_text(size = 8, hjust = 0),
-        legend.position = "bottom")
-
-```
-```{r}
-# library(sf)
-# 
-# # Download the TIGER/Line shapefile for Alaska counties
-# download.file("https://www2.census.gov/geo/tiger/TIGER2020/COUNTY/tl_2020_us_co20.zip", "tl_2020_us_co20.zip")
-# unzip("tl_2020_us_co20.zip")
-# 
-# # Read the shapefile into R using sf
-# alaska_counties <- st_read("tl_2020_us_co20.shp")
-# 
-# # Plot the map
-# ggplot() +
-#   geom_sf(data = alaska_counties) +
-#   theme_void() +
-#   ggtitle("Alaska Map by County")
+        legend.position = "none")
 
 ```
 
 ```{r}
-# # Get county-level data for the United States
-# counties <- map_data("county")
-# 
-# # Get map data for Alaska and Hawaii
-# alaska <- map_data("state", region = "ak")
-# hawaii <- map_data("state", region = "hi")
-# 
-# # Define colors for each region
-# region_colors <- c(
-#   "northeast" = "#0072B2",
-#   "midwest" = "#009E73",
-#   "south" = "#D55E00",
-#   "west" = "#CC79A7"
-# )
-# 
-# # Create the plot
-# ggplot() +
-#   # Add the map data
-#   geom_polygon(data = counties, aes(x = long, y = lat, group = group, fill = region), color = "white") +
-#   # Add the polygons for Alaska and Hawaii
-#   geom_polygon(data = alaska, aes(x = long, y = lat, group = group), color = "white", fill = "transparent") +
-#   geom_polygon(data = hawaii, aes(x = long, y = lat, group = group), color = "white", fill = "transparent") +
-#   # Customize the plot
-#   theme_void() +
-#   scale_fill_manual(values = region_colors, name = "Region") +
-#   ggtitle("United States Map by County") +
-#   labs(caption = "Source: U.S. Census Bureau") +
-#   theme(plot.title = element_text(size = 16, hjust = 0.5),
-#         plot.caption = element_text(size = 8, hjust = 0),
-#         legend.position = "bottom") +
-#   scale_x_continuous(limits = c(-180, -50)) +
-#   scale_y_continuous(limits = c(15, 75))
-# 
 
 ```
 
 ## Summary
 
-When only taking into account the number of isolated incidents, there has been a sharp decrease in gun violence across the entire U.S. 
+When only taking into account the number of isolated incidents, there has been a sharp decrease in gun violence across the entire U.S.
 
 However, when incidents are separated by whether death, injury, both, or neither occurred, revealed the decrease in total incidents is mostly due to non-casualty incidents plummeting, while death, injury, or both increased (or at least stayed constant).
-
-
 
 ## Conclusions
 
