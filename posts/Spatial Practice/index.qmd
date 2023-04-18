@@ -37,9 +37,9 @@ library(dplyr)
 Malaria <- read.csv("National_Unit_data.csv")
 
 Incidence<- Malaria%>%
-  filter(Metric == "Infection Prevalence" & Year == "2019")%>%
+  filter(Metric == "Infection Prevalence")%>%
   mutate(Prevalence = Value)%>%
-  select(c(ISO3, Prevalence))
+  select(c(ISO3, Prevalence, Year))
 
 ```
 
@@ -65,52 +65,84 @@ ggplot() +
   labs(title = "Malaria Prevalence by Country")
 
 ```
+
 ```{r}
 library(gganimate)
-library(transformr)
 
-Incidence<- Malaria%>%
-  filter(Metric == "Infection Prevalence" & Year == "2019")%>%
-  mutate(Prevalence = Value)%>%
-  select(c(ISO3, Prevalence))
+year_1 <- 2010
+year_2 <- 2020
 
-map_data <- world_map %>%
-  filter(continent == "Africa") %>%
-  left_join(Incidence, by = c("iso_a3" = "ISO3"))
+data <- map_data %>%
+  filter(Year == year_1 | Year == year_2) %>%
+  group_by(iso_a3) %>%
+  slice(1)
 
-p <- ggplot() +
-  geom_sf(data = map_data, aes(fill = Prevalence)) +
-  scale_fill_gradient(low = "white", high = "red", na.value = "gray", name = "Malaria Prevalence") +
-  theme_minimal() +
-  theme(axis.text = element_blank(), axis.ticks = element_blank(), axis.title = element_blank()) +
-  labs(title = "Malaria Prevalence by Country")
 
-animate(p, fps= 25, width= 800, height = 500)
+base_map <- ggplot() +
+  geom_sf(data = data, aes(fill = Prevalence, color = Prevalence))
+
+animated_map <- base_map +
+  transition_time(Year) +
+  shadow_mark() +
+  labs(title = "Year: 2010 to 2020")
+
+range <- range(data$pop_est, na.rm = TRUE)
+
+animate(animated_map, fps = 10, duration = 10, range = range)
+
+base_map
+
+animated_map
+
 ```
+
 ```{r}
-library(ggplot2)
-library(sf)
 library(gganimate)
 
-# # Load data
-# map_data <- st_read(system.file("shape/nc.shp", package="sf"))
+sum(is.na(data$Prevalence))
 
-# Create a ggplot object
-p <- ggplot() +
-  geom_sf(data = map_data, aes(fill = Prevalence)) +
-  scale_fill_gradient(low = "white", high = "red", na.value = "gray", name = "Malaria Prevalence") +
-  theme_minimal() +
-  theme(axis.text = element_blank(), axis.ticks = element_blank(), axis.title = element_blank()) +
-  labs(title = "Malaria Prevalence by Country")
 
-gg_animated <- p + transition_states(id, state_length = 1, wrap = TRUE) +
-  labs(title = "Malaria Prevalence by Country: {closest_state}") +
-  enter_fade() + exit_fade()
+# Set the years
+year_1 <- 2010
+year_2 <- 2020
 
-# Save the animation as a GIF file
-animate(gg_animated, "animated_plot.gif", fps = 10, width = 800, height = 500)
+# Filter the data and create the base map
+data <- map_data %>%
+  mutate(Year = as.numeric(Year)) %>%
+  filter(Year == year_1 | Year == year_2) %>%
+  group_by(iso_a3) %>%
+  slice(1)
+
+
+base_map <- ggplot() +
+  geom_sf(data = data, aes(fill = Prevalence, color = Prevalence))
+
+# Check for missing values in the Prevalence column
+if (anyNA(data$Prevalence)) {
+  stop("Data contains missing values in the Prevalence column.")
+}
+
+# Calculate the range after filtering missing values
+range <- range(data$Prevalence, na.rm = TRUE)
+
+# Check if the range is valid (not infinite or NaN)
+if (!is.finite(range[1]) | !is.finite(range[2])) {
+  stop("Invalid range: range[1]=", range[1], ", range[2]=", range[2])
+}
+
+# Create the animated map
+animated_map <- base_map +
+  transition_time(Year) +
+  shadow_mark() +
+  labs(title = "Year: {round(Year)}") +
+  view_follow(fixed_y = TRUE)
+
+animate(animated_map, fps = 10, duration = 10)
+
+
 
 ```
+
 Oh SNAP! We made a MAP!
 
 Hey! That rhymes!
