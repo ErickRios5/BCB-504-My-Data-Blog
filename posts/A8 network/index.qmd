@@ -63,7 +63,6 @@ This means: **U**ndirected **N**amed graph with **10** vertices and **2** edges,
 `summary` does not list the edges, which is convenient for large graphs with millions of edges:
 :::
 
-
 ```{r echo = TRUE}
 summary(g)
 ```
@@ -80,14 +79,13 @@ To visualize a graph you can use `plot`:
 plot(g)
 ```
 
-
 ## Vertex and edge IDs
 
 Vertices and edges have numerical vertex IDs in igraph. Vertex IDs are always consecutive and they start with 1. For a graph with n vertices the vertex IDs are always between 1 and n. If some operation changes the number of vertices in the graphs, e.g. a subgraph is created via `induced_subgraph`, then the vertices are renumbered to satisfy this criterion.
 
 The same is true for the edges as well: edge IDs are always between 1 and m, the total number of edges in the graph.
 
-In addition to IDs, vertices and edges can be assigned a name and other attributes. That makes it easier to track them whenever the graph is altered. 
+In addition to IDs, vertices and edges can be assigned a name and other attributes. That makes it easier to track them whenever the graph is altered.
 
 ## Adding/deleting vertices and edges
 
@@ -112,8 +110,6 @@ g <- g + edges(c(1,35, 1,36, 34,37))
 ```
 
 You can add a single vertex/edge at a time using `add_vertex` and `add_edge`.
-
-
 
 Let us add some more vertices and edges to our graph. In `igraph` we can use the `magrittr` package, which provides a mechanism for chaining commands with the operator `%\>%`:
 
@@ -149,7 +145,6 @@ g <- make_ring(5)
 g <- delete_edges(g, get.edge.ids(g, c(1,5, 4,5)))
 plot(g)
 ```
-
 
 ## Constructing graphs
 
@@ -362,7 +357,7 @@ V(g)[age < 30]$name
 Of course, `<` is not the only boolean operator that can be used for this. Other possibilities include the following:
 
 | Operator | Meaning                                                         |
-|----------------------|--------------------------------------------------|
+|------------------------|------------------------------------------------|
 | `==`     | The attribute/property value must be *equal to*                 |
 | `!=`     | The attribute/property value must *not be equal to*             |
 | `<`      | The attribute/property value must be *less than*                |
@@ -451,7 +446,7 @@ A graph is an abstract mathematical object without a specific representation in 
 The layout functions in igraph always start with `layout`. The following table summarises them:
 
 | Method name        | Algorithm description                                                                                          |
-|-----------------|-------------------------------------------------------|
+|-------------------|-----------------------------------------------------|
 | `layout_randomly`  | Places the vertices completely randomly                                                                        |
 | `layout_in_circle` | Deterministic layout that places the vertices on a circle                                                      |
 | `layout_on_sphere` | Deterministic layout that places the vertices evenly on the surface of a sphere                                |
@@ -480,6 +475,10 @@ We can plot our imaginary social network with the Kamada-Kawai layout algorithm 
 
 ```{r}
 layout <- layout_with_kk(g)
+```
+
+```{r}
+layout <- layout_randomly(g)
 ```
 
 ```{r}
@@ -524,7 +523,7 @@ In summary, there are special vertex and edge properties that correspond to the 
 ### Vertex attributes controlling graph plots
 
 | Attribute name | Keyword argument      | Purpose                                                                                                                                                                                                                                        |
-|----------------------|----------------------|-----------------------------|
+|----------------------|----------------------|----------------------------|
 | `color`        | `vertex.color`        | Color of the vertex                                                                                                                                                                                                                            |
 | `label`        | `vertex.label`        | Label of the vertex. They will be converted to character. Specify NA to omit vertex labels. The default vertex labels are the vertex ids.                                                                                                      |
 | `label.cex`    | `vertex.label.cex`    | Font size of the vertex label, interpreted as a multiplicative factor, similarly to R's `text` function                                                                                                                                        |
@@ -539,7 +538,7 @@ In summary, there are special vertex and edge properties that correspond to the 
 ### Edge attributes controlling graph plots
 
 | Attribute name | Keyword argument    | Purpose                                                                                                                                                                                                                                     |
-|-------------------------|-----------------------------|-------------------|
+|-------------------------|----------------------------|-------------------|
 | `color`        | `edge.color`        | Color of the edge                                                                                                                                                                                                                           |
 | `curved`       | `edge.curved`       | A numeric value specifies the curvature of the edge; zero curvature means straight edges, negative values means the edge bends clockwise, positive values the opposite. TRUE means curvature 0.5, FALSE means curvature zero                |
 | `arrow.size`   | `edge.arrow.size`   | Currently this is a constant, so it is the same for every edge. If a vector is submitted then only the first element is used, ie. if this is taken from an edge attribute then only the attribute of the first edge is used for all arrows. |
@@ -559,6 +558,7 @@ These settings can be specified as arguments to the `plot` function to control t
 |--------------------------------|----------------------------------------|
 | `layout`         | The layout to be used. It can be an instance of `Layout`, a list of tuples containing X-Y coordinates, or the name of a layout algorithm. The default is `auto`, which selects a layout algorithm automatically based on the size and connectedness of the graph. |
 | `margin`         | The amount of empty space below, over, at the left and right of the plot, it is a numeric vector of length four.                                                                                                                                                  |
+
 # A NON BORING EXAMPLE!
 
 ```{r}
@@ -574,13 +574,13 @@ plot(g)
 
 ```
 
-Have a look at the structure of the two dataframes (`people` and `relations`).  `igraph` is creating a graph object using the `relations` data frame as an edge list.  The rest of the elements are attributes of the nodes or the edges that we can use for visualization.
+Have a look at the structure of the two dataframes (`people` and `relations`). `igraph` is creating a graph object using the `relations` data frame as an edge list. The rest of the elements are attributes of the nodes or the edges that we can use for visualization.
 
-While these examples are illustrative, they are also a bit contrived.  It is rare that you would manually make a network.  It is far more common that you will use existing data to visualize a network.  A big challenge is often converting your data into a format that `igraph` can work with, such as an edge list or adjacency matrix.
+While these examples are illustrative, they are also a bit contrived. It is rare that you would manually make a network. It is far more common that you will use existing data to visualize a network. A big challenge is often converting your data into a format that `igraph` can work with, such as an edge list or adjacency matrix.
 
 For example, what if we wanted to use the BCB520 variable in the `people` dataframe to create additional edges?
 
-There are lots of ways to do this.  Here is one:
+There are lots of ways to do this. Here is one:
 
 ```{r}
 
@@ -612,7 +612,6 @@ plot(g)
 
 Improve the network above by:
 
-1. Coloring the edges according to Advisor / BCB520 attribute.
-2. Coloring the nodes according to Department.
-3. Adujsting the labels to improve readability.
-
+1.  Coloring the edges according to Advisor / BCB520 attribute.
+2.  Coloring the nodes according to Department.
+3.  Adujsting the labels to improve readability.
