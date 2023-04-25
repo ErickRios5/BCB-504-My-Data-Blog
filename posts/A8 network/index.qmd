@@ -357,7 +357,7 @@ V(g)[age < 30]$name
 Of course, `<` is not the only boolean operator that can be used for this. Other possibilities include the following:
 
 | Operator | Meaning                                                         |
-|------------------------|------------------------------------------------|
+|------------------------|-----------------------------------------------|
 | `==`     | The attribute/property value must be *equal to*                 |
 | `!=`     | The attribute/property value must *not be equal to*             |
 | `<`      | The attribute/property value must be *less than*                |
@@ -446,7 +446,7 @@ A graph is an abstract mathematical object without a specific representation in 
 The layout functions in igraph always start with `layout`. The following table summarises them:
 
 | Method name        | Algorithm description                                                                                          |
-|-------------------|-----------------------------------------------------|
+|--------------------|----------------------------------------------------|
 | `layout_randomly`  | Places the vertices completely randomly                                                                        |
 | `layout_in_circle` | Deterministic layout that places the vertices on a circle                                                      |
 | `layout_on_sphere` | Deterministic layout that places the vertices evenly on the surface of a sphere                                |
@@ -600,7 +600,7 @@ relations$BCB520 <- "FALSE"
 
 relations3<-rbind(relations, edgelist_df)
 
-g <- graph_from_data_frame(relations3, directed=FALSE, vertices=people)
+g <- graph_from_data_frame(relations3, directed=FALSE, vertices=people, )
 
 
 plot(g)
@@ -615,3 +615,58 @@ Improve the network above by:
 1.  Coloring the edges according to Advisor / BCB520 attribute.
 2.  Coloring the nodes according to Department.
 3.  Adujsting the labels to improve readability.
+
+```{r}
+# E(g)$edge.color[V(g)$] 
+
+V(g)$label.color <- "black"
+V(g)$label.font <- 2
+
+plot(g, edge.color = ifelse(E(g)$Advisor == T, "red", "grey"), edge.width = 2,
+     vertex.color = col[as.factor(vertex_attr(g, "department"))], vertex.size = 32
+     )
+
+
+```
+
+```{r}
+# Load required packages
+library(igraph)
+
+### Force directed graph of 350 proteins
+stack <- read.csv("trimmed_proteomic_Data.csv")
+
+nodes <- unique(c(stack$contrast, stack$Gene))
+edges <- data.frame(
+  from = stack$Gene,
+  to = stack$contrast,
+  LogFC = stack$logFC,
+  p = stack$P.Value
+  
+)
+
+g <- graph_from_data_frame(edges, directed = FALSE, vertices = nodes)
+
+edge_weights <- abs(E(g)$LogFC)^3
+E(g)$length <- edge_weights
+
+l <- layout_with_fr(g, weights = edge_weights)
+
+default_size <- 4
+
+vertex_sizes <- rep(default_size, vcount(g))
+
+mutants <- c("A583T","G309S", "G424D",
+             "K102E", "Q380K", "R46G", 
+             "S25P", "S481Y", "W296A")
+
+vertex_sizes[V(g)$name %in% mutants] <- 8
+
+V(g)$label.color <- "black"
+V(g)$label.font <- 2
+
+plot(g, layout = l, vertex.color = "white", vertex.size = vertex_sizes,
+     vertex.label.cex = .25, edge.width = -log10(E(g)$p)*.2, edge.arrow.size = 0, frame.plot = T,  main = "350")
+
+###
+```

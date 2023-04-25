@@ -1,0 +1,16 @@
+{
+  "hash": "1ecc0fc1e59ea02580b26be56e78d54d",
+  "result": {
+    "markdown": "---\ntitle: \"Hsp90 Proteome Network\"\nauthor: \"Erick Rios\"\nformat:\n  html:\n    toc: false\n    echo: true\ndate: \"2023-04-24\"\ncategories: [Network, iGraph, Practice]\nimage: \"randomnetwork.png\"\ncode-fold: true\ncode-tools: true\n---\n\n::: {.cell}\n\n```{.r .cell-code}\n# Load required packages\nlibrary(igraph)\n```\n\n::: {.cell-output .cell-output-stderr}\n```\nWarning: package 'igraph' was built under R version 4.1.3\n```\n:::\n\n::: {.cell-output .cell-output-stderr}\n```\n\nAttaching package: 'igraph'\n```\n:::\n\n::: {.cell-output .cell-output-stderr}\n```\nThe following objects are masked from 'package:stats':\n\n    decompose, spectrum\n```\n:::\n\n::: {.cell-output .cell-output-stderr}\n```\nThe following object is masked from 'package:base':\n\n    union\n```\n:::\n\n```{.r .cell-code}\n### Force directed graph of 350 proteins\nstack <- read.csv(\"trimmed_proteomic_Data.csv\")\n\nnodes <- unique(c(stack$contrast, stack$Gene))\nedges <- data.frame(\n  from = stack$Gene,\n  to = stack$contrast,\n  LogFC = stack$logFC,\n  p = stack$P.Value\n  \n)\n\ng <- graph_from_data_frame(edges, directed = FALSE, vertices = nodes)\n\nedge_weights <- abs(E(g)$LogFC)^3\nE(g)$length <- edge_weights\n\nl <- layout_with_fr(g, weights = edge_weights)\n\ndefault_size <- 4\n\nvertex_sizes <- rep(default_size, vcount(g))\n\nmutants <- c(\"A583T\",\"G309S\", \"G424D\",\n             \"K102E\", \"Q380K\", \"R46G\", \n             \"S25P\", \"S481Y\", \"W296A\")\n\nvertex_sizes[V(g)$name %in% mutants] <- 8\n\nV(g)$label.color <- \"black\"\nV(g)$label.font <- 2\n\nplot(g, layout = l, vertex.color = \"white\", vertex.size = vertex_sizes,\n     vertex.label.cex = .25, edge.width = -log10(E(g)$p)*.2, edge.arrow.size = 0, frame.plot = T,  main = \"350\")\n```\n\n::: {.cell-output-display}\n![](index_files/figure-html/unnamed-chunk-1-1.png){width=672}\n:::\n\n```{.r .cell-code}\n###\n```\n:::",
+    "supporting": [
+      "index_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
