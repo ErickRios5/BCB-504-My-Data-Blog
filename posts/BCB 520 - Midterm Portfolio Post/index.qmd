@@ -16,19 +16,17 @@ This midterm assignment I will be doing an exploratory analysis on gun violence 
 
 ## Preamble
 
-Pundits are tasked with providing unbiased reporting on new information, as it develops to inform their audiences, in order for society to adapt or adjust to the developing situation. To aid in this effort, many institutions or groups exist to aggregate data on various topics of interest such as gun violence and is often widely available for academics or internet sleuths to analyze, visualize, and interpret. The culmination of these efforts is often a report to answer pertinent questions to topics societies are concerned with.
-
-Here in the U.S. any citizen has the right to own firearms. However, the proliferation of firearms has many concerned on public safety and crimes committed with firearms. From your average Joe to politicians at the federal level, opinions differ on the threats posed and consequences of wide-spread availability of firearms, ability to conceal or openly carry a firearm. The the advent of social media has increased the flow of information and based on increased reporting of gun related crimes, the topic of firearms back into the forefront of average citizens and policy-makers. However, some people consider the increased reporting on crimes a product of increased flow of information and could mislead society and policy makers into believing crime, in particular gun crime is out of control.
+Here in the U.S. any citizen has the right to own firearms. However, the proliferation of firearms has many concerned on public safety and crimes committed with firearms. From your average Joe to politicians at the federal level, opinions differ on the threats posed and consequences of wide-spread availability of firearms, ability to conceal or openly carry a firearm.
 
 Therefore in an effort to inform those concerned on the topic of firearms, I will present and interpret the data set described below in an intuitive and discernible manner. The main overarching question that will be addressed is:
 
-Has there been an increase or decrease in gun violence?
+**Has there been an increase or decrease in gun violence?**
 
-Definition: Here I consider a change in the number of casualties, as a measure of increasing/decreasing gun violence.
+I hereby consider a **change in the number of casualties**, as a measure of increasing/decreasing gun violence.
 
 ## Data
 
-Figures made and presented in this post will be based mainly on a U.S. Gun Violence Data set containing gun violence incidents, retrieved from Kaggle.com on 3/21/2023. However, the data set was originally collected from gunviolencearchive.org.
+Figures made and presented in this post will be based mainly on a U.S. Gun Violence Data set containing gun violence incidents, retrieved from [Kaggle.com](https://www.kaggle.com/datasets/jasonmobley/united-states-gun-violence-data-20142022 "Gun Violence data 2014-2022") on 3/21/2023. However, the data set was originally collected from [gunviolencearchive.org](https://www.gunviolencearchive.org/).
 
 To help the reader understand the keys and attributes available in the data set, an example of the data is displayed and each column header is defined to ensure understanding what values and observations mean.
 
@@ -62,7 +60,11 @@ ggplot(total_by_year, aes(x= Year, y= Incidents, group = 1)) +
 
 ```
 
-Interestingly, from the year 2014 there was an increase of gun incidents up until 2020, then there was a sharp decline in gun violence to levels less than 2014. Although all violence is tragic, fortunately not every incident results in casualties, but injuries or sometimes neither! Compared to 2014 the amount of gun violence appears to be dropping, but for the incidents that do occur: are more people dying, or getting injured? Lets have a look at whether there was an increase in either deaths, injuries or neither.
+Figure 1: Line plot displaying number of incidents as a function of time, from years 2014 to 2022.
+
+From years 2014 to 2020 there was a substantial increase in the number of incidents in the United States. However, from years 2020 to 2022, there was a substantial decrease in gun violence incidents, so much so that the total number of incidents are below 2014 levels.
+
+Lets take a closer look at the data to see if the overall patterns persist when separated by categorical values such as deaths, injuries, both, or neither.
 
 ```{r}
 Totals <- total_by_year
@@ -84,9 +86,11 @@ ggplot(Totals, aes(x= Year, y= Incidents, group = Type, color = Type)) +
   geom_line() + geom_point()
 ```
 
-This is interesting, but perhaps worrying as the data first suggested the U.S. was experiencing less gun violence nationwide. Despite, the total number of violent gun incidents drastically decreased between the years 2020 and 2022, to underneath 2014 levels. However, the amount of deaths and/or injuries per year increased, or at the very least stayed constant! The apparent decrease in gun incidents is a result of non-casualty incidents decreasing.
+Figure 2: Line scatter plot of total incidents, separated by casualty type, as a function of time from years 2014 to 2022.
 
-Even though there is an apparent decrease in gun violence incidents, it appears the likelihood of a death and/or injury occurring per incident is increasing each year. Could we possibly reflect that by introducing a new channel like size of each point based on the average number of deaths and/or injuries per incident for each year?
+The data first suggested the U.S. was experiencing less gun violence nationwide (Figure 1). When focusing on the total number of violent gun incidents decreased between the years 2020 and 2022, we can see that the incidents where no deaths or injuries occurred dipped drastically. However, the amount of deaths and/or injuries per year stayed fairly constant or only slightly increased!
+
+This seems to suggest that gun violence each year is becoming deadlier. Could we possibly reflect that by introducing a new channel like size of each point based on the average number of deaths and/or injuries per incident for each year?
 
 ```{r}
 M_KIT_per_year <- gundata %>% 
@@ -116,9 +120,10 @@ ggplot(Totals, aes(x= Year, y= Incidents, group = Type, color = Type)) +
   scale_size(range = c(1, 10), breaks = c(0, .50, .75, .9))
 ```
 
-Although we were able to visually observe some interesting details about the data using line scatter plot idiom, I believe we have reached a limit. We could continue to add additional channels to convey more information, but the last addition of point size to convey the average number of deaths/injuries per incident does not work very well. This due to the average number of deaths or injuries per year being fairly constant and outliers have negligible impact on the point size when there are 40000+ incidents with only death or injury each year.
+I believe we have reached a limit with the amount of data we can display on a scatter plot idiom. We could continue to add additional channels to convey more information, but the last addition of point size to convey the average number of deaths/injuries per incident does not work very well. This due to the average number of deaths or injuries per year being fairly constant and outliers have negligible impact on the point size when there are 40000+ incidents with only death or injury each year.
 
 Let us try to stacked bar plot idiom, I think it will be an improvement over the scatter plot describe each category as parts of a whole.
+
 ```{r}
 
 ggplot(Totals[10:45,], aes(x = Year, y= Incidents, fill=as.factor(Type)))+
@@ -138,7 +143,7 @@ Although no new information was added based on the scatter plot, the stacked bar
 
 If you recall, we have position data in the form of States, down to the county level. The U.S. is a very large and diverse country, are the trends observed so far applicable to the entire country? or does each state have its own 'pattern' of gun violence?
 
-[Long story short I tried really hard to utilize the county data, but after a few hours I had to throw in the towel! I even had help from ChatGPT, Stack overflow, Github documentation on relevant packages, and I even ended up signing up with Google Maps API and no avail. I will just make things simpler for myself and stick to State level.]
+\[Long story short I tried really hard to utilize the county data, but after a few hours I had to throw in the towel! I even had help from ChatGPT, Stack overflow, Github documentation on relevant packages, and I even ended up signing up with Google Maps API and no avail. I will just make things simpler for myself and stick to State level.\]
 
 Let us keep things simple and start by summarizing the entire gun violence data set from the years 2014 to 2022 by summing up all the gun deaths and injuries together as 'casualties' and utilize the State-level position data.
 
@@ -161,15 +166,16 @@ ggplot() +
           color = "#ffffff", size = 0.25) +
   labs(fill = "All Casualties 2014 to 2022")
 ```
-Well that is interesting, it appears that the vast majority of casualties are clearly occurring in California, Texas, and Illinois, with runner-ups being Pennsylvania, New York, and Florida. 
+
+Well that is interesting, it appears that the vast majority of casualties are clearly occurring in California, Texas, and Illinois, with runner-ups being Pennsylvania, New York, and Florida.
 
 Albeit interesting, it is important to remember a few things.
 
-1. The above-mentioned states are the most populous states in the country. Logically, more incidents occur (thus more casualties) where there are more people present. Vice-versa, less populated places will result in less crime due to less people interacting and resulting in less altercations. Unfortunately, that is a limitation of the dataset, as it does not include population size or density to normalize between states. 
+1.  The above-mentioned states are the most populous states in the country. Logically, more incidents occur (thus more casualties) where there are more people present. Vice-versa, less populated places will result in less crime due to less people interacting and resulting in less altercations. Unfortunately, that is a limitation of the dataset, as it does not include population size or density to normalize between states.
 
-[After spending so much time trying to work with county level data, I could not be bothered to find a whole new data set and add more complexity to this assignment!]
+\[After spending so much time trying to work with county level data, I could not be bothered to find a whole new data set and add more complexity to this assignment!\]
 
-2. This does not address the main question of whether there has been an increase/decrease in gun violence across the entire country or only some states.
+2.  This does not address the main question of whether there has been an increase/decrease in gun violence across the entire country or only some states.
 
 Again, to keep things simple, since we care if there was an overall increase/decreases in gun violence, lets derive a new attribute: "Ratio". Where Ratio is the ratio of casualties between the years 2022 and 2014 (2022/2014).
 
@@ -204,11 +210,12 @@ ggplot() +
   coord_sf(datum = NA) +   scale_fill_gradientn(colors = c("green", "red"))
 
 ```
+
 Although we do not have information to deal with population density issue, by taking the ratio of casualties in 2022 to 2014, we can clearly see that the states in red/orange (Minnesota, Colorado, New Mexico) had ratios of at least a 2, suggesting a 2 fold increase in gun related casualties. The greener states (For example, Florida, Nebraska, California) had ratios of less than 1, suggesting a decrease in gun casualties.
 
 ## Summary
 
-When only taking into account the number of isolated incidents, there has been a sharp decrease in gun violence across the entire U.S.
+When only taking into account the number of isolated incidents, there has been a sharp decrease in gun violent incidents across the entire U.S.
 
 However, when incidents are separated by whether death, injury, both, or neither occurred, the scatter plot and stacked bar plot idioms revealed the decrease in total incidents is mostly due to non-casualty incidents plummeting, while death, injury, or both increased (or at least stayed constant).
 
@@ -220,9 +227,9 @@ Given the limitations and biases against populous states, to help provide a more
 
 Between the years 2014 and 2022, has there been a meaningful change in gun violence in the United States?
 
-1. On a nation-wide basis there are more casualties (deaths and/or Injuries), despite less individual gun incidents occurring in 2022 compared to 2014.
+1.  On a nation-wide basis there are more casualties (deaths and/or Injuries), despite less individual gun incidents occurring in 2022 compared to 2014.
 
-2. On a by state basis, the data suggests a few states, for some unknown reason given the available data, are experiencing a surge in gun violence, while other states had less violence and most hover in-between. 
+2.  On a by state basis, the data suggests a few states, for some unknown reason are experiencing a surge in gun violence, while other states had less violence and most hover in-between.
 
 It is important to note the population densities of each state were not accounted for and a 2-fold change in populous state is a lot more casualties than the same fold change in a low population state.
 
