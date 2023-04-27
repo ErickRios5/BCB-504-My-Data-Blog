@@ -537,7 +537,7 @@ import {Swatches} from "@d3/color-legend"
 ```
 
 ```{ojs}
-chart = ForceGraph(network_graph, {
+chart2 = ForceGraph(network_graph, {
   nodeId: d => d.id,
   nodeGroup: d => d.group,
   nodeTitle: d => `${d.id}\n${d.group}`,
