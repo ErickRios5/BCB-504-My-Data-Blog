@@ -190,7 +190,7 @@ Change the `graph3` object so that it contains six nodes called "Jiyin", "Ronald
 I honestly cannot believe this works! I mean... Hey! Look at this cool interactive network!
 
 ```{ojs}
-chart = ForceGraph(miserables, {
+chart6 = ForceGraph(miserables, {
   nodeId: d => d.id,
   nodeGroup: d => d.group,
   nodeTitle: d => `${d.id}\n${d.group}`,
