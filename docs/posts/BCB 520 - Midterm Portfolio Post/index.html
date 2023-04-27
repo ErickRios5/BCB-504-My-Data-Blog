@@ -732,215 +732,222 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a><span class="fu">## Preamble</span></span>
 <span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>Pundits are tasked with providing unbiased reporting on new information, as it develops to inform their audiences, in order for society to adapt or adjust to the developing situation. To aid in this effort, many institutions or groups exist to aggregate data on various topics of interest such as gun violence and is often widely available for academics or internet sleuths to analyze, visualize, and interpret. The culmination of these efforts is often a report to answer pertinent questions to topics societies are concerned with.</span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>Here in the U.S. any citizen has the right to own firearms. However, the proliferation of firearms has many concerned on public safety and crimes committed with firearms. From your average Joe to politicians at the federal level, opinions differ on the threats posed and consequences of wide-spread availability of firearms, ability to conceal or openly carry a firearm.</span>
 <span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>Here in the U.S. any citizen has the right to own firearms. However, the proliferation of firearms has many concerned on public safety and crimes committed with firearms. From your average Joe to politicians at the federal level, opinions differ on the threats posed and consequences of wide-spread availability of firearms, ability to conceal or openly carry a firearm. The the advent of social media has increased the flow of information and based on increased reporting of gun related crimes, the topic of firearms back into the forefront of average citizens and policy-makers. However, some people consider the increased reporting on crimes a product of increased flow of information and could mislead society and policy makers into believing crime, in particular gun crime is out of control.</span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>Therefore in an effort to inform those concerned on the topic of firearms, I will present and interpret the data set described below in an intuitive and discernible manner. The main overarching question that will be addressed is:</span>
 <span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>Therefore in an effort to inform those concerned on the topic of firearms, I will present and interpret the data set described below in an intuitive and discernible manner. The main overarching question that will be addressed is:</span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>**Has there been an increase or decrease in gun violence?**</span>
 <span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>Has there been an increase or decrease in gun violence?</span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>I hereby consider a **change in the number of casualties**, as a measure of increasing/decreasing gun violence.</span>
 <span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a>Definition: Here I consider a change in the number of casualties, as a measure of increasing/decreasing gun violence.</span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a><span class="fu">## Data</span></span>
 <span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a><span class="fu">## Data</span></span>
+<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a>Figures made and presented in this post will be based mainly on a U.S. Gun Violence Data set containing gun violence incidents, retrieved from <span class="co">[</span><span class="ot">Kaggle.com</span><span class="co">](https://www.kaggle.com/datasets/jasonmobley/united-states-gun-violence-data-20142022 "Gun Violence data 2014-2022")</span> on 3/21/2023. However, the data set was originally collected from <span class="co">[</span><span class="ot">gunviolencearchive.org</span><span class="co">](https://www.gunviolencearchive.org/)</span>.</span>
 <span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a>Figures made and presented in this post will be based mainly on a U.S. Gun Violence Data set containing gun violence incidents, retrieved from Kaggle.com on 3/21/2023. However, the data set was originally collected from gunviolencearchive.org.</span>
+<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a>To help the reader understand the keys and attributes available in the data set, an example of the data is displayed and each column header is defined to ensure understanding what values and observations mean.</span>
 <span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-33"><a href="#cb17-33" aria-hidden="true" tabindex="-1"></a>To help the reader understand the keys and attributes available in the data set, an example of the data is displayed and each column header is defined to ensure understanding what values and observations mean.</span>
-<span id="cb17-34"><a href="#cb17-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-37"><a href="#cb17-37" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb17-38"><a href="#cb17-38" aria-hidden="true" tabindex="-1"></a><span class="co">#| output: false</span></span>
-<span id="cb17-39"><a href="#cb17-39" aria-hidden="true" tabindex="-1"></a><span class="co">#|echo: false </span></span>
-<span id="cb17-40"><a href="#cb17-40" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb17-41"><a href="#cb17-41" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb17-42"><a href="#cb17-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-45"><a href="#cb17-45" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb17-46"><a href="#cb17-46" aria-hidden="true" tabindex="-1"></a>gundata <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"Gun violence data 1.csv"</span>, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb17-47"><a href="#cb17-47" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(gundata)</span>
-<span id="cb17-48"><a href="#cb17-48" aria-hidden="true" tabindex="-1"></a>gundata_attributes <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"Gun_violence_data_descriptions.csv"</span>)</span>
-<span id="cb17-49"><a href="#cb17-49" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(gundata_attributes)</span>
-<span id="cb17-50"><a href="#cb17-50" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-35"><a href="#cb17-35" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-36"><a href="#cb17-36" aria-hidden="true" tabindex="-1"></a><span class="co">#| output: false</span></span>
+<span id="cb17-37"><a href="#cb17-37" aria-hidden="true" tabindex="-1"></a><span class="co">#|echo: false </span></span>
+<span id="cb17-38"><a href="#cb17-38" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb17-39"><a href="#cb17-39" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-40"><a href="#cb17-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-43"><a href="#cb17-43" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-44"><a href="#cb17-44" aria-hidden="true" tabindex="-1"></a>gundata <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"Gun violence data 1.csv"</span>, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb17-45"><a href="#cb17-45" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(gundata)</span>
+<span id="cb17-46"><a href="#cb17-46" aria-hidden="true" tabindex="-1"></a>gundata_attributes <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"Gun_violence_data_descriptions.csv"</span>)</span>
+<span id="cb17-47"><a href="#cb17-47" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(gundata_attributes)</span>
+<span id="cb17-48"><a href="#cb17-48" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-49"><a href="#cb17-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-50"><a href="#cb17-50" aria-hidden="true" tabindex="-1"></a><span class="fu">## Visualizations</span></span>
 <span id="cb17-51"><a href="#cb17-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-52"><a href="#cb17-52" aria-hidden="true" tabindex="-1"></a><span class="fu">## Visualizations</span></span>
+<span id="cb17-52"><a href="#cb17-52" aria-hidden="true" tabindex="-1"></a>We are working with 1 key that identifies each separate gun incident, the dates when incidents occurred, and several position-type data where the incident takes place.</span>
 <span id="cb17-53"><a href="#cb17-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-54"><a href="#cb17-54" aria-hidden="true" tabindex="-1"></a>We are working with 1 key that identifies each separate gun incident, the dates when incidents occurred, and several position-type data where the incident takes place.</span>
+<span id="cb17-54"><a href="#cb17-54" aria-hidden="true" tabindex="-1"></a>Given we are interested in whether there has been an increase in gun violence/crimes within the recent years, it seems only natural to derive total the number of incidents for each year, across the US.</span>
 <span id="cb17-55"><a href="#cb17-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-56"><a href="#cb17-56" aria-hidden="true" tabindex="-1"></a>Given we are interested in whether there has been an increase in gun violence/crimes within the recent years, it seems only natural to derive total the number of incidents for each year, across the US.</span>
-<span id="cb17-57"><a href="#cb17-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-60"><a href="#cb17-60" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb17-61"><a href="#cb17-61" aria-hidden="true" tabindex="-1"></a>gundata <span class="ot">&lt;-</span> gundata <span class="sc">%&gt;%</span></span>
-<span id="cb17-62"><a href="#cb17-62" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate</span>(Incident_Date, <span class="at">sep=</span><span class="st">"/"</span>, <span class="at">into =</span> <span class="fu">c</span>(<span class="st">"month"</span>, <span class="st">"day"</span>, <span class="st">"year"</span>))</span>
+<span id="cb17-58"><a href="#cb17-58" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-59"><a href="#cb17-59" aria-hidden="true" tabindex="-1"></a>gundata <span class="ot">&lt;-</span> gundata <span class="sc">%&gt;%</span></span>
+<span id="cb17-60"><a href="#cb17-60" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate</span>(Incident_Date, <span class="at">sep=</span><span class="st">"/"</span>, <span class="at">into =</span> <span class="fu">c</span>(<span class="st">"month"</span>, <span class="st">"day"</span>, <span class="st">"year"</span>))</span>
+<span id="cb17-61"><a href="#cb17-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-62"><a href="#cb17-62" aria-hidden="true" tabindex="-1"></a>total_by_year <span class="ot">&lt;-</span> <span class="fu">summarise</span>(<span class="fu">group_by</span>(gundata, <span class="at">Year =</span> year), <span class="at">Incidents =</span> <span class="fu">n</span>())</span>
 <span id="cb17-63"><a href="#cb17-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-64"><a href="#cb17-64" aria-hidden="true" tabindex="-1"></a>total_by_year <span class="ot">&lt;-</span> <span class="fu">summarise</span>(<span class="fu">group_by</span>(gundata, <span class="at">Year =</span> year), <span class="at">Incidents =</span> <span class="fu">n</span>())</span>
-<span id="cb17-65"><a href="#cb17-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-66"><a href="#cb17-66" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(total_by_year, <span class="fu">aes</span>(<span class="at">x=</span> Year, <span class="at">y=</span> Incidents, <span class="at">group =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
-<span id="cb17-67"><a href="#cb17-67" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span> <span class="fu">geom_point</span>()</span>
+<span id="cb17-64"><a href="#cb17-64" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(total_by_year, <span class="fu">aes</span>(<span class="at">x=</span> Year, <span class="at">y=</span> Incidents, <span class="at">group =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb17-65"><a href="#cb17-65" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span> <span class="fu">geom_point</span>()</span>
+<span id="cb17-66"><a href="#cb17-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-67"><a href="#cb17-67" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb17-68"><a href="#cb17-68" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-69"><a href="#cb17-69" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-69"><a href="#cb17-69" aria-hidden="true" tabindex="-1"></a>Figure 1: Line plot displaying number of incidents as a function of time, from years 2014 to 2022.</span>
 <span id="cb17-70"><a href="#cb17-70" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-71"><a href="#cb17-71" aria-hidden="true" tabindex="-1"></a>Interestingly, from the year 2014 there was an increase of gun incidents up until 2020, then there was a sharp decline in gun violence to levels less than 2014. Although all violence is tragic, fortunately not every incident results in casualties, but injuries or sometimes neither! Compared to 2014 the amount of gun violence appears to be dropping, but for the incidents that do occur: are more people dying, or getting injured? Lets have a look at whether there was an increase in either deaths, injuries or neither.</span>
+<span id="cb17-71"><a href="#cb17-71" aria-hidden="true" tabindex="-1"></a>From years 2014 to 2020 there was a substantial increase in the number of incidents in the United States. However, from years 2020 to 2022, there was a substantial decrease in gun violence incidents, so much so that the total number of incidents are below 2014 levels.</span>
 <span id="cb17-72"><a href="#cb17-72" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-75"><a href="#cb17-75" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb17-76"><a href="#cb17-76" aria-hidden="true" tabindex="-1"></a>Totals <span class="ot">&lt;-</span> total_by_year</span>
-<span id="cb17-77"><a href="#cb17-77" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-78"><a href="#cb17-78" aria-hidden="true" tabindex="-1"></a>Both_by_year <span class="ot">&lt;-</span> <span class="fu">summarise</span>(<span class="fu">group_by</span>(gundata[gundata<span class="sc">$</span>Killed <span class="sc">&gt;=</span> <span class="dv">1</span> <span class="sc">&amp;</span> gundata<span class="sc">$</span>Injured <span class="sc">&gt;=</span> <span class="dv">1</span>,], <span class="at">Year =</span> year), <span class="at">Incidents =</span> <span class="fu">n</span>())</span>
+<span id="cb17-73"><a href="#cb17-73" aria-hidden="true" tabindex="-1"></a>Lets take a closer look at the data to see if the overall patterns persist when separated by categorical values such as deaths, injuries, both, or neither.</span>
+<span id="cb17-74"><a href="#cb17-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-77"><a href="#cb17-77" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-78"><a href="#cb17-78" aria-hidden="true" tabindex="-1"></a>Totals <span class="ot">&lt;-</span> total_by_year</span>
 <span id="cb17-79"><a href="#cb17-79" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-80"><a href="#cb17-80" aria-hidden="true" tabindex="-1"></a>Casualties_by_year <span class="ot">&lt;-</span> <span class="fu">summarise</span>(<span class="fu">group_by</span>(gundata[gundata<span class="sc">$</span>Killed <span class="sc">&gt;=</span> <span class="dv">1</span> <span class="sc">&amp;</span> gundata<span class="sc">$</span>Injured <span class="sc">==</span> <span class="dv">0</span>,], <span class="at">Year =</span> year), <span class="at">Incidents =</span> <span class="fu">n</span>())</span>
+<span id="cb17-80"><a href="#cb17-80" aria-hidden="true" tabindex="-1"></a>Both_by_year <span class="ot">&lt;-</span> <span class="fu">summarise</span>(<span class="fu">group_by</span>(gundata[gundata<span class="sc">$</span>Killed <span class="sc">&gt;=</span> <span class="dv">1</span> <span class="sc">&amp;</span> gundata<span class="sc">$</span>Injured <span class="sc">&gt;=</span> <span class="dv">1</span>,], <span class="at">Year =</span> year), <span class="at">Incidents =</span> <span class="fu">n</span>())</span>
 <span id="cb17-81"><a href="#cb17-81" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-82"><a href="#cb17-82" aria-hidden="true" tabindex="-1"></a>Injuries_by_year <span class="ot">&lt;-</span> <span class="fu">summarise</span>(<span class="fu">group_by</span>(gundata[gundata<span class="sc">$</span>Killed <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> gundata<span class="sc">$</span>Injured <span class="sc">&gt;=</span> <span class="dv">1</span>,], <span class="at">Year =</span> year), <span class="at">Incidents =</span> <span class="fu">n</span>())</span>
+<span id="cb17-82"><a href="#cb17-82" aria-hidden="true" tabindex="-1"></a>Casualties_by_year <span class="ot">&lt;-</span> <span class="fu">summarise</span>(<span class="fu">group_by</span>(gundata[gundata<span class="sc">$</span>Killed <span class="sc">&gt;=</span> <span class="dv">1</span> <span class="sc">&amp;</span> gundata<span class="sc">$</span>Injured <span class="sc">==</span> <span class="dv">0</span>,], <span class="at">Year =</span> year), <span class="at">Incidents =</span> <span class="fu">n</span>())</span>
 <span id="cb17-83"><a href="#cb17-83" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-84"><a href="#cb17-84" aria-hidden="true" tabindex="-1"></a>neither_by_year <span class="ot">&lt;-</span> <span class="fu">summarise</span>(<span class="fu">group_by</span>(gundata[gundata<span class="sc">$</span>Killed <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> gundata<span class="sc">$</span>Injured <span class="sc">==</span> <span class="dv">0</span>,], <span class="at">Year =</span> year), <span class="at">Incidents =</span> <span class="fu">n</span>())</span>
+<span id="cb17-84"><a href="#cb17-84" aria-hidden="true" tabindex="-1"></a>Injuries_by_year <span class="ot">&lt;-</span> <span class="fu">summarise</span>(<span class="fu">group_by</span>(gundata[gundata<span class="sc">$</span>Killed <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> gundata<span class="sc">$</span>Injured <span class="sc">&gt;=</span> <span class="dv">1</span>,], <span class="at">Year =</span> year), <span class="at">Incidents =</span> <span class="fu">n</span>())</span>
 <span id="cb17-85"><a href="#cb17-85" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-86"><a href="#cb17-86" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-87"><a href="#cb17-87" aria-hidden="true" tabindex="-1"></a>Totals <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(Totals, Casualties_by_year, Injuries_by_year, neither_by_year, Both_by_year)</span>
-<span id="cb17-88"><a href="#cb17-88" aria-hidden="true" tabindex="-1"></a>Totals<span class="sc">$</span>Type <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep_len</span>(<span class="st">"Total Incidents"</span>, <span class="dv">9</span>), <span class="fu">rep</span>(<span class="st">"Death"</span>, <span class="dv">9</span>), <span class="fu">rep</span>(<span class="st">"Injured"</span>, <span class="dv">9</span>), <span class="fu">rep</span>(<span class="st">"Neither"</span>, <span class="dv">9</span>), <span class="fu">rep</span>(<span class="st">"Death and Injuries"</span>, <span class="dv">9</span>))</span>
-<span id="cb17-89"><a href="#cb17-89" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-90"><a href="#cb17-90" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-91"><a href="#cb17-91" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Totals, <span class="fu">aes</span>(<span class="at">x=</span> Year, <span class="at">y=</span> Incidents, <span class="at">group =</span> Type, <span class="at">color =</span> Type)) <span class="sc">+</span></span>
-<span id="cb17-92"><a href="#cb17-92" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span> <span class="fu">geom_point</span>()</span>
-<span id="cb17-93"><a href="#cb17-93" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb17-94"><a href="#cb17-94" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-95"><a href="#cb17-95" aria-hidden="true" tabindex="-1"></a>This is interesting, but perhaps worrying as the data first suggested the U.S. was experiencing less gun violence nationwide. Despite, the total number of violent gun incidents drastically decreased between the years 2020 and 2022, to underneath 2014 levels. However, the amount of deaths and/or injuries per year increased, or at the very least stayed constant! The apparent decrease in gun incidents is a result of non-casualty incidents decreasing.</span>
+<span id="cb17-86"><a href="#cb17-86" aria-hidden="true" tabindex="-1"></a>neither_by_year <span class="ot">&lt;-</span> <span class="fu">summarise</span>(<span class="fu">group_by</span>(gundata[gundata<span class="sc">$</span>Killed <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> gundata<span class="sc">$</span>Injured <span class="sc">==</span> <span class="dv">0</span>,], <span class="at">Year =</span> year), <span class="at">Incidents =</span> <span class="fu">n</span>())</span>
+<span id="cb17-87"><a href="#cb17-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-88"><a href="#cb17-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-89"><a href="#cb17-89" aria-hidden="true" tabindex="-1"></a>Totals <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(Totals, Casualties_by_year, Injuries_by_year, neither_by_year, Both_by_year)</span>
+<span id="cb17-90"><a href="#cb17-90" aria-hidden="true" tabindex="-1"></a>Totals<span class="sc">$</span>Type <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep_len</span>(<span class="st">"Total Incidents"</span>, <span class="dv">9</span>), <span class="fu">rep</span>(<span class="st">"Death"</span>, <span class="dv">9</span>), <span class="fu">rep</span>(<span class="st">"Injured"</span>, <span class="dv">9</span>), <span class="fu">rep</span>(<span class="st">"Neither"</span>, <span class="dv">9</span>), <span class="fu">rep</span>(<span class="st">"Death and Injuries"</span>, <span class="dv">9</span>))</span>
+<span id="cb17-91"><a href="#cb17-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-92"><a href="#cb17-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-93"><a href="#cb17-93" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Totals, <span class="fu">aes</span>(<span class="at">x=</span> Year, <span class="at">y=</span> Incidents, <span class="at">group =</span> Type, <span class="at">color =</span> Type)) <span class="sc">+</span></span>
+<span id="cb17-94"><a href="#cb17-94" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span> <span class="fu">geom_point</span>()</span>
+<span id="cb17-95"><a href="#cb17-95" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb17-96"><a href="#cb17-96" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-97"><a href="#cb17-97" aria-hidden="true" tabindex="-1"></a>Even though there is an apparent decrease in gun violence incidents, it appears the likelihood of a death and/or injury occurring per incident is increasing each year. Could we possibly reflect that by introducing a new channel like size of each point based on the average number of deaths and/or injuries per incident for each year?</span>
+<span id="cb17-97"><a href="#cb17-97" aria-hidden="true" tabindex="-1"></a>Figure 2: Line scatter plot of total incidents, separated by casualty type, as a function of time from years 2014 to 2022.</span>
 <span id="cb17-98"><a href="#cb17-98" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-101"><a href="#cb17-101" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb17-102"><a href="#cb17-102" aria-hidden="true" tabindex="-1"></a>M_KIT_per_year <span class="ot">&lt;-</span> gundata <span class="sc">%&gt;%</span> </span>
-<span id="cb17-103"><a href="#cb17-103" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year) <span class="sc">%&gt;%</span></span>
-<span id="cb17-104"><a href="#cb17-104" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean =</span> <span class="fu">mean</span>(<span class="fu">c</span>(Killed, Injured)))</span>
-<span id="cb17-105"><a href="#cb17-105" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-106"><a href="#cb17-106" aria-hidden="true" tabindex="-1"></a>M_K_per_year <span class="ot">&lt;-</span> gundata <span class="sc">%&gt;%</span> </span>
+<span id="cb17-99"><a href="#cb17-99" aria-hidden="true" tabindex="-1"></a>The data first suggested the U.S. was experiencing less gun violence nationwide (Figure 1). When focusing on the total number of violent gun incidents decreased between the years 2020 and 2022, we can see that the incidents where no deaths or injuries occurred dipped drastically. However, the amount of deaths and/or injuries per year stayed fairly constant or only slightly increased!</span>
+<span id="cb17-100"><a href="#cb17-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-101"><a href="#cb17-101" aria-hidden="true" tabindex="-1"></a>This seems to suggest that gun violence each year is becoming deadlier. Could we possibly reflect that by introducing a new channel like size of each point based on the average number of deaths and/or injuries per incident for each year?</span>
+<span id="cb17-102"><a href="#cb17-102" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-105"><a href="#cb17-105" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-106"><a href="#cb17-106" aria-hidden="true" tabindex="-1"></a>M_KIT_per_year <span class="ot">&lt;-</span> gundata <span class="sc">%&gt;%</span> </span>
 <span id="cb17-107"><a href="#cb17-107" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year) <span class="sc">%&gt;%</span></span>
-<span id="cb17-108"><a href="#cb17-108" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean =</span> <span class="fu">mean</span>(Killed))</span>
+<span id="cb17-108"><a href="#cb17-108" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean =</span> <span class="fu">mean</span>(<span class="fu">c</span>(Killed, Injured)))</span>
 <span id="cb17-109"><a href="#cb17-109" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-110"><a href="#cb17-110" aria-hidden="true" tabindex="-1"></a>M_I_per_year <span class="ot">&lt;-</span> gundata <span class="sc">%&gt;%</span></span>
+<span id="cb17-110"><a href="#cb17-110" aria-hidden="true" tabindex="-1"></a>M_K_per_year <span class="ot">&lt;-</span> gundata <span class="sc">%&gt;%</span> </span>
 <span id="cb17-111"><a href="#cb17-111" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year) <span class="sc">%&gt;%</span></span>
-<span id="cb17-112"><a href="#cb17-112" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean =</span> <span class="fu">mean</span>(Injured))</span>
+<span id="cb17-112"><a href="#cb17-112" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean =</span> <span class="fu">mean</span>(Killed))</span>
 <span id="cb17-113"><a href="#cb17-113" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-114"><a href="#cb17-114" aria-hidden="true" tabindex="-1"></a>Neither <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">9</span>)</span>
-<span id="cb17-115"><a href="#cb17-115" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-116"><a href="#cb17-116" aria-hidden="true" tabindex="-1"></a>M_KI_per_year <span class="ot">&lt;-</span> gundata <span class="sc">%&gt;%</span> </span>
-<span id="cb17-117"><a href="#cb17-117" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year) <span class="sc">%&gt;%</span></span>
-<span id="cb17-118"><a href="#cb17-118" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean =</span> <span class="fu">mean</span>(<span class="fu">c</span>(Killed, Injured)))</span>
+<span id="cb17-114"><a href="#cb17-114" aria-hidden="true" tabindex="-1"></a>M_I_per_year <span class="ot">&lt;-</span> gundata <span class="sc">%&gt;%</span></span>
+<span id="cb17-115"><a href="#cb17-115" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year) <span class="sc">%&gt;%</span></span>
+<span id="cb17-116"><a href="#cb17-116" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean =</span> <span class="fu">mean</span>(Injured))</span>
+<span id="cb17-117"><a href="#cb17-117" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-118"><a href="#cb17-118" aria-hidden="true" tabindex="-1"></a>Neither <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">9</span>)</span>
 <span id="cb17-119"><a href="#cb17-119" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-120"><a href="#cb17-120" aria-hidden="true" tabindex="-1"></a>Mean <span class="ot">&lt;-</span> <span class="fu">c</span>(M_KIT_per_year<span class="sc">$</span>mean, M_K_per_year<span class="sc">$</span>mean, M_I_per_year<span class="sc">$</span>mean, Neither, M_KI_per_year<span class="sc">$</span>mean)</span>
-<span id="cb17-121"><a href="#cb17-121" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-122"><a href="#cb17-122" aria-hidden="true" tabindex="-1"></a>Totals<span class="sc">$</span>Mean <span class="ot">&lt;-</span> Mean</span>
+<span id="cb17-120"><a href="#cb17-120" aria-hidden="true" tabindex="-1"></a>M_KI_per_year <span class="ot">&lt;-</span> gundata <span class="sc">%&gt;%</span> </span>
+<span id="cb17-121"><a href="#cb17-121" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year) <span class="sc">%&gt;%</span></span>
+<span id="cb17-122"><a href="#cb17-122" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean =</span> <span class="fu">mean</span>(<span class="fu">c</span>(Killed, Injured)))</span>
 <span id="cb17-123"><a href="#cb17-123" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-124"><a href="#cb17-124" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Totals, <span class="fu">aes</span>(<span class="at">x=</span> Year, <span class="at">y=</span> Incidents, <span class="at">group =</span> Type, <span class="at">color =</span> Type)) <span class="sc">+</span></span>
-<span id="cb17-125"><a href="#cb17-125" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">size =</span> Mean)) <span class="sc">+</span></span>
-<span id="cb17-126"><a href="#cb17-126" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_size</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">10</span>), <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, .<span class="dv">50</span>, .<span class="dv">75</span>, .<span class="dv">9</span>))</span>
-<span id="cb17-127"><a href="#cb17-127" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb17-128"><a href="#cb17-128" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-129"><a href="#cb17-129" aria-hidden="true" tabindex="-1"></a>Although we were able to visually observe some interesting details about the data using line scatter plot idiom, I believe we have reached a limit. We could continue to add additional channels to convey more information, but the last addition of point size to convey the average number of deaths/injuries per incident does not work very well. This due to the average number of deaths or injuries per year being fairly constant and outliers have negligible impact on the point size when there are 40000+ incidents with only death or injury each year.</span>
-<span id="cb17-130"><a href="#cb17-130" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-131"><a href="#cb17-131" aria-hidden="true" tabindex="-1"></a>Let us try to stacked bar plot idiom, I think it will be an improvement over the scatter plot describe each category as parts of a whole.</span>
-<span id="cb17-134"><a href="#cb17-134" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb17-135"><a href="#cb17-135" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Totals[<span class="dv">10</span><span class="sc">:</span><span class="dv">45</span>,], <span class="fu">aes</span>(<span class="at">x =</span> Year, <span class="at">y=</span> Incidents, <span class="at">fill=</span><span class="fu">as.factor</span>(Type)))<span class="sc">+</span></span>
-<span id="cb17-136"><a href="#cb17-136" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">position =</span> <span class="st">"stack"</span>)<span class="sc">+</span></span>
-<span id="cb17-137"><a href="#cb17-137" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">fill =</span> <span class="st">"Casualty Type"</span>) <span class="sc">+</span></span>
-<span id="cb17-138"><a href="#cb17-138" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> Incidents), <span class="at">position =</span> <span class="fu">position_stack</span>(<span class="at">vjust =</span> .<span class="dv">5</span>))</span>
-<span id="cb17-139"><a href="#cb17-139" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-140"><a href="#cb17-140" aria-hidden="true" tabindex="-1"></a><span class="co"># ggplot(Totals[10:45,], aes(x = Year, y= Incidents, fill=as.factor(Type)))+</span></span>
-<span id="cb17-141"><a href="#cb17-141" aria-hidden="true" tabindex="-1"></a><span class="co">#   geom_col(position = "fill") +</span></span>
-<span id="cb17-142"><a href="#cb17-142" aria-hidden="true" tabindex="-1"></a><span class="co">#   labs(fill = "Casualty Type")</span></span>
-<span id="cb17-143"><a href="#cb17-143" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-144"><a href="#cb17-144" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb17-145"><a href="#cb17-145" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-146"><a href="#cb17-146" aria-hidden="true" tabindex="-1"></a>Between the years 2014 and 2022, we can more clearly observe a decrease in total incidents, however the amount of incidents resulting in death, injury, or both increased when comparing 2014 and 2022 specifically. Despite the apparent down trend in total incidents, it appears the each incident that does occur is more likely to result in at least one casualty.</span>
-<span id="cb17-147"><a href="#cb17-147" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-148"><a href="#cb17-148" aria-hidden="true" tabindex="-1"></a>Although no new information was added based on the scatter plot, the stacked bar plot idiom seems to be better, even if only slightly. Using length on the Y axis to represent the total incidents per year is better than having it be its own category on the scatter plot, in theory this should reduce the cognitive demands on the reader. Also, the connecting lines are not necessary to expressing the order of time.</span>
-<span id="cb17-149"><a href="#cb17-149" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-150"><a href="#cb17-150" aria-hidden="true" tabindex="-1"></a>If you recall, we have position data in the form of States, down to the county level. The U.S. is a very large and diverse country, are the trends observed so far applicable to the entire country? or does each state have its own 'pattern' of gun violence?</span>
-<span id="cb17-151"><a href="#cb17-151" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-152"><a href="#cb17-152" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">Long story short I tried really hard to utilize the county data, but after a few hours I had to throw in the towel! I even had help from ChatGPT, Stack overflow, Github documentation on relevant packages, and I even ended up signing up with Google Maps API and no avail. I will just make things simpler for myself and stick to State level.</span><span class="co">]</span></span>
-<span id="cb17-153"><a href="#cb17-153" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-154"><a href="#cb17-154" aria-hidden="true" tabindex="-1"></a>Let us keep things simple and start by summarizing the entire gun violence data set from the years 2014 to 2022 by summing up all the gun deaths and injuries together as 'casualties' and utilize the State-level position data.</span>
-<span id="cb17-155"><a href="#cb17-155" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-158"><a href="#cb17-158" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb17-159"><a href="#cb17-159" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(urbnmapr)</span>
+<span id="cb17-124"><a href="#cb17-124" aria-hidden="true" tabindex="-1"></a>Mean <span class="ot">&lt;-</span> <span class="fu">c</span>(M_KIT_per_year<span class="sc">$</span>mean, M_K_per_year<span class="sc">$</span>mean, M_I_per_year<span class="sc">$</span>mean, Neither, M_KI_per_year<span class="sc">$</span>mean)</span>
+<span id="cb17-125"><a href="#cb17-125" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-126"><a href="#cb17-126" aria-hidden="true" tabindex="-1"></a>Totals<span class="sc">$</span>Mean <span class="ot">&lt;-</span> Mean</span>
+<span id="cb17-127"><a href="#cb17-127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-128"><a href="#cb17-128" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Totals, <span class="fu">aes</span>(<span class="at">x=</span> Year, <span class="at">y=</span> Incidents, <span class="at">group =</span> Type, <span class="at">color =</span> Type)) <span class="sc">+</span></span>
+<span id="cb17-129"><a href="#cb17-129" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">size =</span> Mean)) <span class="sc">+</span></span>
+<span id="cb17-130"><a href="#cb17-130" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_size</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">10</span>), <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, .<span class="dv">50</span>, .<span class="dv">75</span>, .<span class="dv">9</span>))</span>
+<span id="cb17-131"><a href="#cb17-131" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-132"><a href="#cb17-132" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-133"><a href="#cb17-133" aria-hidden="true" tabindex="-1"></a>I believe we have reached a limit with the amount of data we can display on a scatter plot idiom. We could continue to add additional channels to convey more information, but the last addition of point size to convey the average number of deaths/injuries per incident does not work very well. This due to the average number of deaths or injuries per year being fairly constant and outliers have negligible impact on the point size when there are 40000+ incidents with only death or injury each year.</span>
+<span id="cb17-134"><a href="#cb17-134" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-135"><a href="#cb17-135" aria-hidden="true" tabindex="-1"></a>Let us try to stacked bar plot idiom, I think it will be an improvement over the scatter plot describe each category as parts of a whole.</span>
+<span id="cb17-136"><a href="#cb17-136" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-139"><a href="#cb17-139" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-140"><a href="#cb17-140" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Totals[<span class="dv">10</span><span class="sc">:</span><span class="dv">45</span>,], <span class="fu">aes</span>(<span class="at">x =</span> Year, <span class="at">y=</span> Incidents, <span class="at">fill=</span><span class="fu">as.factor</span>(Type)))<span class="sc">+</span></span>
+<span id="cb17-141"><a href="#cb17-141" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">position =</span> <span class="st">"stack"</span>)<span class="sc">+</span></span>
+<span id="cb17-142"><a href="#cb17-142" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">fill =</span> <span class="st">"Casualty Type"</span>) <span class="sc">+</span></span>
+<span id="cb17-143"><a href="#cb17-143" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> Incidents), <span class="at">position =</span> <span class="fu">position_stack</span>(<span class="at">vjust =</span> .<span class="dv">5</span>))</span>
+<span id="cb17-144"><a href="#cb17-144" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-145"><a href="#cb17-145" aria-hidden="true" tabindex="-1"></a><span class="co"># ggplot(Totals[10:45,], aes(x = Year, y= Incidents, fill=as.factor(Type)))+</span></span>
+<span id="cb17-146"><a href="#cb17-146" aria-hidden="true" tabindex="-1"></a><span class="co">#   geom_col(position = "fill") +</span></span>
+<span id="cb17-147"><a href="#cb17-147" aria-hidden="true" tabindex="-1"></a><span class="co">#   labs(fill = "Casualty Type")</span></span>
+<span id="cb17-148"><a href="#cb17-148" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-149"><a href="#cb17-149" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-150"><a href="#cb17-150" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-151"><a href="#cb17-151" aria-hidden="true" tabindex="-1"></a>Between the years 2014 and 2022, we can more clearly observe a decrease in total incidents, however the amount of incidents resulting in death, injury, or both increased when comparing 2014 and 2022 specifically. Despite the apparent down trend in total incidents, it appears the each incident that does occur is more likely to result in at least one casualty.</span>
+<span id="cb17-152"><a href="#cb17-152" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-153"><a href="#cb17-153" aria-hidden="true" tabindex="-1"></a>Although no new information was added based on the scatter plot, the stacked bar plot idiom seems to be better, even if only slightly. Using length on the Y axis to represent the total incidents per year is better than having it be its own category on the scatter plot, in theory this should reduce the cognitive demands on the reader. Also, the connecting lines are not necessary to expressing the order of time.</span>
+<span id="cb17-154"><a href="#cb17-154" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-155"><a href="#cb17-155" aria-hidden="true" tabindex="-1"></a>If you recall, we have position data in the form of States, down to the county level. The U.S. is a very large and diverse country, are the trends observed so far applicable to the entire country? or does each state have its own 'pattern' of gun violence?</span>
+<span id="cb17-156"><a href="#cb17-156" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-157"><a href="#cb17-157" aria-hidden="true" tabindex="-1"></a><span class="sc">\[</span>Long story short I tried really hard to utilize the county data, but after a few hours I had to throw in the towel! I even had help from ChatGPT, Stack overflow, Github documentation on relevant packages, and I even ended up signing up with Google Maps API and no avail. I will just make things simpler for myself and stick to State level.<span class="sc">\]</span></span>
+<span id="cb17-158"><a href="#cb17-158" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-159"><a href="#cb17-159" aria-hidden="true" tabindex="-1"></a>Let us keep things simple and start by summarizing the entire gun violence data set from the years 2014 to 2022 by summing up all the gun deaths and injuries together as 'casualties' and utilize the State-level position data.</span>
 <span id="cb17-160"><a href="#cb17-160" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-161"><a href="#cb17-161" aria-hidden="true" tabindex="-1"></a>Casualties_by_state_all_data <span class="ot">&lt;-</span> gundata <span class="sc">%&gt;%</span> </span>
-<span id="cb17-162"><a href="#cb17-162" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(State_Code) <span class="sc">%&gt;%</span></span>
-<span id="cb17-163"><a href="#cb17-163" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">sum =</span> <span class="fu">sum</span>(<span class="fu">c</span>(Killed, Injured)))</span>
-<span id="cb17-164"><a href="#cb17-164" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-165"><a href="#cb17-165" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(Casualties_by_state_all_data)[<span class="fu">colnames</span>(Casualties_by_state_all_data) <span class="sc">==</span> <span class="st">"State_Code"</span>] <span class="ot">&lt;-</span> <span class="st">"state_abbv"</span></span>
-<span id="cb17-166"><a href="#cb17-166" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-167"><a href="#cb17-167" aria-hidden="true" tabindex="-1"></a>spatial_data <span class="ot">&lt;-</span> <span class="fu">left_join</span>(<span class="fu">get_urbn_map</span>(<span class="at">map =</span> <span class="st">"states"</span>, <span class="at">sf =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb17-168"><a href="#cb17-168" aria-hidden="true" tabindex="-1"></a>                          Casualties_by_state_all_data,</span>
-<span id="cb17-169"><a href="#cb17-169" aria-hidden="true" tabindex="-1"></a>                          <span class="at">by =</span> <span class="st">"state_abbv"</span>)</span>
-<span id="cb17-170"><a href="#cb17-170" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-171"><a href="#cb17-171" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb17-172"><a href="#cb17-172" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(spatial_data,</span>
-<span id="cb17-173"><a href="#cb17-173" aria-hidden="true" tabindex="-1"></a>          <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">fill =</span> sum),</span>
-<span id="cb17-174"><a href="#cb17-174" aria-hidden="true" tabindex="-1"></a>          <span class="at">color =</span> <span class="st">"#ffffff"</span>, <span class="at">size =</span> <span class="fl">0.25</span>) <span class="sc">+</span></span>
-<span id="cb17-175"><a href="#cb17-175" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">fill =</span> <span class="st">"All Casualties 2014 to 2022"</span>)</span>
-<span id="cb17-176"><a href="#cb17-176" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb17-177"><a href="#cb17-177" aria-hidden="true" tabindex="-1"></a>Well that is interesting, it appears that the vast majority of casualties are clearly occurring in California, Texas, and Illinois, with runner-ups being Pennsylvania, New York, and Florida. </span>
-<span id="cb17-178"><a href="#cb17-178" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-179"><a href="#cb17-179" aria-hidden="true" tabindex="-1"></a>Albeit interesting, it is important to remember a few things.</span>
-<span id="cb17-180"><a href="#cb17-180" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-181"><a href="#cb17-181" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>The above-mentioned states are the most populous states in the country. Logically, more incidents occur (thus more casualties) where there are more people present. Vice-versa, less populated places will result in less crime due to less people interacting and resulting in less altercations. Unfortunately, that is a limitation of the dataset, as it does not include population size or density to normalize between states. </span>
+<span id="cb17-163"><a href="#cb17-163" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-164"><a href="#cb17-164" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(urbnmapr)</span>
+<span id="cb17-165"><a href="#cb17-165" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-166"><a href="#cb17-166" aria-hidden="true" tabindex="-1"></a>Casualties_by_state_all_data <span class="ot">&lt;-</span> gundata <span class="sc">%&gt;%</span> </span>
+<span id="cb17-167"><a href="#cb17-167" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(State_Code) <span class="sc">%&gt;%</span></span>
+<span id="cb17-168"><a href="#cb17-168" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">sum =</span> <span class="fu">sum</span>(<span class="fu">c</span>(Killed, Injured)))</span>
+<span id="cb17-169"><a href="#cb17-169" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-170"><a href="#cb17-170" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(Casualties_by_state_all_data)[<span class="fu">colnames</span>(Casualties_by_state_all_data) <span class="sc">==</span> <span class="st">"State_Code"</span>] <span class="ot">&lt;-</span> <span class="st">"state_abbv"</span></span>
+<span id="cb17-171"><a href="#cb17-171" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-172"><a href="#cb17-172" aria-hidden="true" tabindex="-1"></a>spatial_data <span class="ot">&lt;-</span> <span class="fu">left_join</span>(<span class="fu">get_urbn_map</span>(<span class="at">map =</span> <span class="st">"states"</span>, <span class="at">sf =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb17-173"><a href="#cb17-173" aria-hidden="true" tabindex="-1"></a>                          Casualties_by_state_all_data,</span>
+<span id="cb17-174"><a href="#cb17-174" aria-hidden="true" tabindex="-1"></a>                          <span class="at">by =</span> <span class="st">"state_abbv"</span>)</span>
+<span id="cb17-175"><a href="#cb17-175" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-176"><a href="#cb17-176" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb17-177"><a href="#cb17-177" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(spatial_data,</span>
+<span id="cb17-178"><a href="#cb17-178" aria-hidden="true" tabindex="-1"></a>          <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">fill =</span> sum),</span>
+<span id="cb17-179"><a href="#cb17-179" aria-hidden="true" tabindex="-1"></a>          <span class="at">color =</span> <span class="st">"#ffffff"</span>, <span class="at">size =</span> <span class="fl">0.25</span>) <span class="sc">+</span></span>
+<span id="cb17-180"><a href="#cb17-180" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">fill =</span> <span class="st">"All Casualties 2014 to 2022"</span>)</span>
+<span id="cb17-181"><a href="#cb17-181" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb17-182"><a href="#cb17-182" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-183"><a href="#cb17-183" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">After spending so much time trying to work with county level data, I could not be bothered to find a whole new data set and add more complexity to this assignment!</span><span class="co">]</span></span>
+<span id="cb17-183"><a href="#cb17-183" aria-hidden="true" tabindex="-1"></a>Well that is interesting, it appears that the vast majority of casualties are clearly occurring in California, Texas, and Illinois, with runner-ups being Pennsylvania, New York, and Florida.</span>
 <span id="cb17-184"><a href="#cb17-184" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-185"><a href="#cb17-185" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>This does not address the main question of whether there has been an increase/decrease in gun violence across the entire country or only some states.</span>
+<span id="cb17-185"><a href="#cb17-185" aria-hidden="true" tabindex="-1"></a>Albeit interesting, it is important to remember a few things.</span>
 <span id="cb17-186"><a href="#cb17-186" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-187"><a href="#cb17-187" aria-hidden="true" tabindex="-1"></a>Again, to keep things simple, since we care if there was an overall increase/decreases in gun violence, lets derive a new attribute: "Ratio". Where Ratio is the ratio of casualties between the years 2022 and 2014 (2022/2014).</span>
+<span id="cb17-187"><a href="#cb17-187" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>The above-mentioned states are the most populous states in the country. Logically, more incidents occur (thus more casualties) where there are more people present. Vice-versa, less populated places will result in less crime due to less people interacting and resulting in less altercations. Unfortunately, that is a limitation of the dataset, as it does not include population size or density to normalize between states.</span>
 <span id="cb17-188"><a href="#cb17-188" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-191"><a href="#cb17-191" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb17-192"><a href="#cb17-192" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter for 2014 and 2022 and group by state</span></span>
-<span id="cb17-193"><a href="#cb17-193" aria-hidden="true" tabindex="-1"></a>ratio <span class="ot">&lt;-</span> gundata <span class="sc">%&gt;%</span></span>
-<span id="cb17-194"><a href="#cb17-194" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">2014</span>, <span class="dv">2022</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb17-195"><a href="#cb17-195" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(State_Code) <span class="sc">%&gt;%</span></span>
-<span id="cb17-196"><a href="#cb17-196" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Sum killed and injured for each year and calculate ratio</span></span>
-<span id="cb17-197"><a href="#cb17-197" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">casualties_2014 =</span> <span class="fu">sum</span>(<span class="fu">c</span>(Killed[year <span class="sc">==</span> <span class="dv">2014</span>], Injured[year <span class="sc">==</span> <span class="dv">2014</span>])),</span>
-<span id="cb17-198"><a href="#cb17-198" aria-hidden="true" tabindex="-1"></a>            <span class="at">casualties_2022 =</span> <span class="fu">sum</span>(<span class="fu">c</span>(Killed[year <span class="sc">==</span> <span class="dv">2022</span>], Injured[year <span class="sc">==</span> <span class="dv">2022</span>])),</span>
-<span id="cb17-199"><a href="#cb17-199" aria-hidden="true" tabindex="-1"></a>            <span class="at">ratio =</span> casualties_2022 <span class="sc">/</span> casualties_2014)</span>
-<span id="cb17-200"><a href="#cb17-200" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-201"><a href="#cb17-201" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(ratio)[<span class="fu">colnames</span>(ratio) <span class="sc">==</span> <span class="st">"State_Code"</span>] <span class="ot">&lt;-</span> <span class="st">"state_abbv"</span></span>
-<span id="cb17-202"><a href="#cb17-202" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-203"><a href="#cb17-203" aria-hidden="true" tabindex="-1"></a>spatial_data <span class="ot">&lt;-</span> <span class="fu">left_join</span>(<span class="fu">get_urbn_map</span>(<span class="at">map =</span> <span class="st">"states"</span>, <span class="at">sf =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb17-204"><a href="#cb17-204" aria-hidden="true" tabindex="-1"></a>                          ratio,</span>
-<span id="cb17-205"><a href="#cb17-205" aria-hidden="true" tabindex="-1"></a>                          <span class="at">by =</span> <span class="st">"state_abbv"</span>)</span>
+<span id="cb17-189"><a href="#cb17-189" aria-hidden="true" tabindex="-1"></a><span class="sc">\[</span>After spending so much time trying to work with county level data, I could not be bothered to find a whole new data set and add more complexity to this assignment!<span class="sc">\]</span></span>
+<span id="cb17-190"><a href="#cb17-190" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-191"><a href="#cb17-191" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>This does not address the main question of whether there has been an increase/decrease in gun violence across the entire country or only some states.</span>
+<span id="cb17-192"><a href="#cb17-192" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-193"><a href="#cb17-193" aria-hidden="true" tabindex="-1"></a>Again, to keep things simple, since we care if there was an overall increase/decreases in gun violence, lets derive a new attribute: "Ratio". Where Ratio is the ratio of casualties between the years 2022 and 2014 (2022/2014).</span>
+<span id="cb17-194"><a href="#cb17-194" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-197"><a href="#cb17-197" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-198"><a href="#cb17-198" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter for 2014 and 2022 and group by state</span></span>
+<span id="cb17-199"><a href="#cb17-199" aria-hidden="true" tabindex="-1"></a>ratio <span class="ot">&lt;-</span> gundata <span class="sc">%&gt;%</span></span>
+<span id="cb17-200"><a href="#cb17-200" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">2014</span>, <span class="dv">2022</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb17-201"><a href="#cb17-201" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(State_Code) <span class="sc">%&gt;%</span></span>
+<span id="cb17-202"><a href="#cb17-202" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Sum killed and injured for each year and calculate ratio</span></span>
+<span id="cb17-203"><a href="#cb17-203" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">casualties_2014 =</span> <span class="fu">sum</span>(<span class="fu">c</span>(Killed[year <span class="sc">==</span> <span class="dv">2014</span>], Injured[year <span class="sc">==</span> <span class="dv">2014</span>])),</span>
+<span id="cb17-204"><a href="#cb17-204" aria-hidden="true" tabindex="-1"></a>            <span class="at">casualties_2022 =</span> <span class="fu">sum</span>(<span class="fu">c</span>(Killed[year <span class="sc">==</span> <span class="dv">2022</span>], Injured[year <span class="sc">==</span> <span class="dv">2022</span>])),</span>
+<span id="cb17-205"><a href="#cb17-205" aria-hidden="true" tabindex="-1"></a>            <span class="at">ratio =</span> casualties_2022 <span class="sc">/</span> casualties_2014)</span>
 <span id="cb17-206"><a href="#cb17-206" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-207"><a href="#cb17-207" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb17-208"><a href="#cb17-208" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(spatial_data,</span>
-<span id="cb17-209"><a href="#cb17-209" aria-hidden="true" tabindex="-1"></a>          <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">fill =</span> ratio),</span>
-<span id="cb17-210"><a href="#cb17-210" aria-hidden="true" tabindex="-1"></a>          <span class="at">color =</span> <span class="st">"#ffffff"</span>, <span class="at">size =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb17-211"><a href="#cb17-211" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">fill =</span> <span class="st">"Ratio (2022/2014)"</span>) <span class="sc">+</span></span>
-<span id="cb17-212"><a href="#cb17-212" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Ratio of 2022:2014 Casualties"</span>) <span class="sc">+</span> </span>
-<span id="cb17-213"><a href="#cb17-213" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf_text</span>(<span class="at">data =</span> <span class="fu">get_urbn_labels</span>(<span class="at">map =</span> <span class="st">"states"</span>, <span class="at">sf =</span> <span class="cn">TRUE</span>), </span>
-<span id="cb17-214"><a href="#cb17-214" aria-hidden="true" tabindex="-1"></a>                <span class="fu">aes</span>(<span class="at">label =</span> state_abbv), </span>
-<span id="cb17-215"><a href="#cb17-215" aria-hidden="true" tabindex="-1"></a>            <span class="at">size =</span> <span class="dv">3</span>)<span class="sc">+</span></span>
-<span id="cb17-216"><a href="#cb17-216" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span></span>
-<span id="cb17-217"><a href="#cb17-217" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="cn">NULL</span>) <span class="sc">+</span> </span>
-<span id="cb17-218"><a href="#cb17-218" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_sf</span>(<span class="at">datum =</span> <span class="cn">NA</span>) <span class="sc">+</span>   <span class="fu">scale_fill_gradientn</span>(<span class="at">colors =</span> <span class="fu">c</span>(<span class="st">"green"</span>, <span class="st">"red"</span>))</span>
-<span id="cb17-219"><a href="#cb17-219" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-220"><a href="#cb17-220" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb17-221"><a href="#cb17-221" aria-hidden="true" tabindex="-1"></a>Although we do not have information to deal with population density issue, by taking the ratio of casualties in 2022 to 2014, we can clearly see that the states in red/orange (Minnesota, Colorado, New Mexico) had ratios of at least a 2, suggesting a 2 fold increase in gun related casualties. The greener states (For example, Florida, Nebraska, California) had ratios of less than 1, suggesting a decrease in gun casualties.</span>
-<span id="cb17-222"><a href="#cb17-222" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-223"><a href="#cb17-223" aria-hidden="true" tabindex="-1"></a><span class="fu">## Summary</span></span>
-<span id="cb17-224"><a href="#cb17-224" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-225"><a href="#cb17-225" aria-hidden="true" tabindex="-1"></a>When only taking into account the number of isolated incidents, there has been a sharp decrease in gun violence across the entire U.S.</span>
-<span id="cb17-226"><a href="#cb17-226" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-227"><a href="#cb17-227" aria-hidden="true" tabindex="-1"></a>However, when incidents are separated by whether death, injury, both, or neither occurred, the scatter plot and stacked bar plot idioms revealed the decrease in total incidents is mostly due to non-casualty incidents plummeting, while death, injury, or both increased (or at least stayed constant).</span>
-<span id="cb17-228"><a href="#cb17-228" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-229"><a href="#cb17-229" aria-hidden="true" tabindex="-1"></a>When breaking down the data by state, we observed initially the most populous states like California, Texas, and Illinois constituted a bulk of the casualties that have occurred between the years 2014 and 2022.</span>
-<span id="cb17-230"><a href="#cb17-230" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-231"><a href="#cb17-231" aria-hidden="true" tabindex="-1"></a>Given the limitations and biases against populous states, to help provide a more meaningful comparison between states taking the ratio of 2022 to 2014 casualties for each state reveals that each state is experiencing its own unique trend in gun violence. Therefore, suggesting other variables not accounted for in the data set are at play on a by-state basis, suggesting a more nuanced conversation is needed.</span>
-<span id="cb17-232"><a href="#cb17-232" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-233"><a href="#cb17-233" aria-hidden="true" tabindex="-1"></a><span class="fu">## Conclusions</span></span>
-<span id="cb17-234"><a href="#cb17-234" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-235"><a href="#cb17-235" aria-hidden="true" tabindex="-1"></a>Between the years 2014 and 2022, has there been a meaningful change in gun violence in the United States?</span>
-<span id="cb17-236"><a href="#cb17-236" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-237"><a href="#cb17-237" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>On a nation-wide basis there are more casualties (deaths and/or Injuries), despite less individual gun incidents occurring in 2022 compared to 2014.</span>
-<span id="cb17-238"><a href="#cb17-238" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-239"><a href="#cb17-239" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>On a by state basis, the data suggests a few states, for some unknown reason given the available data, are experiencing a surge in gun violence, while other states had less violence and most hover in-between. </span>
-<span id="cb17-240"><a href="#cb17-240" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-241"><a href="#cb17-241" aria-hidden="true" tabindex="-1"></a>It is important to note the population densities of each state were not accounted for and a 2-fold change in populous state is a lot more casualties than the same fold change in a low population state.</span>
-<span id="cb17-242"><a href="#cb17-242" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-243"><a href="#cb17-243" aria-hidden="true" tabindex="-1"></a>Therefore, without more data to be more confident on a state by state basis to have a more nuanced conversation, there has been an increase in gun violence in the United States in the form of casualties.</span>
+<span id="cb17-207"><a href="#cb17-207" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(ratio)[<span class="fu">colnames</span>(ratio) <span class="sc">==</span> <span class="st">"State_Code"</span>] <span class="ot">&lt;-</span> <span class="st">"state_abbv"</span></span>
+<span id="cb17-208"><a href="#cb17-208" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-209"><a href="#cb17-209" aria-hidden="true" tabindex="-1"></a>spatial_data <span class="ot">&lt;-</span> <span class="fu">left_join</span>(<span class="fu">get_urbn_map</span>(<span class="at">map =</span> <span class="st">"states"</span>, <span class="at">sf =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb17-210"><a href="#cb17-210" aria-hidden="true" tabindex="-1"></a>                          ratio,</span>
+<span id="cb17-211"><a href="#cb17-211" aria-hidden="true" tabindex="-1"></a>                          <span class="at">by =</span> <span class="st">"state_abbv"</span>)</span>
+<span id="cb17-212"><a href="#cb17-212" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-213"><a href="#cb17-213" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb17-214"><a href="#cb17-214" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(spatial_data,</span>
+<span id="cb17-215"><a href="#cb17-215" aria-hidden="true" tabindex="-1"></a>          <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">fill =</span> ratio),</span>
+<span id="cb17-216"><a href="#cb17-216" aria-hidden="true" tabindex="-1"></a>          <span class="at">color =</span> <span class="st">"#ffffff"</span>, <span class="at">size =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb17-217"><a href="#cb17-217" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">fill =</span> <span class="st">"Ratio (2022/2014)"</span>) <span class="sc">+</span></span>
+<span id="cb17-218"><a href="#cb17-218" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Ratio of 2022:2014 Casualties"</span>) <span class="sc">+</span> </span>
+<span id="cb17-219"><a href="#cb17-219" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf_text</span>(<span class="at">data =</span> <span class="fu">get_urbn_labels</span>(<span class="at">map =</span> <span class="st">"states"</span>, <span class="at">sf =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb17-220"><a href="#cb17-220" aria-hidden="true" tabindex="-1"></a>                <span class="fu">aes</span>(<span class="at">label =</span> state_abbv), </span>
+<span id="cb17-221"><a href="#cb17-221" aria-hidden="true" tabindex="-1"></a>            <span class="at">size =</span> <span class="dv">3</span>)<span class="sc">+</span></span>
+<span id="cb17-222"><a href="#cb17-222" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span></span>
+<span id="cb17-223"><a href="#cb17-223" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="cn">NULL</span>) <span class="sc">+</span> </span>
+<span id="cb17-224"><a href="#cb17-224" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_sf</span>(<span class="at">datum =</span> <span class="cn">NA</span>) <span class="sc">+</span>   <span class="fu">scale_fill_gradientn</span>(<span class="at">colors =</span> <span class="fu">c</span>(<span class="st">"green"</span>, <span class="st">"red"</span>))</span>
+<span id="cb17-225"><a href="#cb17-225" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-226"><a href="#cb17-226" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-227"><a href="#cb17-227" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-228"><a href="#cb17-228" aria-hidden="true" tabindex="-1"></a>Although we do not have information to deal with population density issue, by taking the ratio of casualties in 2022 to 2014, we can clearly see that the states in red/orange (Minnesota, Colorado, New Mexico) had ratios of at least a 2, suggesting a 2 fold increase in gun related casualties. The greener states (For example, Florida, Nebraska, California) had ratios of less than 1, suggesting a decrease in gun casualties.</span>
+<span id="cb17-229"><a href="#cb17-229" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-230"><a href="#cb17-230" aria-hidden="true" tabindex="-1"></a><span class="fu">## Summary</span></span>
+<span id="cb17-231"><a href="#cb17-231" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-232"><a href="#cb17-232" aria-hidden="true" tabindex="-1"></a>When only taking into account the number of isolated incidents, there has been a sharp decrease in gun violent incidents across the entire U.S.</span>
+<span id="cb17-233"><a href="#cb17-233" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-234"><a href="#cb17-234" aria-hidden="true" tabindex="-1"></a>However, when incidents are separated by whether death, injury, both, or neither occurred, the scatter plot and stacked bar plot idioms revealed the decrease in total incidents is mostly due to non-casualty incidents plummeting, while death, injury, or both increased (or at least stayed constant).</span>
+<span id="cb17-235"><a href="#cb17-235" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-236"><a href="#cb17-236" aria-hidden="true" tabindex="-1"></a>When breaking down the data by state, we observed initially the most populous states like California, Texas, and Illinois constituted a bulk of the casualties that have occurred between the years 2014 and 2022.</span>
+<span id="cb17-237"><a href="#cb17-237" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-238"><a href="#cb17-238" aria-hidden="true" tabindex="-1"></a>Given the limitations and biases against populous states, to help provide a more meaningful comparison between states taking the ratio of 2022 to 2014 casualties for each state reveals that each state is experiencing its own unique trend in gun violence. Therefore, suggesting other variables not accounted for in the data set are at play on a by-state basis, suggesting a more nuanced conversation is needed.</span>
+<span id="cb17-239"><a href="#cb17-239" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-240"><a href="#cb17-240" aria-hidden="true" tabindex="-1"></a><span class="fu">## Conclusions</span></span>
+<span id="cb17-241"><a href="#cb17-241" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-242"><a href="#cb17-242" aria-hidden="true" tabindex="-1"></a>Between the years 2014 and 2022, has there been a meaningful change in gun violence in the United States?</span>
+<span id="cb17-243"><a href="#cb17-243" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-244"><a href="#cb17-244" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>On a nation-wide basis there are more casualties (deaths and/or Injuries), despite less individual gun incidents occurring in 2022 compared to 2014.</span>
+<span id="cb17-245"><a href="#cb17-245" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-246"><a href="#cb17-246" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>On a by state basis, the data suggests a few states, for some unknown reason are experiencing a surge in gun violence, while other states had less violence and most hover in-between.</span>
+<span id="cb17-247"><a href="#cb17-247" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-248"><a href="#cb17-248" aria-hidden="true" tabindex="-1"></a>It is important to note the population densities of each state were not accounted for and a 2-fold change in populous state is a lot more casualties than the same fold change in a low population state.</span>
+<span id="cb17-249"><a href="#cb17-249" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-250"><a href="#cb17-250" aria-hidden="true" tabindex="-1"></a>Therefore, without more data to be more confident on a state by state basis to have a more nuanced conversation, there has been an increase in gun violence in the United States in the form of casualties.</span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

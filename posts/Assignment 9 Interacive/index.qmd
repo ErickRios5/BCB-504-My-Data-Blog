@@ -5,8 +5,8 @@ format:
   html:
     toc: false
     echo: true
-author: "Barrie Robison"
-date: "2023-04-25"
+author: "Erick Rios"
+date: "2023-04-27"
 categories: [Portfolio, DataViz, Network, Observable, Assignment]
 image: "Wendigojson.png"
 description: "Cool!"
@@ -29,8 +29,6 @@ The preamble of that document summarizes things nicely:
 ## EXAMPLE 1: BASIC FORCE DIRECTED GRAPH
 
 I'm going to start by trying to replicate [this observable notebook](https://observablehq.com/@d3/modifying-a-force-directed-graph):
-
-
 
 ```{ojs}
 viewof graph = {
@@ -130,7 +128,7 @@ update = chart2.update(graph)
 
 ```
 
-The code chunk below shows us how Dr. Bostock creates the basic architecture of an [EDGE LIST]{.red} called `links` along with NODE LABELS called `nodes`.  Have a close look at the structure.  He is setting this up in a heirarchy very similar to a JSON file, which we will examine in **EXAMPLE 2**.
+The code chunk below shows us how Dr. Bostock creates the basic architecture of an [EDGE LIST]{.red} called `links` along with NODE LABELS called `nodes`. Have a close look at the structure. He is setting this up in a heirarchy very similar to a JSON file, which we will examine in **EXAMPLE 2**.
 
 ```{ojs}
 graph1 = ({
@@ -159,11 +157,20 @@ graph2 = ({
 
 graph3 = ({
   nodes: [
-    {id: "a"},
-    {id: "b"}
+    {id: "Erick"},
+    {id: "Jiyin"},
+    {id: "Ronald"},
+    {id: "Cody"},
+    {id: "Mac"},
+    {id: "PC"},
   ],
   links: [
-    {source: "a", target: "b"}
+    {source: "Erick", target: "PC"},
+    {source: "Jiyin", target: "PC"},
+    {source: "Jiyin", target: "Mac"},
+    {source: "Ronald", target: "PC"},
+    {source: "Cody", target: "PC"},
+    {source: "Cody", target: "Mac"}
   ]
 })
 
@@ -180,7 +187,7 @@ Change the `graph3` object so that it contains six nodes called "Jiyin", "Ronald
 
 ## EXAMPLE 2: INTERACTIVE FORCE DIRECTED GRAPH
 
-I honestly cannot believe this works!  I mean... Hey!  Look at this cool interactive network!
+I honestly cannot believe this works! I mean... Hey! Look at this cool interactive network!
 
 ```{ojs}
 chart = ForceGraph(miserables, {
@@ -197,10 +204,9 @@ chart = ForceGraph(miserables, {
 
 ### JSON - Abandon All Hope Ye Who Enter Here
 
-The first line of code in the chunk below defines the data object from a .json file called `miserables.json`.  Have a look at this file within RStudio.  Does the overall structure look familiar?
+The first line of code in the chunk below defines the data object from a .json file called `miserables.json`. Have a look at this file within RStudio. Does the overall structure look familiar?
 
-Could we possibly replace the stupid data file about a stupid musical with something of our own design???  
-
+Could we possibly replace the stupid data file about a stupid musical with something of our own design???
 
 ```{ojs}
 miserables = FileAttachment("Miserables.json").json()
@@ -384,7 +390,7 @@ write(json, file = "network_graph.json")
 
 ```
 
-Oh god....  now go back and point the stuff to the stuff...
+Oh god.... now go back and point the stuff to the stuff...
 
 Anyway.... here is where I want to go:
 

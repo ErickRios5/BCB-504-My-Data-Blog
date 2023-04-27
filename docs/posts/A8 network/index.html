@@ -2177,7 +2177,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb121-641"><a href="#cb121-641" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb121-642"><a href="#cb121-642" aria-hidden="true" tabindex="-1"></a>relations3<span class="ot">&lt;-</span><span class="fu">rbind</span>(relations, edgelist_df)</span>
 <span id="cb121-643"><a href="#cb121-643" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb121-644"><a href="#cb121-644" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">graph_from_data_frame</span>(relations3, <span class="at">directed=</span><span class="cn">FALSE</span>, <span class="at">vertices=</span>people)</span>
+<span id="cb121-644"><a href="#cb121-644" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">graph_from_data_frame</span>(relations3, <span class="at">directed=</span><span class="cn">FALSE</span>, <span class="at">vertices=</span>people, )</span>
 <span id="cb121-645"><a href="#cb121-645" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb121-646"><a href="#cb121-646" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb121-647"><a href="#cb121-647" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(g)</span>
@@ -2194,46 +2194,59 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb121-658"><a href="#cb121-658" aria-hidden="true" tabindex="-1"></a><span class="ss">3.  </span>Adujsting the labels to improve readability.</span>
 <span id="cb121-659"><a href="#cb121-659" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb121-662"><a href="#cb121-662" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb121-663"><a href="#cb121-663" aria-hidden="true" tabindex="-1"></a><span class="co"># Load required packages</span></span>
-<span id="cb121-664"><a href="#cb121-664" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(igraph)</span>
-<span id="cb121-665"><a href="#cb121-665" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb121-666"><a href="#cb121-666" aria-hidden="true" tabindex="-1"></a><span class="do">### Force directed graph of 350 proteins</span></span>
-<span id="cb121-667"><a href="#cb121-667" aria-hidden="true" tabindex="-1"></a>stack <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"trimmed_proteomic_Data.csv"</span>)</span>
-<span id="cb121-668"><a href="#cb121-668" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb121-669"><a href="#cb121-669" aria-hidden="true" tabindex="-1"></a>nodes <span class="ot">&lt;-</span> <span class="fu">unique</span>(<span class="fu">c</span>(stack<span class="sc">$</span>contrast, stack<span class="sc">$</span>Gene))</span>
-<span id="cb121-670"><a href="#cb121-670" aria-hidden="true" tabindex="-1"></a>edges <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb121-671"><a href="#cb121-671" aria-hidden="true" tabindex="-1"></a>  <span class="at">from =</span> stack<span class="sc">$</span>Gene,</span>
-<span id="cb121-672"><a href="#cb121-672" aria-hidden="true" tabindex="-1"></a>  <span class="at">to =</span> stack<span class="sc">$</span>contrast,</span>
-<span id="cb121-673"><a href="#cb121-673" aria-hidden="true" tabindex="-1"></a>  <span class="at">LogFC =</span> stack<span class="sc">$</span>logFC,</span>
-<span id="cb121-674"><a href="#cb121-674" aria-hidden="true" tabindex="-1"></a>  <span class="at">p =</span> stack<span class="sc">$</span>P.Value</span>
-<span id="cb121-675"><a href="#cb121-675" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb121-676"><a href="#cb121-676" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb121-677"><a href="#cb121-677" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb121-678"><a href="#cb121-678" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">graph_from_data_frame</span>(edges, <span class="at">directed =</span> <span class="cn">FALSE</span>, <span class="at">vertices =</span> nodes)</span>
-<span id="cb121-679"><a href="#cb121-679" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb121-680"><a href="#cb121-680" aria-hidden="true" tabindex="-1"></a>edge_weights <span class="ot">&lt;-</span> <span class="fu">abs</span>(<span class="fu">E</span>(g)<span class="sc">$</span>LogFC)<span class="sc">^</span><span class="dv">3</span></span>
-<span id="cb121-681"><a href="#cb121-681" aria-hidden="true" tabindex="-1"></a><span class="fu">E</span>(g)<span class="sc">$</span>length <span class="ot">&lt;-</span> edge_weights</span>
-<span id="cb121-682"><a href="#cb121-682" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb121-683"><a href="#cb121-683" aria-hidden="true" tabindex="-1"></a>l <span class="ot">&lt;-</span> <span class="fu">layout_with_fr</span>(g, <span class="at">weights =</span> edge_weights)</span>
-<span id="cb121-684"><a href="#cb121-684" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb121-685"><a href="#cb121-685" aria-hidden="true" tabindex="-1"></a>default_size <span class="ot">&lt;-</span> <span class="dv">4</span></span>
-<span id="cb121-686"><a href="#cb121-686" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb121-687"><a href="#cb121-687" aria-hidden="true" tabindex="-1"></a>vertex_sizes <span class="ot">&lt;-</span> <span class="fu">rep</span>(default_size, <span class="fu">vcount</span>(g))</span>
-<span id="cb121-688"><a href="#cb121-688" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb121-689"><a href="#cb121-689" aria-hidden="true" tabindex="-1"></a>mutants <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"A583T"</span>,<span class="st">"G309S"</span>, <span class="st">"G424D"</span>,</span>
-<span id="cb121-690"><a href="#cb121-690" aria-hidden="true" tabindex="-1"></a>             <span class="st">"K102E"</span>, <span class="st">"Q380K"</span>, <span class="st">"R46G"</span>, </span>
-<span id="cb121-691"><a href="#cb121-691" aria-hidden="true" tabindex="-1"></a>             <span class="st">"S25P"</span>, <span class="st">"S481Y"</span>, <span class="st">"W296A"</span>)</span>
+<span id="cb121-663"><a href="#cb121-663" aria-hidden="true" tabindex="-1"></a><span class="co"># E(g)$edge.color[V(g)$] </span></span>
+<span id="cb121-664"><a href="#cb121-664" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb121-665"><a href="#cb121-665" aria-hidden="true" tabindex="-1"></a><span class="fu">V</span>(g)<span class="sc">$</span>label.color <span class="ot">&lt;-</span> <span class="st">"black"</span></span>
+<span id="cb121-666"><a href="#cb121-666" aria-hidden="true" tabindex="-1"></a><span class="fu">V</span>(g)<span class="sc">$</span>label.font <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb121-667"><a href="#cb121-667" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb121-668"><a href="#cb121-668" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(g, <span class="at">edge.color =</span> <span class="fu">ifelse</span>(<span class="fu">E</span>(g)<span class="sc">$</span>Advisor <span class="sc">==</span> T, <span class="st">"red"</span>, <span class="st">"grey"</span>), <span class="at">edge.width =</span> <span class="dv">2</span>,</span>
+<span id="cb121-669"><a href="#cb121-669" aria-hidden="true" tabindex="-1"></a>     <span class="at">vertex.color =</span> col[<span class="fu">as.factor</span>(<span class="fu">vertex_attr</span>(g, <span class="st">"department"</span>))], <span class="at">vertex.size =</span> <span class="dv">32</span></span>
+<span id="cb121-670"><a href="#cb121-670" aria-hidden="true" tabindex="-1"></a>     )</span>
+<span id="cb121-671"><a href="#cb121-671" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb121-672"><a href="#cb121-672" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb121-673"><a href="#cb121-673" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb121-674"><a href="#cb121-674" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb121-677"><a href="#cb121-677" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb121-678"><a href="#cb121-678" aria-hidden="true" tabindex="-1"></a><span class="co"># Load required packages</span></span>
+<span id="cb121-679"><a href="#cb121-679" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(igraph)</span>
+<span id="cb121-680"><a href="#cb121-680" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb121-681"><a href="#cb121-681" aria-hidden="true" tabindex="-1"></a><span class="do">### Force directed graph of 350 proteins</span></span>
+<span id="cb121-682"><a href="#cb121-682" aria-hidden="true" tabindex="-1"></a>stack <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"trimmed_proteomic_Data.csv"</span>)</span>
+<span id="cb121-683"><a href="#cb121-683" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb121-684"><a href="#cb121-684" aria-hidden="true" tabindex="-1"></a>nodes <span class="ot">&lt;-</span> <span class="fu">unique</span>(<span class="fu">c</span>(stack<span class="sc">$</span>contrast, stack<span class="sc">$</span>Gene))</span>
+<span id="cb121-685"><a href="#cb121-685" aria-hidden="true" tabindex="-1"></a>edges <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb121-686"><a href="#cb121-686" aria-hidden="true" tabindex="-1"></a>  <span class="at">from =</span> stack<span class="sc">$</span>Gene,</span>
+<span id="cb121-687"><a href="#cb121-687" aria-hidden="true" tabindex="-1"></a>  <span class="at">to =</span> stack<span class="sc">$</span>contrast,</span>
+<span id="cb121-688"><a href="#cb121-688" aria-hidden="true" tabindex="-1"></a>  <span class="at">LogFC =</span> stack<span class="sc">$</span>logFC,</span>
+<span id="cb121-689"><a href="#cb121-689" aria-hidden="true" tabindex="-1"></a>  <span class="at">p =</span> stack<span class="sc">$</span>P.Value</span>
+<span id="cb121-690"><a href="#cb121-690" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb121-691"><a href="#cb121-691" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb121-692"><a href="#cb121-692" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb121-693"><a href="#cb121-693" aria-hidden="true" tabindex="-1"></a>vertex_sizes[<span class="fu">V</span>(g)<span class="sc">$</span>name <span class="sc">%in%</span> mutants] <span class="ot">&lt;-</span> <span class="dv">8</span></span>
+<span id="cb121-693"><a href="#cb121-693" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">graph_from_data_frame</span>(edges, <span class="at">directed =</span> <span class="cn">FALSE</span>, <span class="at">vertices =</span> nodes)</span>
 <span id="cb121-694"><a href="#cb121-694" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb121-695"><a href="#cb121-695" aria-hidden="true" tabindex="-1"></a><span class="fu">V</span>(g)<span class="sc">$</span>label.color <span class="ot">&lt;-</span> <span class="st">"black"</span></span>
-<span id="cb121-696"><a href="#cb121-696" aria-hidden="true" tabindex="-1"></a><span class="fu">V</span>(g)<span class="sc">$</span>label.font <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb121-695"><a href="#cb121-695" aria-hidden="true" tabindex="-1"></a>edge_weights <span class="ot">&lt;-</span> <span class="fu">abs</span>(<span class="fu">E</span>(g)<span class="sc">$</span>LogFC)<span class="sc">^</span><span class="dv">3</span></span>
+<span id="cb121-696"><a href="#cb121-696" aria-hidden="true" tabindex="-1"></a><span class="fu">E</span>(g)<span class="sc">$</span>length <span class="ot">&lt;-</span> edge_weights</span>
 <span id="cb121-697"><a href="#cb121-697" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb121-698"><a href="#cb121-698" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(g, <span class="at">layout =</span> l, <span class="at">vertex.color =</span> <span class="st">"white"</span>, <span class="at">vertex.size =</span> vertex_sizes,</span>
-<span id="cb121-699"><a href="#cb121-699" aria-hidden="true" tabindex="-1"></a>     <span class="at">vertex.label.cex =</span> .<span class="dv">25</span>, <span class="at">edge.width =</span> <span class="sc">-</span><span class="fu">log10</span>(<span class="fu">E</span>(g)<span class="sc">$</span>p)<span class="sc">*</span>.<span class="dv">2</span>, <span class="at">edge.arrow.size =</span> <span class="dv">0</span>, <span class="at">frame.plot =</span> T,  <span class="at">main =</span> <span class="st">"350"</span>)</span>
-<span id="cb121-700"><a href="#cb121-700" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb121-701"><a href="#cb121-701" aria-hidden="true" tabindex="-1"></a><span class="do">###</span></span>
-<span id="cb121-702"><a href="#cb121-702" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb121-698"><a href="#cb121-698" aria-hidden="true" tabindex="-1"></a>l <span class="ot">&lt;-</span> <span class="fu">layout_with_fr</span>(g, <span class="at">weights =</span> edge_weights)</span>
+<span id="cb121-699"><a href="#cb121-699" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb121-700"><a href="#cb121-700" aria-hidden="true" tabindex="-1"></a>default_size <span class="ot">&lt;-</span> <span class="dv">4</span></span>
+<span id="cb121-701"><a href="#cb121-701" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb121-702"><a href="#cb121-702" aria-hidden="true" tabindex="-1"></a>vertex_sizes <span class="ot">&lt;-</span> <span class="fu">rep</span>(default_size, <span class="fu">vcount</span>(g))</span>
+<span id="cb121-703"><a href="#cb121-703" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb121-704"><a href="#cb121-704" aria-hidden="true" tabindex="-1"></a>mutants <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"A583T"</span>,<span class="st">"G309S"</span>, <span class="st">"G424D"</span>,</span>
+<span id="cb121-705"><a href="#cb121-705" aria-hidden="true" tabindex="-1"></a>             <span class="st">"K102E"</span>, <span class="st">"Q380K"</span>, <span class="st">"R46G"</span>, </span>
+<span id="cb121-706"><a href="#cb121-706" aria-hidden="true" tabindex="-1"></a>             <span class="st">"S25P"</span>, <span class="st">"S481Y"</span>, <span class="st">"W296A"</span>)</span>
+<span id="cb121-707"><a href="#cb121-707" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb121-708"><a href="#cb121-708" aria-hidden="true" tabindex="-1"></a>vertex_sizes[<span class="fu">V</span>(g)<span class="sc">$</span>name <span class="sc">%in%</span> mutants] <span class="ot">&lt;-</span> <span class="dv">8</span></span>
+<span id="cb121-709"><a href="#cb121-709" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb121-710"><a href="#cb121-710" aria-hidden="true" tabindex="-1"></a><span class="fu">V</span>(g)<span class="sc">$</span>label.color <span class="ot">&lt;-</span> <span class="st">"black"</span></span>
+<span id="cb121-711"><a href="#cb121-711" aria-hidden="true" tabindex="-1"></a><span class="fu">V</span>(g)<span class="sc">$</span>label.font <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb121-712"><a href="#cb121-712" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb121-713"><a href="#cb121-713" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(g, <span class="at">layout =</span> l, <span class="at">vertex.color =</span> <span class="st">"white"</span>, <span class="at">vertex.size =</span> vertex_sizes,</span>
+<span id="cb121-714"><a href="#cb121-714" aria-hidden="true" tabindex="-1"></a>     <span class="at">vertex.label.cex =</span> .<span class="dv">25</span>, <span class="at">edge.width =</span> <span class="sc">-</span><span class="fu">log10</span>(<span class="fu">E</span>(g)<span class="sc">$</span>p)<span class="sc">*</span>.<span class="dv">2</span>, <span class="at">edge.arrow.size =</span> <span class="dv">0</span>, <span class="at">frame.plot =</span> T,  <span class="at">main =</span> <span class="st">"350"</span>)</span>
+<span id="cb121-715"><a href="#cb121-715" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb121-716"><a href="#cb121-716" aria-hidden="true" tabindex="-1"></a><span class="do">###</span></span>
+<span id="cb121-717"><a href="#cb121-717" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
