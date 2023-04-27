@@ -357,7 +357,7 @@ V(g)[age < 30]$name
 Of course, `<` is not the only boolean operator that can be used for this. Other possibilities include the following:
 
 | Operator | Meaning                                                         |
-|------------------------|-----------------------------------------------|
+|-------------------------|-----------------------------------------------|
 | `==`     | The attribute/property value must be *equal to*                 |
 | `!=`     | The attribute/property value must *not be equal to*             |
 | `<`      | The attribute/property value must be *less than*                |
@@ -446,7 +446,7 @@ A graph is an abstract mathematical object without a specific representation in 
 The layout functions in igraph always start with `layout`. The following table summarises them:
 
 | Method name        | Algorithm description                                                                                          |
-|--------------------|----------------------------------------------------|
+|---------------------|---------------------------------------------------|
 | `layout_randomly`  | Places the vertices completely randomly                                                                        |
 | `layout_in_circle` | Deterministic layout that places the vertices on a circle                                                      |
 | `layout_on_sphere` | Deterministic layout that places the vertices evenly on the surface of a sphere                                |
