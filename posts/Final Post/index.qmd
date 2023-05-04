@@ -41,7 +41,10 @@ Data source:
 -   Physical protein attributes such as molecular weight, hydrophobicity, etc.
 
 ```{r}
-# Load in our data table
+# Load in our data
+proteomic <- read.csv("trimmed_proteomic_Data.csv")
+
+
 ```
 
 Data Dictionary
@@ -53,18 +56,27 @@ Data Dictionary
 
 ## Creating Figure 1: Basic static 'network'
 
+```{r}
+library(igraph)
+```
+
 ### NODES
 
-Since our objective is to construct a protein interaction network, intuitively our nodes will be our significant hits found in our study.
+Since our objective is to construct a protein interaction network, intuitively our nodes will be our significant hits found in our study. However, we must also include our experimental variables, in this case single point mutations in the Hsp90 chaperone, this will help promote separation/clustering between nodes later when we apply our measurements from DIA-MS.
 
 ```{r}
 # Visualize 350 nodes corresponding to the significant hits in our data
-```
+nodes <- unique(c(proteomic$contrast, proteomic$Gene))
 
-However, we must also include our experimental variables, in this case single point mutations in the Hsp90 chaperone, this will help promote separation/clustering between nodes later when we apply our measurements from DIA-MS.
+g <- make_empty_graph()
+g <- add_vertices(g, length(nodes))
+V(g)$name <- nodes
 
-```{r}
-# Include nodes for Hsp90 mutants
+plot(g, 
+     margin = -.4,
+     vertex.size = 4,
+     vertex.label.cex = .5
+     )
 ```
 
 Now we must establish the relationship between these nodes. Starting with the relationship between our protein hits and experimental variables (Hsp90 mutants). These proteins were found to have a significant change in abundance when at least one mutant Hsp90 is expressed as the sole source of Hsp90.
@@ -76,3 +88,13 @@ Now we must establish the relationship between these nodes. Starting with the re
 -   edge color opacity/transparency for p value
 
 -   Edge length will be Log base 2 fold change; this will pull proteins nodes towards mutants that have significant impact on said protein
+
+```{r}
+edges <- data.frame(
+  from = proteomic$Gene,
+  to = proteomic$contrast,
+  LogFC = proteomic$logFC,
+  p = proteomic$P.Value
+  
+)
+```
