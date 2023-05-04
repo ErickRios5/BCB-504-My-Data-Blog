@@ -68,7 +68,7 @@ Since our objective is to construct a protein interaction network, intuitively o
 # Visualize 350 nodes corresponding to the significant hits in our data
 nodes <- unique(c(proteomic$contrast, proteomic$Gene))
 
-g <- make_empty_graph()
+g <- make_empty_graph(directed = FALSE)
 g <- add_vertices(g, length(nodes))
 V(g)$name <- nodes
 
@@ -97,4 +97,21 @@ edges <- data.frame(
   p = proteomic$P.Value
   
 )
+
+E(g) <- 
+
+edge.list <- cbind(edges$from, edges$to)
+g <- add_edges(g, edges = edges)
+
+edge_weights <- abs(E(g)$LogFC)^2
+E(g)$length <- edge_weights
+
+layout <- layout_with_fr(g, weights = abs(edges$LogFC))
+
+plot(g, margin = -.4,
+     #layout = layout,
+     vertex.size = 4,
+     vertex.label.cex = .5,
+     edge_arrow_mode = 0
+     )
 ```
