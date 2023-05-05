@@ -75,7 +75,8 @@ V(g)$name <- nodes
 plot(g, 
      margin = -.4,
      vertex.size = 4,
-     vertex.label.cex = .5
+     vertex.label.cex = .5,
+     xlim=c(-1.5, 1.5), ylim=c(-1.5,1.5) 
      )
 ```
 
@@ -98,20 +99,87 @@ edges <- data.frame(
   
 )
 
-E(g) <- 
+# Convert edge list to indices
+edges$from <- match(edges$from, nodes)
+edges$to <- match(edges$to, nodes)
 
-edge.list <- cbind(edges$from, edges$to)
-g <- add_edges(g, edges = edges)
+# create a list of alternating values from 'from' and 'to' columns
+edge_list <- c(rbind(edges$from, edges$to))
 
-edge_weights <- abs(E(g)$LogFC)^2
-E(g)$length <- edge_weights
+g <- add_edges(g, edges = edge_list)
 
-layout <- layout_with_fr(g, weights = abs(edges$LogFC))
+# Specify edge length based on attribute: LogFC, but undo the Log base 2 so larger LogFC have more influence
 
-plot(g, margin = -.4,
-     #layout = layout,
+edge_weights <- abs(edges$LogFC)^2 + 10
+E(g)$weight <- edge_weights
+
+# Plot the network
+plot(g,
+     margin = -1,
      vertex.size = 4,
      vertex.label.cex = .5,
-     edge_arrow_mode = 0
+     edge_arrow_mode = 0,
+     xlim=c(-2, 2), ylim=c(-2, 2)
      )
+
+
+plot(g,
+     vertex.size = 4,
+     vertex.label.cex = .5,
+     edge_arrow_mode = 0,
+     xlim=c(-1.5, 1.5), ylim=c(-1.5,1.5)
+     )
+```
+
+```{r}
+# library(igraph)
+# 
+# # create a random graph with 300 vertices
+# g <- erdos.renyi.game(300, 0.1)
+# 
+# # set edge weights randomly
+# E(g)$weight <- runif(ecount(g))
+# 
+# # set initial vertex positions randomly
+# V(g)$x <- runif(vcount(g))
+# V(g)$y <- runif(vcount(g))
+# 
+# # define a function to adjust vertex positions
+# adjust_positions <- function(g, min.dist) {
+#   # calculate distances between vertices
+#   dists <- as.matrix(dist(cbind(V(g)$x, V(g)$y)))
+#   # set diagonal to infinite so that vertices don't compare to themselves
+#   diag(dists) <- Inf
+#   # get indices of vertices that are too close to each other
+#   close_vertices <- which(dists < min.dist, arr.ind = TRUE)
+#   # loop over close vertices and move them apart
+#   for (i in 1:nrow(close_vertices)) {
+#     # get indices of the two vertices that are too close
+#     v1 <- close_vertices[i, 1]
+#     v2 <- close_vertices[i, 2]
+#     # calculate the direction and distance between the two vertices
+#     dir <- c(V(g)[v1]$x - V(g)[v2]$x, V(g)[v1]$y - V(g)[v2]$y)
+#     dist <- sqrt(dir[1]^2 + dir[2]^2)
+#     # move the vertices apart by half the minimum distance
+#     V(g)[v1]$x <- V(g)[v1]$x + dir[1]/dist * (min.dist - dist)/2
+#     V(g)[v1]$y <- V(g)[v1]$y + dir[2]/dist * (min.dist - dist)/2
+#     V(g)[v2]$x <- V(g)[v2]$x - dir[1]/dist * (min.dist - dist)/2
+#     V(g)[v2]$y <- V(g)[v2]$y - dir[2]/dist * (min.dist - dist)/2
+#   }
+#   return(g)
+# }
+# 
+# # adjust vertex positions until there are no close vertices
+# min.dist <- 0.1
+# while (TRUE) {
+#   g <- adjust_positions(g, min.dist)
+#   if (length(which(as.matrix(dist(cbind(V(g)$x, V(g)$y))) < min.dist)) == 0) {
+#     break
+#   }
+#   min.dist <- min.dist + 0.01
+# }
+# 
+# # plot the graph
+# plot(g, edge.width = E(g)$weight)
+
 ```
