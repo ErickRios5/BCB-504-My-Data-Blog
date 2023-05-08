@@ -54,9 +54,11 @@ Data Dictionary
 
 # Visualization
 
-## Creating Figure 1: Basic static 'network'
+## Figure 1: Basic static 'network'
 
 ```{r}
+#| message: false
+#| warning: false
 library(igraph)
 ```
 
@@ -78,17 +80,37 @@ plot(g,
      vertex.label.cex = .5,
      xlim=c(-1.5, 1.5), ylim=c(-1.5,1.5) 
      )
+
+edges1 <- data.frame(
+  from = proteomic$Gene,
+  to = proteomic$contrast,
+  LogFC = proteomic$logFC,
+  p = proteomic$P.Value
+  
+)
+
+# Convert edge list to indices
+edges1$from <- match(edges1$from, nodes)
+edges1$to <- match(edges1$to, nodes)
+
+# create a list of alternating values from 'from' and 'to' columns
+edge_list <- c(rbind(edges1$from, edges1$to))
+
+g <- add_edges(g, edges = edge_list)
+
+E(g)$length <- 1
+
+plot(g, 
+     margin = -.4,
+     vertex.size = 4,
+     vertex.label.cex = .5,
+     xlim=c(-1.5, 1.5), ylim=c(-1.5,1.5) 
+     )
 ```
 
+### EDGES
+
 Now we must establish the relationship between these nodes. Starting with the relationship between our protein hits and experimental variables (Hsp90 mutants). These proteins were found to have a significant change in abundance when at least one mutant Hsp90 is expressed as the sole source of Hsp90.
-
--   Color the edges of the protein-mutant relationship based on increase or decrease (green / red;consider color blind plebs though.)
-
--   Edge thickness can be p value of measurement and/or
-
--   edge color opacity/transparency for p value
-
--   Edge length will be Log base 2 fold change; this will pull proteins nodes towards mutants that have significant impact on said protein
 
 ```{r}
 edges <- data.frame(
@@ -108,78 +130,94 @@ edge_list <- c(rbind(edges$from, edges$to))
 
 g <- add_edges(g, edges = edge_list)
 
-# Specify edge length based on attribute: LogFC, but undo the Log base 2 so larger LogFC have more influence
+# Specify edge length based on attribute: LogFC
+
+edge_weights <- abs(edges$LogFC)
+E(g)$weight <- edge_weights
+```
+
+### Default Network
+
+```{r}
+# Plot the network
+plot(g)
+```
+
+Figure caption:
+
+Nice, we now have the results of our DIA-MS experiments for each mutant 'condition' visualized as a network. However, I think it is safe to say it is garbage and unintelligible as-is. Let's make some conscious design choices to make this at least visually pleasing to the eye. Bonus points if it reveals something cool!
+
+```{r}
+# Nodes
+nodes <- unique(c(proteomic$contrast, proteomic$Gene))
+
+g <- make_empty_graph(directed = FALSE)
+g <- add_vertices(g, length(nodes))
+
+# set all vertex labels to an empty string
+V(g)$label <- ""
+
+# manually assign labels to the 9 (mutant) nodes
+V(g)$label[1:9] <- nodes[1:9]
+
+# Manually enlarge the mutant nodes
+V(g)$size <- 5
+V(g)[1:9]$size <- 10
+
+# Hide mutant nodes, but leave labels
+V(g)$shape <- "circle"
+V(g)$shape[1:9] <- "none"
+
+# Change vertex color
+V(g)$color <- "white"
+
+# Edges
+edges <- data.frame(
+  from = proteomic$Gene,
+  to = proteomic$contrast,
+  LogFC = proteomic$logFC,
+  p = proteomic$P.Value
+  
+)
+
+# Convert edge list to indices
+edges$from <- match(edges$from, nodes)
+edges$to <- match(edges$to, nodes)
+
+# create a list of alternating values from 'from' and 'to' columns
+edge_list <- c(rbind(edges$from, edges$to))
+
+g <- add_edges(g, edges = edge_list)
+
+# Specify edge length based on attribute: LogFC
+# "Undo" the Log (base: 2) so that larger LogFC values have more 'weight'
+# add 10 to all values to help make the network physically smaller.
 
 edge_weights <- abs(edges$LogFC)^2 + 10
 E(g)$weight <- edge_weights
 
 # Plot the network
+set.seed(420)
 plot(g,
-     margin = -1,
-     vertex.size = 4,
+     margin = -.8, # allow the network to use up more of the margin
      vertex.label.cex = .5,
+     vertex.label.font = 2, # Bold
      edge_arrow_mode = 0,
-     xlim=c(-2, 2), ylim=c(-2, 2)
-     )
-
-
-plot(g,
-     vertex.size = 4,
-     vertex.label.cex = .5,
-     edge_arrow_mode = 0,
-     xlim=c(-1.5, 1.5), ylim=c(-1.5,1.5)
+     xlim=c(-1.75, 1.75), ylim=c(-1.75, 1.75) # Increase the plot size to help accommodate the network
      )
 ```
 
 ```{r}
-# library(igraph)
-# 
-# # create a random graph with 300 vertices
-# g <- erdos.renyi.game(300, 0.1)
-# 
-# # set edge weights randomly
-# E(g)$weight <- runif(ecount(g))
-# 
-# # set initial vertex positions randomly
-# V(g)$x <- runif(vcount(g))
-# V(g)$y <- runif(vcount(g))
-# 
-# # define a function to adjust vertex positions
-# adjust_positions <- function(g, min.dist) {
-#   # calculate distances between vertices
-#   dists <- as.matrix(dist(cbind(V(g)$x, V(g)$y)))
-#   # set diagonal to infinite so that vertices don't compare to themselves
-#   diag(dists) <- Inf
-#   # get indices of vertices that are too close to each other
-#   close_vertices <- which(dists < min.dist, arr.ind = TRUE)
-#   # loop over close vertices and move them apart
-#   for (i in 1:nrow(close_vertices)) {
-#     # get indices of the two vertices that are too close
-#     v1 <- close_vertices[i, 1]
-#     v2 <- close_vertices[i, 2]
-#     # calculate the direction and distance between the two vertices
-#     dir <- c(V(g)[v1]$x - V(g)[v2]$x, V(g)[v1]$y - V(g)[v2]$y)
-#     dist <- sqrt(dir[1]^2 + dir[2]^2)
-#     # move the vertices apart by half the minimum distance
-#     V(g)[v1]$x <- V(g)[v1]$x + dir[1]/dist * (min.dist - dist)/2
-#     V(g)[v1]$y <- V(g)[v1]$y + dir[2]/dist * (min.dist - dist)/2
-#     V(g)[v2]$x <- V(g)[v2]$x - dir[1]/dist * (min.dist - dist)/2
-#     V(g)[v2]$y <- V(g)[v2]$y - dir[2]/dist * (min.dist - dist)/2
-#   }
-#   return(g)
-# }
-# 
-# # adjust vertex positions until there are no close vertices
-# min.dist <- 0.1
-# while (TRUE) {
-#   g <- adjust_positions(g, min.dist)
-#   if (length(which(as.matrix(dist(cbind(V(g)$x, V(g)$y))) < min.dist)) == 0) {
-#     break
-#   }
-#   min.dist <- min.dist + 0.01
-# }
-# 
-# # plot the graph
-# plot(g, edge.width = E(g)$weight)
+# all vertex shapes, minus "raster", that might not be available
+shapes <- setdiff(shapes(), "")
+g <- make_ring(length(shapes))
+set.seed(42)
+plot(g, vertex.shape=shapes, vertex.label=shapes, vertex.label.dist=1,
+     vertex.size=15, vertex.size2=15,
+     vertex.pie=lapply(shapes, function(x) if (x=="pie") 2:6 else 0),
+     vertex.pie.color=list(heat.colors(5)))
 
+# add new vertex shape, plot nothing with no clipping
+add_shape("nil")
+plot(g, vertex.shape="nil")
 ```
