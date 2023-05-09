@@ -80,32 +80,6 @@ plot(g,
      vertex.label.cex = .5,
      xlim=c(-1.5, 1.5), ylim=c(-1.5,1.5) 
      )
-
-edges1 <- data.frame(
-  from = proteomic$Gene,
-  to = proteomic$contrast,
-  LogFC = proteomic$logFC,
-  p = proteomic$P.Value
-  
-)
-
-# Convert edge list to indices
-edges1$from <- match(edges1$from, nodes)
-edges1$to <- match(edges1$to, nodes)
-
-# create a list of alternating values from 'from' and 'to' columns
-edge_list <- c(rbind(edges1$from, edges1$to))
-
-g <- add_edges(g, edges = edge_list)
-
-E(g)$length <- 1
-
-plot(g, 
-     margin = -.4,
-     vertex.size = 4,
-     vertex.label.cex = .5,
-     xlim=c(-1.5, 1.5), ylim=c(-1.5,1.5) 
-     )
 ```
 
 ### EDGES
@@ -136,6 +110,27 @@ edge_weights <- abs(edges$LogFC)
 E(g)$weight <- edge_weights
 ```
 
+# Add edges between mutant conditions weighted by their correlation each other mutation.
+
+```{r}
+mutants <- c("R46G", "G309S", "S481Y", "A583T", "S25P", "K102E", "Q380K", "G424D", "W296A")
+
+Matrix <- NULL
+
+for(m in mutants){
+  column <- NULL
+  for (p in Proteins_350){
+    Entry <- c(stack$logFC[stack$contrast == m & stack$Gene == p |
+                             stack$contrast == m & stack$Systemic.name == p |
+                             stack$contrast == m & stack$UniprotID == p], NA)[1]
+    column <- rbind(column, Entry)
+  }
+  Matrix <- cbind(Matrix, column)
+}
+rownames(Matrix) <- Proteins_350
+colnames(Matrix) <- mutants2
+```
+
 ### Default Network
 
 ```{r}
@@ -154,6 +149,13 @@ nodes <- unique(c(proteomic$contrast, proteomic$Gene))
 g <- make_empty_graph(directed = FALSE)
 g <- add_vertices(g, length(nodes))
 
+# Fix coordinates of mutants
+fixed_coords <- cbind(cos(seq(0, 7/4*pi, length.out=9)), sin(seq(0, 7/4*pi, length.out=9)))
+fixed_coords <- rbind(fixed_coords, data.frame(V1 = rep(0, 350), V2 = rep(0, 350)))  # add coordinate for protein nodes
+
+# Set fixed nodes in layout matrix
+layout <- as.matrix(fixed_coords)
+
 # set all vertex labels to an empty string
 V(g)$label <- ""
 
@@ -162,7 +164,7 @@ V(g)$label[1:9] <- nodes[1:9]
 
 # Manually enlarge the mutant nodes
 V(g)$size <- 5
-V(g)[1:9]$size <- 10
+V(g)[1:9]$size <- 0
 
 # Hide mutant nodes, but leave labels
 V(g)$shape <- "circle"
@@ -196,9 +198,12 @@ g <- add_edges(g, edges = edge_list)
 edge_weights <- abs(edges$LogFC)^2 + 10
 E(g)$weight <- edge_weights
 
+# c <- cluster_louvain(g, resolution = 1.7)
+
 # Plot the network
 set.seed(420)
 plot(g,
+     layout = layout,
      margin = -.8, # allow the network to use up more of the margin
      vertex.label.cex = .5,
      vertex.label.font = 2, # Bold
@@ -206,6 +211,12 @@ plot(g,
      xlim=c(-1.75, 1.75), ylim=c(-1.75, 1.75) # Increase the plot size to help accommodate the network
      )
 ```
+Design choices: We are more interested in results as a whole and not individual proteins (for now at least), node size was decreased and labels removed; To help distinguish between the 2 node classes/groups: Hsp90 mutations and Proteins, the mutant node shapes were removed, leaving behind the label.
+
+```{r}
+
+```
+
 
 ```{r}
 # all vertex shapes, minus "raster", that might not be available
@@ -220,4 +231,118 @@ plot(g, vertex.shape=shapes, vertex.label=shapes, vertex.label.dist=1,
 # add new vertex shape, plot nothing with no clipping
 add_shape("nil")
 plot(g, vertex.shape="nil")
+```
+
+```{r}
+# create a sample data frame with 9 sets of measurements
+set.seed(123)
+df <- data.frame(cond1 = rnorm(10), cond2 = rnorm(10), cond3 = rnorm(10),
+                 cond4 = rnorm(10), cond5 = rnorm(10), cond6 = rnorm(10),
+                 cond7 = rnorm(10), cond8 = rnorm(10), cond9 = rnorm(10))
+
+# calculate the correlation matrix between all pairs of conditions
+cor_matrix <- cor(df)
+```
+
+```{r}
+library(igraph)
+
+set.seed(1234)
+
+# create a random igraph network
+g <- erdos.renyi.game(10, 0.2)
+
+# assign a group number to each node
+V(g)$group <- sample(1:3, 10, replace=TRUE)
+
+# plot the igraph network with the group annotation
+plot(g, vertex.color=V(g)$group, vertex.size=20, vertex.label=NA, 
+     main="Igraph network with group annotation")
+legend("topleft", legend=unique(V(g)$group), fill=unique(V(g)$group))
+
+```
+
+```{r}
+library(igraph)
+
+set.seed(1234)
+
+# create a random igraph network
+g <- erdos.renyi.game(10, 0.2)
+
+# assign a group number to each node
+V(g)$group <- sample(1:3, 10, replace=TRUE)
+
+# detect communities using Louvain algorithm
+c <- cluster_louvain(g)
+
+# plot the igraph network with group annotation and cluster highlighting
+plot(c, g, vertex.color=V(g)$group, vertex.size=20, vertex.label=NA, 
+     mark.groups=TRUE, mark.border=2, main="Igraph network with group and cluster annotation")
+legend("topleft", legend=unique(V(g)$group), fill=unique(V(g)$group))
+
+```
+```{r}
+# # Create an example graph with groups assigned to nodes
+# g <- graph_from_data_frame(data.frame(from = sample(1:10, 20, replace = TRUE), 
+#                                       to = sample(1:10, 20, replace = TRUE)))
+# V(g)$group <- sample(1:3, 10, replace = TRUE)
+# 
+# # Set colors for the groups
+# group_colors <- c("red", "green", "blue")
+# 
+# # Assign initial coordinates to nodes in a circle
+# coords <- layout_in_circle(g)
+# 
+# # Apply Kamada-Kawai layout to cluster nodes by group
+# layout <- layout_with_kk(g, initial = coords, 
+#                          dim = 2, 
+#                          niter = 1000,
+#                          user.weights = V(g)$group,
+#                          weight.exp = 1)
+# 
+# # Plot the graph with clustered nodes and group annotations
+# plot(g, 
+#      layout = layout, 
+#      vertex.color = group_colors[V(g)$group],
+#      vertex.label.color = "black", 
+#      vertex.label.family = "sans", 
+#      vertex.label.cex = 1, 
+#      vertex.size = 20, 
+#      margin = -0.5, 
+#      vertex.shape = "circle",
+#      edge.color = "gray")
+# 
+# # Add group annotations
+# for (group in unique(V(g)$group)) {
+#   members <- V(g)$name[V(g)$group == group]
+#   x <- mean(layout[V(g)$name %in% members, 1])
+#   y <- mean(layout[V(g)$name %in% members, 2])
+#   text(x, y, paste0("Group ", group), col = group_colors[group], font = 2, cex = 2)
+# }
+
+
+```
+
+```{r}
+library(igraph)
+
+# Create an empty graph with 10 nodes arranged in a ring
+g <- make_empty_graph(10)
+g <- add_edges(g, c(1,2,2,3,3,4,4,5,5,6,6,7,7,8,8,9,9,10,10,1))
+
+# Set initial layout
+layout <- layout_with_fr(g)
+
+# Set coordinates for the first 9 nodes in a ring formation
+fixed_coords <- cbind(cos(seq(0, 7/4*pi, length.out=9)), sin(seq(0, 7/4*pi, length.out=9)))
+fixed_coords <- rbind(fixed_coords, c(0,0))  # add coordinate for 10th node
+
+# Set fixed nodes in layout matrix
+layout[1:10,] <- fixed_coords
+
+# Plot the graph with fixed positions for the first 9 nodes
+plot(g, layout = layout)
+
+
 ```
