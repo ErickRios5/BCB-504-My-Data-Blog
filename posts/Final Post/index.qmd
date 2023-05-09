@@ -113,22 +113,22 @@ E(g)$weight <- edge_weights
 # Add edges between mutant conditions weighted by their correlation each other mutation.
 
 ```{r}
-mutants <- c("R46G", "G309S", "S481Y", "A583T", "S25P", "K102E", "Q380K", "G424D", "W296A")
-
-Matrix <- NULL
-
-for(m in mutants){
-  column <- NULL
-  for (p in Proteins_350){
-    Entry <- c(stack$logFC[stack$contrast == m & stack$Gene == p |
-                             stack$contrast == m & stack$Systemic.name == p |
-                             stack$contrast == m & stack$UniprotID == p], NA)[1]
-    column <- rbind(column, Entry)
-  }
-  Matrix <- cbind(Matrix, column)
-}
-rownames(Matrix) <- Proteins_350
-colnames(Matrix) <- mutants2
+# mutants <- c("R46G", "G309S", "S481Y", "A583T", "S25P", "K102E", "Q380K", "G424D", "W296A")
+# 
+# Matrix <- NULL
+# 
+# for(m in mutants){
+#   column <- NULL
+#   for (p in Proteins_350){
+#     Entry <- c(stack$logFC[stack$contrast == m & stack$Gene == p |
+#                              stack$contrast == m & stack$Systemic.name == p |
+#                              stack$contrast == m & stack$UniprotID == p], NA)[1]
+#     column <- rbind(column, Entry)
+#   }
+#   Matrix <- cbind(Matrix, column)
+# }
+# rownames(Matrix) <- Proteins_350
+# colnames(Matrix) <- mutants2
 ```
 
 ### Default Network
