@@ -1,24 +1,25 @@
 ---
-title: "BCB 520 - The Final Portfolio Post"
-subtitle: "Hsp90"
+title: "BCB 520 - The Final Project"
+subtitle: "Mutations in Molecular Chaperone: Hsp90 Elicit Different Proteomic Responses"
 format:
   html:
     toc: false
     echo: true
 author: "Erick Rios"
 date: "2023-05-03"
-categories: [Portfolio, DataViz, Network, Observable, Assignment]
+categories: [Portfolio, DataViz, Network, Project, Hsp90, Mutations]
 image: "yeastbud.png"
-description: "Research"
+description: "Network visualization and analysis of proteomic responses to Hsp90 mutation."
 code-fold: true
 code-tools: true
+bibliography: references.bib
 ---
 
 # The Preamble
 
-The focus of my research is the study of Hsp90 molecular chaperone. Over the decades we come to realize this chaperone sits as a major hub of protein-protein interactions (CITE GOPINATH) in which it regulates the folding, activity, and degradation of its clients.
+The focus of my research is the study of Hsp90 molecular chaperone. Over the decades we come to realize this chaperone sits as a major hub of protein-protein interactions [@Gopinath2014; @Zhao2005a; @Rizzolo2019] in which it regulates the folding, activity, and degradation of its clients.
 
-The current study expands the proteomic analysis previously done by us (CITE GENETICS PAPER), here we use quantitative proteomic analysis to compare extracts from yeast expressing wild-type yeast Hsp90 to nine different mutants. Our results demonstrate that the mutants elicit varied proteomic responses, even though the cells were harvested at temperatures that do not significantly affect growth. Overall, these results suggest:
+The current study expands the preliminary proteomic analysis previously done in yeast by us[@Hohrman2021], here we use quantitative proteomic analysis to compare extracts from yeast expressing wild-type yeast Hsp90 to nine different mutants. Our results demonstrate that the mutants elicit varied proteomic responses, even though the cells were harvested at temperatures that do not significantly affect growth. Overall, our results suggest:
 
 1.  It is possible to selectively inhibit Hsp90 function *in vivo*, and
 
@@ -30,31 +31,43 @@ Data source:
 
 1.  Main data used in this analysis are the results of Data Independent Acquisition Mass Spectrometry (DIA-MS) experiments, a technique for quantitative proteomics. This is the crux of our study. For brevity, the data has been pre-filtered for significant hits of interest for analysis.
 
-2.  Supporting data/information publicly available on *Saccharomyces Genome Database (SGD)* (MAKE LINK)
-
--   List of currently known protein **physical** interactors of Hsp90 (Both Hsc82 and Hsp82 isoforms)
--   List of currently known protein **genetic** interactors of Hsp90 (Both Hsc82 and Hsp82 isoforms)
--   Results GO term analysis using GO Slim Mapper
-
-3.  Supporting data/information publicly available on
-
--   Physical protein attributes such as molecular weight, hydrophobicity, etc.
+A significant hit in our study is a protein whose abundance had a \|Log~2~ Fold Change\| (LogFC) greater than 1.5, relative to wild-type.
 
 ```{r}
 # Load in our data
 proteomic <- read.csv("trimmed_proteomic_Data.csv")
-
-
 ```
 
-Data Dictionary
+Data Dictionary #1
 
 ```{r}
 ```
 
-# Visualization
+2.  Supporting data/information publicly available on *Saccharomyces Genome Database ([SGD](https://yeastgenome.org/ "Saccharomyces Genome Database main page"))*
 
-## Figure 1: Basic static 'network'
+-   List of currently known protein **physical** interactors of Hsp90 (Both [Hsc82](https://yeastgenome.org/locus/S000004798/interaction "List of Hsc82 genetic and physical interactors") and [Hsp82](https://yeastgenome.org/locus/S000006161/interaction "List of Hsp82 genetic and physical interactors") isoforms)
+-   List of currently known protein **genetic** interactors of Hsp90 (Both [Hsc82](https://yeastgenome.org/locus/S000004798/interaction "List of Hsc82 genetic and physical interactors") and [Hsp82](https://yeastgenome.org/locus/S000006161/interaction "List of Hsp82 genetic and physical interactors") isoforms)
+-   Hits from our data analyzed by [Gene Ontology (GO) Slim Mapper](https://yeastgenome.org/goSlimMapper "Gene Ontology tool to classify and group genes/proteins") \# Visualization
+
+```{r}
+# Use read.table() to read in the file
+# Hsp90.Interactors <- read.table(file_path, header = TRUE, sep = "\t", stringsAsFactors = FALSE)
+
+```
+
+Data Dictionary #2
+
+```{r}
+GO.terms <- read.table(file = "GO Slim Mapper Results.txt", header = TRUE, sep = "\t", stringsAsFactors = FALSE)
+```
+
+Data Dictionary #3
+
+```{r}
+```
+
+# Visualizations
+## Figure 1: Hsp90 Mutant-Protein Network of Significant Hits
 
 ```{r}
 #| message: false
@@ -81,6 +94,7 @@ plot(g,
      xlim=c(-1.5, 1.5), ylim=c(-1.5,1.5) 
      )
 ```
+In this circle of nodes we have our 9 Hsp90 mutants and 350 proteins that had a significant change in protein abundance in at least one mutant strain.
 
 ### EDGES
 
@@ -110,27 +124,6 @@ edge_weights <- abs(edges$LogFC)
 E(g)$weight <- edge_weights
 ```
 
-# Add edges between mutant conditions weighted by their correlation each other mutation.
-
-```{r}
-# mutants <- c("R46G", "G309S", "S481Y", "A583T", "S25P", "K102E", "Q380K", "G424D", "W296A")
-# 
-# Matrix <- NULL
-# 
-# for(m in mutants){
-#   column <- NULL
-#   for (p in Proteins_350){
-#     Entry <- c(stack$logFC[stack$contrast == m & stack$Gene == p |
-#                              stack$contrast == m & stack$Systemic.name == p |
-#                              stack$contrast == m & stack$UniprotID == p], NA)[1]
-#     column <- rbind(column, Entry)
-#   }
-#   Matrix <- cbind(Matrix, column)
-# }
-# rownames(Matrix) <- Proteins_350
-# colnames(Matrix) <- mutants2
-```
-
 ### Default Network
 
 ```{r}
@@ -138,23 +131,15 @@ E(g)$weight <- edge_weights
 plot(g)
 ```
 
-Figure caption:
-
 Nice, we now have the results of our DIA-MS experiments for each mutant 'condition' visualized as a network. However, I think it is safe to say it is garbage and unintelligible as-is. Let's make some conscious design choices to make this at least visually pleasing to the eye. Bonus points if it reveals something cool!
 
+### Make it pretty 
 ```{r}
 # Nodes
 nodes <- unique(c(proteomic$contrast, proteomic$Gene))
 
 g <- make_empty_graph(directed = FALSE)
 g <- add_vertices(g, length(nodes))
-
-# Fix coordinates of mutants
-fixed_coords <- cbind(cos(seq(0, 7/4*pi, length.out=9)), sin(seq(0, 7/4*pi, length.out=9)))
-fixed_coords <- rbind(fixed_coords, data.frame(V1 = rep(0, 350), V2 = rep(0, 350)))  # add coordinate for protein nodes
-
-# Set fixed nodes in layout matrix
-layout <- as.matrix(fixed_coords)
 
 # set all vertex labels to an empty string
 V(g)$label <- ""
@@ -195,13 +180,30 @@ g <- add_edges(g, edges = edge_list)
 # "Undo" the Log (base: 2) so that larger LogFC values have more 'weight'
 # add 10 to all values to help make the network physically smaller.
 
-edge_weights <- abs(edges$LogFC)^2 + 10
+edge_weights <- abs(edges$LogFC)^3
 E(g)$weight <- edge_weights
 
 # c <- cluster_louvain(g, resolution = 1.7)
 
-# Plot the network
+# Fix coordinates of mutants
+fixed_coords <- cbind(cos(seq(0, 7/4*pi, length.out=9)), sin(seq(0, 7/4*pi, length.out=9)))
+fixed_coords <- rbind(fixed_coords, data.frame(V1 = rep(0, 350), V2 = rep(0, 350)))  # add coordinate for protein nodes
+
+# Set fixed nodes in layout matrix
+layout <- as.matrix(fixed_coords)
+
 set.seed(420)
+layout2 <- layout_randomly(g)
+layout2[1:9,1:2] <- layout[1:9,1:2]
+
+layout3 <- layout_with_fr(graph = g, coords = layout2, start.temp = .1)
+
+# layout3[1:9,1:2] <- layout[1:9,1:2]
+# 
+# layout3 <- layout_with_fr(graph = g, coords = layout2, start.temp = .1, niter = 5,  )
+
+# Plot the network
+
 plot(g,
      layout = layout,
      margin = -.8, # allow the network to use up more of the margin
@@ -209,14 +211,44 @@ plot(g,
      vertex.label.font = 2, # Bold
      edge_arrow_mode = 0,
      xlim=c(-1.75, 1.75), ylim=c(-1.75, 1.75) # Increase the plot size to help accommodate the network
-     )
+)
+
+plot(g,
+     layout = layout2,
+     margin = -.8, # allow the network to use up more of the margin
+     vertex.label.cex = .5,
+     vertex.label.font = 2, # Bold
+     edge_arrow_mode = 0,
+     xlim=c(-1.75, 1.75), ylim=c(-1.75, 1.75) # Increase the plot size to help accommodate the network
+)
+
+plot(g,
+     layout = layout3,
+     margin = -.8, # allow the network to use up more of the margin
+     vertex.label.cex = .5,
+     vertex.label.font = 2, # Bold
+     edge_arrow_mode = 0,
+     xlim=c(-1.75, 1.75), ylim=c(-1.75, 1.75) # Increase the plot size to help accommodate the network
+)
 ```
+
 Design choices: We are more interested in results as a whole and not individual proteins (for now at least), node size was decreased and labels removed; To help distinguish between the 2 node classes/groups: Hsp90 mutations and Proteins, the mutant node shapes were removed, leaving behind the label.
 
+## Integrate Hsp90 Interactor data and results from Gene Ontology.
 ```{r}
+library(tidyr)
+
+# Create an example data frame
+df <- data.frame(group = c(1, 2, 3),
+                 members = c("A, B, C", "D, E, F", "G, H"))
+
+# Separate the comma-separated values in the "members" column into separate rows
+df_split <- separate_rows(df, members, sep = ", ")
+
+# View the resulting data frame
+df_split
 
 ```
-
 
 ```{r}
 # all vertex shapes, minus "raster", that might not be available
@@ -282,6 +314,7 @@ plot(c, g, vertex.color=V(g)$group, vertex.size=20, vertex.label=NA,
 legend("topleft", legend=unique(V(g)$group), fill=unique(V(g)$group))
 
 ```
+
 ```{r}
 # # Create an example graph with groups assigned to nodes
 # g <- graph_from_data_frame(data.frame(from = sample(1:10, 20, replace = TRUE), 
@@ -346,3 +379,5 @@ plot(g, layout = layout)
 
 
 ```
+
+# Conlusions
