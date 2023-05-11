@@ -147,16 +147,17 @@ V(g)$label <- ""
 # manually assign labels to the 9 (mutant) nodes
 V(g)$label[1:9] <- nodes[1:9]
 
-# Manually enlarge the mutant nodes
-V(g)$size <- 5
-V(g)[1:9]$size <- 0
+# node colors
+
+V(g)$color <- "white"
+
+# Hide the mutant node shapes
+V(g)$size <- 3
+V(g)[1:9]$size <- 5
 
 # Hide mutant nodes, but leave labels
 V(g)$shape <- "circle"
 V(g)$shape[1:9] <- "none"
-
-# Change vertex color
-V(g)$color <- "white"
 
 # Edges
 edges <- data.frame(
@@ -180,101 +181,65 @@ g <- add_edges(g, edges = edge_list)
 # "Undo" the Log (base: 2) so that larger LogFC values have more 'weight'
 # add 10 to all values to help make the network physically smaller.
 
-edge_weights <- abs(edges$LogFC)^3
+edge_weights <- abs(edges$LogFC)
 E(g)$weight <- edge_weights
 
-# c <- cluster_louvain(g, resolution = 1.7)
+# c <- cluster_louvain(g, resolution = 1.25)
 
-# Fix coordinates of mutants
-fixed_coords <- cbind(cos(seq(0, 7/4*pi, length.out=9)), sin(seq(0, 7/4*pi, length.out=9)))
-fixed_coords <- rbind(fixed_coords, data.frame(V1 = rep(0, 350), V2 = rep(0, 350)))  # add coordinate for protein nodes
-
-# Set fixed nodes in layout matrix
-layout <- as.matrix(fixed_coords)
-
-set.seed(420)
-layout2 <- layout_randomly(g)
-layout2[1:9,1:2] <- layout[1:9,1:2]
-
-layout3 <- layout_with_fr(graph = g, coords = layout2, start.temp = .1)
-
-# layout3[1:9,1:2] <- layout[1:9,1:2]
-# 
-# layout3 <- layout_with_fr(graph = g, coords = layout2, start.temp = .1, niter = 5,  )
+layout <- layout_with_fr(g)
 
 # Plot the network
-
+set.seed(420)
 plot(g,
      layout = layout,
      margin = -.8, # allow the network to use up more of the margin
      vertex.label.cex = .5,
      vertex.label.font = 2, # Bold
+     vertex.label.color= "black",
      edge_arrow_mode = 0,
      xlim=c(-1.75, 1.75), ylim=c(-1.75, 1.75) # Increase the plot size to help accommodate the network
 )
 
-plot(g,
-     layout = layout2,
-     margin = -.8, # allow the network to use up more of the margin
-     vertex.label.cex = .5,
-     vertex.label.font = 2, # Bold
-     edge_arrow_mode = 0,
-     xlim=c(-1.75, 1.75), ylim=c(-1.75, 1.75) # Increase the plot size to help accommodate the network
-)
-
-plot(g,
-     layout = layout3,
-     margin = -.8, # allow the network to use up more of the margin
-     vertex.label.cex = .5,
-     vertex.label.font = 2, # Bold
-     edge_arrow_mode = 0,
-     xlim=c(-1.75, 1.75), ylim=c(-1.75, 1.75) # Increase the plot size to help accommodate the network
-)
 ```
 
 Design choices: We are more interested in results as a whole and not individual proteins (for now at least), node size was decreased and labels removed; To help distinguish between the 2 node classes/groups: Hsp90 mutations and Proteins, the mutant node shapes were removed, leaving behind the label.
 
 ## Integrate Hsp90 Interactor data and results from Gene Ontology.
 ```{r}
+#| warning: false
+
+# Calculate GO process enrichment
+GO.terms$CLUSTER_FREQUENCY <- as.numeric(sub("%", "", GO.terms$CLUSTER_FREQUENCY))/100
+GO.terms$GENOME_FREQUENCY <- as.numeric(sub("%", "", GO.terms$GENOME_FREQUENCY))/100
+GO.terms$Enrichment <- GO.terms$CLUSTER_FREQUENCY/GO.terms$GENOME_FREQUENCY
+
+# Take top 5 enriched processes that have at least 5 proteins annotated to a cellular process.
+
+GO.terms5 <- GO.terms[GO.terms$NUM_LIST_ANNOTATIONS >= 5,]
+GO.terms5 <- GO.terms5[order(GO.terms5$Enrichment, decreasing = T),]
+GO.terms5 <- GO.terms5[1:5, c(1,2,9,10)]
+
 library(tidyr)
+GO.terms5.split <- separate_rows(GO.terms5, ANNOTATED_GENES, sep = ", ")
 
-# Create an example data frame
-df <- data.frame(group = c(1, 2, 3),
-                 members = c("A, B, C", "D, E, F", "G, H"))
+proteomic$GO.process <- "other"
+proteomic$GO.process[proteomic$Gene %in% GO.terms5.split$ANNOTATED_GENES] <- GO.terms5.split$TERM[GO.terms5.split$ANNOTATED_GENES %in% proteomic$Gene]
 
-# Separate the comma-separated values in the "members" column into separate rows
-df_split <- separate_rows(df, members, sep = ", ")
+g <- graph_from_data_frame(proteomic)
 
-# View the resulting data frame
-df_split
+set.seed(420)
+plot(g,
+     layout = layout,
+     margin = -.8, # allow the network to use up more of the margin
+     vertex.label.cex = .5,
+     vertex.label.font = 2, # Bold
+     vertex.label.color= "black",
+     edge_arrow_mode = 0,
+     xlim=c(-1.75, 1.75), ylim=c(-1.75, 1.75) # Increase the plot size to help accommodate the network
+)
 
 ```
 
-```{r}
-# all vertex shapes, minus "raster", that might not be available
-shapes <- setdiff(shapes(), "")
-g <- make_ring(length(shapes))
-set.seed(42)
-plot(g, vertex.shape=shapes, vertex.label=shapes, vertex.label.dist=1,
-     vertex.size=15, vertex.size2=15,
-     vertex.pie=lapply(shapes, function(x) if (x=="pie") 2:6 else 0),
-     vertex.pie.color=list(heat.colors(5)))
-
-# add new vertex shape, plot nothing with no clipping
-add_shape("nil")
-plot(g, vertex.shape="nil")
-```
-
-```{r}
-# create a sample data frame with 9 sets of measurements
-set.seed(123)
-df <- data.frame(cond1 = rnorm(10), cond2 = rnorm(10), cond3 = rnorm(10),
-                 cond4 = rnorm(10), cond5 = rnorm(10), cond6 = rnorm(10),
-                 cond7 = rnorm(10), cond8 = rnorm(10), cond9 = rnorm(10))
-
-# calculate the correlation matrix between all pairs of conditions
-cor_matrix <- cor(df)
-```
 
 ```{r}
 library(igraph)
@@ -291,92 +256,6 @@ V(g)$group <- sample(1:3, 10, replace=TRUE)
 plot(g, vertex.color=V(g)$group, vertex.size=20, vertex.label=NA, 
      main="Igraph network with group annotation")
 legend("topleft", legend=unique(V(g)$group), fill=unique(V(g)$group))
-
-```
-
-```{r}
-library(igraph)
-
-set.seed(1234)
-
-# create a random igraph network
-g <- erdos.renyi.game(10, 0.2)
-
-# assign a group number to each node
-V(g)$group <- sample(1:3, 10, replace=TRUE)
-
-# detect communities using Louvain algorithm
-c <- cluster_louvain(g)
-
-# plot the igraph network with group annotation and cluster highlighting
-plot(c, g, vertex.color=V(g)$group, vertex.size=20, vertex.label=NA, 
-     mark.groups=TRUE, mark.border=2, main="Igraph network with group and cluster annotation")
-legend("topleft", legend=unique(V(g)$group), fill=unique(V(g)$group))
-
-```
-
-```{r}
-# # Create an example graph with groups assigned to nodes
-# g <- graph_from_data_frame(data.frame(from = sample(1:10, 20, replace = TRUE), 
-#                                       to = sample(1:10, 20, replace = TRUE)))
-# V(g)$group <- sample(1:3, 10, replace = TRUE)
-# 
-# # Set colors for the groups
-# group_colors <- c("red", "green", "blue")
-# 
-# # Assign initial coordinates to nodes in a circle
-# coords <- layout_in_circle(g)
-# 
-# # Apply Kamada-Kawai layout to cluster nodes by group
-# layout <- layout_with_kk(g, initial = coords, 
-#                          dim = 2, 
-#                          niter = 1000,
-#                          user.weights = V(g)$group,
-#                          weight.exp = 1)
-# 
-# # Plot the graph with clustered nodes and group annotations
-# plot(g, 
-#      layout = layout, 
-#      vertex.color = group_colors[V(g)$group],
-#      vertex.label.color = "black", 
-#      vertex.label.family = "sans", 
-#      vertex.label.cex = 1, 
-#      vertex.size = 20, 
-#      margin = -0.5, 
-#      vertex.shape = "circle",
-#      edge.color = "gray")
-# 
-# # Add group annotations
-# for (group in unique(V(g)$group)) {
-#   members <- V(g)$name[V(g)$group == group]
-#   x <- mean(layout[V(g)$name %in% members, 1])
-#   y <- mean(layout[V(g)$name %in% members, 2])
-#   text(x, y, paste0("Group ", group), col = group_colors[group], font = 2, cex = 2)
-# }
-
-
-```
-
-```{r}
-library(igraph)
-
-# Create an empty graph with 10 nodes arranged in a ring
-g <- make_empty_graph(10)
-g <- add_edges(g, c(1,2,2,3,3,4,4,5,5,6,6,7,7,8,8,9,9,10,10,1))
-
-# Set initial layout
-layout <- layout_with_fr(g)
-
-# Set coordinates for the first 9 nodes in a ring formation
-fixed_coords <- cbind(cos(seq(0, 7/4*pi, length.out=9)), sin(seq(0, 7/4*pi, length.out=9)))
-fixed_coords <- rbind(fixed_coords, c(0,0))  # add coordinate for 10th node
-
-# Set fixed nodes in layout matrix
-layout[1:10,] <- fixed_coords
-
-# Plot the graph with fixed positions for the first 9 nodes
-plot(g, layout = layout)
-
 
 ```
 
