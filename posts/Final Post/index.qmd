@@ -349,16 +349,64 @@ GO.terms5.split <- separate_rows(GO.terms5, ANNOTATED_GENES, sep = ", ")
 proteomic$GO.process <- "other"
 proteomic$GO.process[proteomic$Gene %in% GO.terms5.split$ANNOTATED_GENES] <- GO.terms5.split$TERM[GO.terms5.split$ANNOTATED_GENES %in% proteomic$Gene]
 
-g <- graph_from_data_frame(proteomic)
+vertices <- unique(c(GO.terms5.split$TERM, GO.terms5.split$ANNOTATED_GENES))
 
-set.seed(420)
+g <- graph_from_data_frame(GO.terms5.split[,2:4], directed = F, vertices = vertices)
+
+term.count <-  length(unique(GO.terms5.split$TERM))
+node.count <- length(unique(GO.terms5.split$ANNOTATED_GENES))
+
+V(g)$size <- c(rep(10, term.count), rep(5, node.count))
+# Set edge length based on the GO process enrichment in our data over the whole genome background.
+E(g)$weight <- GO.terms5.split$Enrichment
+
+V(g)$label <- c(vertices[1:5], rep("", 86))
+
+set.seed(4200)
 plot(g,
-     layout = layout,
+     #layout = layout,
      margin = -.8, # allow the network to use up more of the margin
-     vertex.label.cex = .5,
+     vertex.label.cex = 1,
      vertex.label.font = 2, # Bold
      vertex.label.color= "black",
      edge_arrow_mode = 0,
+     #vertex.color = V(g)$color,
+     xlim=c(-1.75, 1.75), ylim=c(-1.75, 1.75) # Increase the plot size to help accommodate the network
+)
+```
+```{r}
+# Calculate GO process enrichment
+GO.terms$CLUSTER_FREQUENCY <- as.numeric(sub("%", "", GO.terms$CLUSTER_FREQUENCY))/100
+GO.terms$GENOME_FREQUENCY <- as.numeric(sub("%", "", GO.terms$GENOME_FREQUENCY))/100
+GO.terms$Enrichment <- GO.terms$CLUSTER_FREQUENCY/GO.terms$GENOME_FREQUENCY
+
+GO.terms.split <- separate_rows(GO.terms, ANNOTATED_GENES, sep = ", ")
+
+# proteomic$GO.process <- "other"
+# proteomic$GO.process[proteomic$Gene %in% GO.terms5.split$ANNOTATED_GENES] <- GO.terms5.split$TERM[GO.terms5.split$ANNOTATED_GENES %in% proteomic$Gene]
+
+vertices <- unique(c(GO.terms.split$TERM, GO.terms.split$ANNOTATED_GENES))
+
+g <- graph_from_data_frame(GO.terms.split[,c(2,9,10)], directed = F, vertices = vertices)
+
+term.count <-  length(unique(GO.terms.split$TERM))
+node.count <- length(unique(GO.terms.split$ANNOTATED_GENES))
+
+V(g)$size <- c(rep(10, term.count), rep(2, node.count))
+E(g)$weight <- GO.terms.split$Enrichment
+
+V(g)$label <- c(rep("", term.count), vertices[90:373])
+V(g)$label <- c(vertices[1:89], rep("", 284))
+
+set.seed(420)
+plot(g,
+     #layout = layout,
+     margin = -.8, # allow the network to use up more of the margin
+     vertex.label.cex = .6,
+     vertex.label.font = 2, # Bold
+     vertex.label.color= "black",
+     edge_arrow_mode = 0,
+     #vertex.color = V(g)$color,
      xlim=c(-1.75, 1.75), ylim=c(-1.75, 1.75) # Increase the plot size to help accommodate the network
 )
 
