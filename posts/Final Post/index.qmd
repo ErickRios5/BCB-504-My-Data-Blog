@@ -67,349 +67,146 @@ Data Dictionary #3
 ```
 
 # Visualizations
+
 ## Figure 1
 
 ```{r}
 #| message: false
 #| warning: false
 library(igraph)
-```
-
-
-```{r}
-#| warning: false
-
-# Nodes
-nodes <- unique(c(proteomic$contrast, proteomic$Gene))
-
-g <- make_empty_graph(directed = FALSE)
-g <- add_vertices(g, length(nodes))
-
-# set all vertex labels to an empty string
-V(g)$label <- ""
-
-# manually assign labels to the 9 (mutant) nodes
-V(g)$label[1:9] <- nodes[1:9]
-
-# node colors
-
-V(g)$color <- "white"
-
-# Hide the mutant node shapes
-V(g)$size <- 3
-V(g)[1:9]$size <- 7
-
-# Hide mutant nodes, but leave labels
-V(g)$shape <- "circle"
-V(g)$shape[1:9] <- "none"
-
-# Edges
-edges <- data.frame(
-  from = proteomic$Gene,
-  to = proteomic$contrast,
-  LogFC = proteomic$logFC,
-  p = proteomic$P.Value
-  
-)
-
-# Convert edge list to indices
-edges$from <- match(edges$from, nodes)
-edges$to <- match(edges$to, nodes)
-
-# create a list of alternating values from 'from' and 'to' columns
-edge_list <- c(rbind(edges$from, edges$to))
-
-g <- add_edges(g, edges = edge_list)
-
-# Specify edge length based on attribute: LogFC
-# "Undo" the Log (base: 2) so that larger LogFC values have more 'weight'
-# add 10 to all values to help make the network physically smaller.
-
-edge_weights <- abs(edges$LogFC)
-E(g)$weight <- edge_weights
-
-layout <- layout_with_fr(g)
-
-# Plot the network
-set.seed(420)
-plot(g,
-     layout = layout,
-     margin = -.8, # allow the network to use up more of the margin
-     vertex.label.cex = .6,
-     vertex.label.font = 2, # Bold
-     vertex.label.color= "black",
-     edge_arrow_mode = 0,
-     xlim=c(-1.75, 1.75), ylim=c(-1.75, 1.75) # Increase the plot size to help accommodate the network
-)
-
-
-```
-### NODES
-
-Since our objective is to construct a protein interaction network, intuitively our nodes will be our significant hits found in our study. However, we must also include our experimental variables, in this case single point mutations in the Hsp90 chaperone.
-
-
-
-### EDGES
-
-Now we must establish the relationship between these nodes. Starting with the relationship between our protein hits and experimental variables (Hsp90 mutants). These proteins were found to have a significant change in abundance when at least one mutant Hsp90 is expressed as the sole source of Hsp90.
-
-### Make it pretty 
-
-Design choices: We are more interested in results as a whole and not individual proteins (for now at least), node size was decreased and labels removed; To help distinguish between the 2 node classes/groups: Hsp90 mutations and Proteins, the mutant node shapes were removed, leaving behind the label.
-
-```{r}
-# Assign each gene to a group based on interaction type with Hsp90.
-proteomic$Interaction <- "Unknown"
-proteomic$Interaction[proteomic$Systemic.name %in% Hsp90.Interactors$Systemic.Name[Hsp90.Interactors$TYPE=="Genetic"]] <- "Genetic"
-proteomic$Interaction[proteomic$Systemic.name %in% Hsp90.Interactors$Systemic.Name[Hsp90.Interactors$TYPE=="Physical"]] <- "Physical"
-proteomic$Interaction[proteomic$Systemic.name %in% Hsp90.Interactors$Systemic.Name[Hsp90.Interactors$TYPE=="Physical"] &
-                        proteomic$Systemic.name %in% Hsp90.Interactors$Systemic.Name[Hsp90.Interactors$TYPE=="Genetic"]] <- "Mixed"
-
-# Assign color to each group
+library(tidyr)
 library(viridis)
-
-# Define color palette
-colors <- viridis(n = 4, option = "D", alpha = 1, begin = 0, end = 1, direction = -1)
-
-# Add color column to dataframe
-proteomic$Int.color <- colors[match(proteomic$Interaction, unique(proteomic$Interaction))]
-
-# Nodes
-nodes <- unique(c(proteomic$contrast, proteomic$Gene))
-
-g <- make_empty_graph(directed = FALSE)
-g <- add_vertices(g, length(nodes))
-
-V(g)$label <- nodes
-
-# Edges
-
-edges <- data.frame(
-  from = proteomic$Gene,
-  to = proteomic$contrast,
-  LogFC = proteomic$logFC,
-  p = proteomic$P.Value
-  
-)
-
-# Convert edge list to indices
-edges$from <- match(edges$from, nodes)
-edges$to <- match(edges$to, nodes)
-
-# create a list of alternating values from 'from' and 'to' columns
-edge_list <- c(rbind(edges$from, edges$to))
-
-g <- add_edges(g, edges = edge_list)
-
-# node colors
-
-V(g)$color <- "white"
-V(g)$color <- proteomic$Int.color[match(V(g)$label, proteomic$Gene)]
-
-# set all vertex labels to an empty string
-V(g)$label <- ""
-
-# manually assign labels to the 9 (mutant) nodes
-V(g)$label[1:9] <- nodes[1:9]
-
-# Hide the mutant node shapes
-V(g)$size <- 3
-V(g)[1:9]$size <- 7
-
-# Hide mutant nodes, but leave labels
-V(g)$shape <- "circle"
-V(g)$shape[1:9] <- "none"
-
-# Specify edge length based on attribute: LogFC
-# "Undo" the Log (base: 2) so that larger LogFC values have more 'weight'
-# add 10 to all values to help make the network physically smaller.
-
-edge_weights <- abs(edges$LogFC)
-E(g)$weight <- edge_weights
-
-layout <- layout_with_fr(g)
-
-# Plot the network
-set.seed(420)
-plot(g,
-     layout = layout,
-     margin = -.8, # allow the network to use up more of the margin
-     vertex.label.cex = .6,
-     vertex.label.font = 2, # Bold
-     vertex.label.color= "black",
-     edge_arrow_mode = 0,
-    vertex.color = V(g)$color,
-     xlim=c(-1.75, 1.75), ylim=c(-1.75, 1.75) # Increase the plot size to help accommodate the network
-)
-
 ```
-```{r}
-V(g)$label <- nodes
 
-mutants <- matrix(c(cos(seq(0, 2*pi, length.out = 10)), 
-                    sin(seq(0, 2*pi, length.out = 10))), ncol = 2)*4
-
-# Add nodes to outer rings based on conditions
-V(g)$color <- proteomic$Int.color[match(V(g)$label, proteomic$Gene)]
-
-genetic <- length(unique(proteomic$Gene[proteomic$Interaction == "Genetic"]))+ 1
-mixed <- length(unique(proteomic$Gene[proteomic$Interaction == "Mixed"]))+ 1
-physical <- length(unique(proteomic$Gene[proteomic$Interaction == "Physical"]))+ 1
-unknown <- length(unique(proteomic$Gene[proteomic$Interaction == "Unknown"]))+ 1
-
-Node_coords <- data.frame(nodes.index = 1:359,
-                          gene = c(unique(proteomic$contrast),unique(proteomic$Gene[proteomic$Interaction == "Genetic"]), 
-                                  unique(proteomic$Gene[proteomic$Interaction == "Mixed"]),
-                                  unique(proteomic$Gene[proteomic$Interaction == "Physical"]),
-                                  unique(proteomic$Gene[proteomic$Interaction == "Unknown"])
-                                  ))
-
-# Assign the nodes in the outer rings to different positions based on their group
-
-genetic.c <- matrix(c(cos(seq(0, 2*pi, length.out = genetic)), 
-                    sin(seq(0, 2*pi, length.out = genetic))), 
-                    ncol = 2)*7
-
-mixed.c <- matrix(c(cos(seq(0, 2*pi, length.out = mixed)), 
-                    sin(seq(0, 2*pi, length.out = mixed))), 
-                  ncol = 2)*9
-
-physical.c <- matrix(c(cos(seq(0, 2*pi, length.out = physical)), 
-                       sin(seq(0, 2*pi, length.out = physical))), 
-                     ncol = 2)*11
-
-Unknown.c <- matrix(c(cos(seq(0, 2*pi, length.out = unknown)), 
-                    sin(seq(0, 2*pi, length.out = unknown))), 
-                    ncol = 2)*13
-
-DF <- rbind(mutants[-nrow(mutants),], genetic.c[-nrow(genetic.c),], mixed.c[-nrow(mixed.c),], physical.c[-nrow(physical.c),], Unknown.c[-nrow(Unknown.c),])
-
-Node_coords <- cbind(Node_coords,DF)
-
-layout <- as.matrix(Node_coords[,3:4][match(V(g)$label, Node_coords$gene),])
-
-# set all vertex labels to an empty string
-V(g)$label <- ""
-
-# manually assign labels to the 9 (mutant) nodes
-V(g)$label[1:9] <- nodes[1:9]
-
-###
-colors2 <- viridis(n = 9, option = "D", alpha = .25, begin = 0, end = 1, direction = -1)
-
-
-E(g)$color <- c(rep(colors2[1], degree(g,1)),
-                rep(colors2[2], degree(g,2)),
-                rep(colors2[3], degree(g,3)),
-                rep(colors2[4], degree(g,4)),
-                rep(colors2[5], degree(g,5)),
-                rep(colors2[6], degree(g,6)),
-                rep(colors2[7], degree(g,7)),
-                rep(colors2[8], degree(g,8)),
-                rep(colors2[9], degree(g,9))
-                )
-
-
-set.seed(420)
-plot(g,
-     layout = layout,
-     margin = -.8, # allow the network to use up more of the margin
-     vertex.label.cex = .6,
-     vertex.label.font = 2, # Bold
-     vertex.label.color= "black",
-     edge_arrow_mode = 0,
-     vertex.color = V(g)$color,
-     edge.alpha = .1,
-     xlim=c(-1.75, 1.75), ylim=c(-1.75, 1.75) # Increase the plot size to help accommodate the network
-)
-
-legend("topleft", legend=unique(proteomic$Interaction), fill=unique(V(g)$color)[2:5], title = "Hsp90 Interaction Type")
-```
-In this circle of nodes we have our 9 Hsp90 mutants and 350 proteins that had a significant change in protein abundance in at least one mutant strain.
-
-## Integrate Hsp90 Interactor data and results from Gene Ontology.
 ```{r}
 #| warning: false
+
+### Trim and format the Gene Ontology: Process data
 
 # Calculate GO process enrichment
 GO.terms$CLUSTER_FREQUENCY <- as.numeric(sub("%", "", GO.terms$CLUSTER_FREQUENCY))/100
 GO.terms$GENOME_FREQUENCY <- as.numeric(sub("%", "", GO.terms$GENOME_FREQUENCY))/100
 GO.terms$Enrichment <- GO.terms$CLUSTER_FREQUENCY/GO.terms$GENOME_FREQUENCY
-
 # Take top 5 enriched processes that have at least 5 proteins annotated to a cellular process.
-
 GO.terms5 <- GO.terms[GO.terms$NUM_LIST_ANNOTATIONS >= 5,]
 GO.terms5 <- GO.terms5[order(GO.terms5$Enrichment, decreasing = T),]
 GO.terms5 <- GO.terms5[1:5, c(1,2,9,10)]
-
-library(tidyr)
+# Format for network
 GO.terms5.split <- separate_rows(GO.terms5, ANNOTATED_GENES, sep = ", ")
 
-proteomic$GO.process <- "other"
-proteomic$GO.process[proteomic$Gene %in% GO.terms5.split$ANNOTATED_GENES] <- GO.terms5.split$TERM[GO.terms5.split$ANNOTATED_GENES %in% proteomic$Gene]
+###
 
+# Make initial network
 vertices <- unique(c(GO.terms5.split$TERM, GO.terms5.split$ANNOTATED_GENES))
+g <- graph_from_data_frame(GO.terms5.split[,2:3], directed = F, vertices = vertices)
 
-g <- graph_from_data_frame(GO.terms5.split[,2:4], directed = F, vertices = vertices)
+###
 
+# create layout using force directed algorithm
+
+layout <- layout_with_fr(g, weights = GO.terms5.split$Enrichment, coords = matrix(data = 0, nrow = 91, ncol = 2))
+
+###
+
+# Add mutant nodes 
+
+mutants <- matrix(c(cos(seq(0, 2*pi, length.out = 10)), 
+                    sin(seq(0, 2*pi, length.out = 10))), ncol = 2)*11 # Create coordinates for a ring.
+
+g <- add_vertices(g, 9)
+
+mutant.names <- c("R46G", "G309S", "S481Y", "A583T", "K102E", "S25P", "Q380K", "G424D", "W296A")
+
+V(g)$name[92:100] <- mutant.names
+
+# and edges between mutants and proteins/genes
+
+edgelist <- proteomic[,c(3,5)][proteomic$Gene %in% GO.terms5.split$ANNOTATED_GENES,]
+
+# Convert edge list to indices
+edgelist$from <- match(edgelist$contrast, V(g)$name)
+edgelist$to <- match(edgelist$Gene, V(g)$name)
+
+# create a list of alternating values from 'from' and 'to' columns
+edges <- c(rbind(edgelist$from, edgelist$to))
+
+g <- add_edges(g, edges = edges)
+
+###
+
+# Assign node colors based on physical, genetic, both (mixed), interaction with Hsp90 or neither (unknown)
+
+proteomic$Interaction <- "Unknown"
+
+proteomic$Interaction[proteomic$Systemic.name %in% Hsp90.Interactors$Systemic.Name[Hsp90.Interactors$TYPE=="Genetic"]] <- "Genetic"
+
+proteomic$Interaction[proteomic$Systemic.name %in% Hsp90.Interactors$Systemic.Name[Hsp90.Interactors$TYPE=="Physical"]] <- "Physical"
+
+proteomic$Interaction[proteomic$Systemic.name %in% Hsp90.Interactors$Systemic.Name[Hsp90.Interactors$TYPE=="Physical"] &
+                        proteomic$Systemic.name %in% Hsp90.Interactors$Systemic.Name[Hsp90.Interactors$TYPE=="Genetic"]] <- "Mixed"
+
+# Define color palette for the color blind plebs, just kidding, but not really
+colors <- viridis(n = 4, option = "D", alpha = 1, begin = 0, end = 1, direction = -1)
+colors.process <- viridis(n = 5, option = "F", alpha = 1, begin = 0, end = 1, direction = -1)
+proteomic$Int.color <- colors[match(proteomic$Interaction, unique(proteomic$Interaction))]
+
+V(g)$color <- c(colors.process, 
+                proteomic$Int.color[match(V(g)$name, proteomic$Gene)][6:91],
+                rep("white", 9)
+                )
+V(g)$color[23] <- "#35B779FF"
+
+### 
+#colors2 <- viridis(n = 9, option = "D", alpha = .25, begin = 0, end = 1, direction = -1)
+
+# E(g)$color <- c(rep(colors2[1], degree(g,1)),
+#                 rep(colors2[2], degree(g,2)),
+#                 rep(colors2[3], degree(g,3)),
+#                 rep(colors2[4], degree(g,4)),
+#                 rep(colors2[5], degree(g,5)),
+#                 rep(colors2[6], degree(g,6)),
+#                 rep(colors2[7], degree(g,7)),
+#                 rep(colors2[8], degree(g,8)),
+#                 rep(colors2[9], degree(g,9))
+#                 )
+
+###
+
+# Modify node size, shape, and labels to display
 term.count <-  length(unique(GO.terms5.split$TERM))
 node.count <- length(unique(GO.terms5.split$ANNOTATED_GENES))
 
-V(g)$size <- c(rep(10, term.count), rep(5, node.count))
-# Set edge length based on the GO process enrichment in our data over the whole genome background.
-E(g)$weight <- GO.terms5.split$Enrichment
+V(g)$size <- c(rep(12, term.count), rep(5, node.count), rep(0, 9))
 
-V(g)$label <- c(vertices[1:5], rep("", 86))
+V(g)$label <- c(rep("", 91), mutant.names)
 
-set.seed(4200)
+V(g)$shape <- c(rep("circle", term.count), rep("square" , node.count), rep("none", 9))
+###
+
 plot(g,
-     #layout = layout,
+     layout = rbind(layout, mutants[1:9,1:2]),
      margin = -.8, # allow the network to use up more of the margin
      vertex.label.cex = 1,
      vertex.label.font = 2, # Bold
      vertex.label.color= "black",
      edge_arrow_mode = 0,
-     #vertex.color = V(g)$color,
-     xlim=c(-1.75, 1.75), ylim=c(-1.75, 1.75) # Increase the plot size to help accommodate the network
-)
-```
-```{r}
-# Calculate GO process enrichment
-GO.terms$CLUSTER_FREQUENCY <- as.numeric(sub("%", "", GO.terms$CLUSTER_FREQUENCY))/100
-GO.terms$GENOME_FREQUENCY <- as.numeric(sub("%", "", GO.terms$GENOME_FREQUENCY))/100
-GO.terms$Enrichment <- GO.terms$CLUSTER_FREQUENCY/GO.terms$GENOME_FREQUENCY
-
-GO.terms.split <- separate_rows(GO.terms, ANNOTATED_GENES, sep = ", ")
-
-# proteomic$GO.process <- "other"
-# proteomic$GO.process[proteomic$Gene %in% GO.terms5.split$ANNOTATED_GENES] <- GO.terms5.split$TERM[GO.terms5.split$ANNOTATED_GENES %in% proteomic$Gene]
-
-vertices <- unique(c(GO.terms.split$TERM, GO.terms.split$ANNOTATED_GENES))
-
-g <- graph_from_data_frame(GO.terms.split[,c(2,9,10)], directed = F, vertices = vertices)
-
-term.count <-  length(unique(GO.terms.split$TERM))
-node.count <- length(unique(GO.terms.split$ANNOTATED_GENES))
-
-V(g)$size <- c(rep(10, term.count), rep(2, node.count))
-E(g)$weight <- GO.terms.split$Enrichment
-
-V(g)$label <- c(rep("", term.count), vertices[90:373])
-V(g)$label <- c(vertices[1:89], rep("", 284))
-
-set.seed(420)
-plot(g,
-     #layout = layout,
-     margin = -.8, # allow the network to use up more of the margin
-     vertex.label.cex = .6,
-     vertex.label.font = 2, # Bold
-     vertex.label.color= "black",
-     edge_arrow_mode = 0,
-     #vertex.color = V(g)$color,
-     xlim=c(-1.75, 1.75), ylim=c(-1.75, 1.75) # Increase the plot size to help accommodate the network
+     vertex.color = V(g)$color,
+     xlim=c(-5, 1.75), ylim=c(-2, 2) # Increase the plot size to help accommodate the network
 )
 
+legend("topleft", legend=unique(proteomic$Interaction), fill=unique(V(g)$color)[6:91], title = "Hsp90 Interaction Type", cex = .75)
+
+legend("bottomleft", legend= V(g)$name[1:5], title = "GO Process", cex = .75, pch = 21, pt.cex = 2, pt.bg = V(g)$color[1:5], pt.lwd = 0.5)
 ```
+
+### NODES
+
+Since our objective is to construct a protein interaction network, intuitively our nodes will be our significant hits found in our study. However, we must also include our experimental variables, in this case single point mutations in the Hsp90 chaperone.
+
+### EDGES
+
+Now we must establish the relationship between these nodes. Starting with the relationship between our protein hits and experimental variables (Hsp90 mutants). These proteins were found to have a significant change in abundance when at least one mutant Hsp90 is expressed as the sole source of Hsp90.
+
+### Layout
 
 # Conlusions

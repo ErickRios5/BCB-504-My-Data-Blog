@@ -1,0 +1,7 @@
+Index,"Old indexing from the original entire data set, artifact from ""write.csv"" function"
+Systemic.name,Unique identifiers for genes in yeast
+contrast,Our single point mutations in Hsc82 isoform; This is sometimes referred to as our 'experimental conditions'
+UniprotID,Unique identifiers for genes
+Gene,Gene symbol; symbols to genes by researchers and voted on by committees
+logFC,"Log Fold Change in protein abundance in mutant sample over wild type sample; Log base 2; negative values signify increase in abundance, positive values is decreased abundance."
+P.Value,corrected P value using Bonferroni correction
