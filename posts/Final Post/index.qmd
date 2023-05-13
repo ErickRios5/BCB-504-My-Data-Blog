@@ -67,7 +67,7 @@ Data Dictionary #3
 ```
 
 # Visualizations
-## Figure 1: Hsp90 Mutant-Protein Network of Significant Hits
+## Figure 1
 
 ```{r}
 #| message: false
@@ -75,65 +75,7 @@ Data Dictionary #3
 library(igraph)
 ```
 
-### NODES
 
-Since our objective is to construct a protein interaction network, intuitively our nodes will be our significant hits found in our study. However, we must also include our experimental variables, in this case single point mutations in the Hsp90 chaperone, this will help promote separation/clustering between nodes later when we apply our measurements from DIA-MS.
-
-```{r}
-# Visualize 350 nodes corresponding to the significant hits in our data
-nodes <- unique(c(proteomic$contrast, proteomic$Gene))
-
-g <- make_empty_graph(directed = FALSE)
-g <- add_vertices(g, length(nodes))
-V(g)$name <- nodes
-
-plot(g, 
-     margin = -.4,
-     vertex.size = 4,
-     vertex.label.cex = .5,
-     xlim=c(-1.5, 1.5), ylim=c(-1.5,1.5) 
-     )
-```
-In this circle of nodes we have our 9 Hsp90 mutants and 350 proteins that had a significant change in protein abundance in at least one mutant strain.
-
-### EDGES
-
-Now we must establish the relationship between these nodes. Starting with the relationship between our protein hits and experimental variables (Hsp90 mutants). These proteins were found to have a significant change in abundance when at least one mutant Hsp90 is expressed as the sole source of Hsp90.
-
-```{r}
-edges <- data.frame(
-  from = proteomic$Gene,
-  to = proteomic$contrast,
-  LogFC = proteomic$logFC,
-  p = proteomic$P.Value
-  
-)
-
-# Convert edge list to indices
-edges$from <- match(edges$from, nodes)
-edges$to <- match(edges$to, nodes)
-
-# create a list of alternating values from 'from' and 'to' columns
-edge_list <- c(rbind(edges$from, edges$to))
-
-g <- add_edges(g, edges = edge_list)
-
-# Specify edge length based on attribute: LogFC
-
-edge_weights <- abs(edges$LogFC)
-E(g)$weight <- edge_weights
-```
-
-### Default Network
-
-```{r}
-# Plot the network
-plot(g)
-```
-
-Nice, we now have the results of our DIA-MS experiments for each mutant 'condition' visualized as a network. However, I think it is safe to say it is garbage and unintelligible as-is. Let's make some conscious design choices to make this at least visually pleasing to the eye. Bonus points if it reveals something cool!
-
-### Make it pretty 
 ```{r}
 #| warning: false
 
@@ -186,18 +128,7 @@ g <- add_edges(g, edges = edge_list)
 edge_weights <- abs(edges$LogFC)
 E(g)$weight <- edge_weights
 
-# c <- cluster_louvain(g, resolution = 1.25)
-
 layout <- layout_with_fr(g)
-
-# ## Try to resolve overlapping labels or labels too close.
-# # Calculate the degree of each node
-# deg <- degree(g)
-# 
-# # Set the label distance and degree based on the node degree
-# dist <- ifelse(deg <= 2, 0, .5)  # For nodes with degree <= 2, set distance 
-# degree <- seq(0, 360, length.out = 4)  # Set the label degree based on the node index
-# degree <- degree + 90  # Shift the degrees so that labels are offset from the top of the node
 
 # Plot the network
 set.seed(420)
@@ -208,13 +139,22 @@ plot(g,
      vertex.label.font = 2, # Bold
      vertex.label.color= "black",
      edge_arrow_mode = 0,
-     # vertex.label.degree = degree,
-     # vertex.label.dist = dist,
      xlim=c(-1.75, 1.75), ylim=c(-1.75, 1.75) # Increase the plot size to help accommodate the network
 )
 
 
 ```
+### NODES
+
+Since our objective is to construct a protein interaction network, intuitively our nodes will be our significant hits found in our study. However, we must also include our experimental variables, in this case single point mutations in the Hsp90 chaperone.
+
+
+
+### EDGES
+
+Now we must establish the relationship between these nodes. Starting with the relationship between our protein hits and experimental variables (Hsp90 mutants). These proteins were found to have a significant change in abundance when at least one mutant Hsp90 is expressed as the sole source of Hsp90.
+
+### Make it pretty 
 
 Design choices: We are more interested in results as a whole and not individual proteins (for now at least), node size was decreased and labels removed; To help distinguish between the 2 node classes/groups: Hsp90 mutations and Proteins, the mutant node shapes were removed, leaving behind the label.
 
@@ -386,6 +326,7 @@ plot(g,
 
 legend("topleft", legend=unique(proteomic$Interaction), fill=unique(V(g)$color)[2:5], title = "Hsp90 Interaction Type")
 ```
+In this circle of nodes we have our 9 Hsp90 mutants and 350 proteins that had a significant change in protein abundance in at least one mutant strain.
 
 ## Integrate Hsp90 Interactor data and results from Gene Ontology.
 ```{r}
