@@ -1,0 +1,10 @@
+Attribute,Description
+GOID,Unique Identifier for Gene Ontology process term
+TERM,Descriptive name for cellular process
+NUM_LIST_ANNOTATIONS,# of hits in our list annotated to a cellular process
+LIST_SIZE,"Size of our gene/protein list inputted in GO Slim Mapper; # is 349 instead of 350, due to AAD16 gene unable to be include (for some reason)"
+CLUSTER_FREQUENCY,Percentage of hits in each NUM_LIST divided by our total LIST_SIZE; in decimal form
+TOTAL_NUM_ANNOTATIONS,"Total number of known genes/proteins, in the yeast genome, belonging to the cellular process (TERM)"
+POPULATION_SIZE,The total known number of genes/proteins in the yeast genome.
+GENOME_FREQUENCY,Percentage of all known yeast genes (TOTAL_NUM_ANNOTATIONS) divided by # of all known genes in the yeast genome (POPULATION_SIZE); in decimal form
+ANNOTATED_GENES,List of gene symbols of genes annotated to a given cellular process term; separated by commas

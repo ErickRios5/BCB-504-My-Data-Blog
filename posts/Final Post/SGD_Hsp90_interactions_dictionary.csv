@@ -1,0 +1,8 @@
+Attribute,Description
+TYPE,Type of interaction with either Hsc82 or Hsp82 isoforms of Hsp90; either Genetic or Physical
+HSP90,Gene symbol for either isoform: Hsc82 or Hsp82
+HSP90 Systematic Name,Yeast systematic identifier for isoforms Hsc82 or Hsp82naming convention 
+Gene,Gene symbol for all genes/proteins currently known to have either genetic or physical interaction with either for Hsp90 isoform.
+Systemic Name,Yeast systematic identifiers for all genes/proteins currently known to have either genetic or physical interaction with either for Hsp90 isoform.
+Source,Database accessed by SGD to aggregate list
+Reference,References to studies that provided interaction data

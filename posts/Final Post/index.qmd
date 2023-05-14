@@ -15,17 +15,25 @@ code-tools: true
 bibliography: references.bib
 ---
 
+```{r}
+#| message: false
+#| warning: false
+library(igraph)
+library(tidyverse)
+library(viridis)
+```
+
 # The Preamble
 
 The focus of my research is the study of Hsp90 molecular chaperone. Over the decades we come to realize this chaperone sits as a major hub of protein-protein interactions [@Gopinath2014; @Zhao2005a; @Rizzolo2019] in which it regulates the folding, activity, and degradation of its clients.
 
-The current study expands the preliminary proteomic analysis previously done in yeast by us[@Hohrman2021], here we use quantitative proteomic analysis to compare extracts from yeast expressing wild-type yeast Hsp90 to nine different mutants. Our results demonstrate that the mutants elicit varied proteomic responses, even though the cells were harvested at temperatures that do not significantly affect growth. Overall, our results suggest:
+The current study expands the preliminary proteomic analysis previously done in yeast by us[@Hohrman2021], here we use quantitative proteomic analysis to compare extracts from yeast expressing wild-type yeast Hsp90 to nine different mutants. Our results demonstrate that the mutants elicit varied proteomic responses, even though the cells were harvested at temperatures that do not significantly affect growth. Overall, our results suggests:
 
-1.  It is possible to selectively inhibit Hsp90 function *in vivo*, and
-
-2.  Identifies **cellular processes** and/or likely **clients** that may be differentially affected by Hsc82 mutation.
+-   **cellular processes** that may be differentially affected by Hsc82 mutation.
 
 # Data
+
+## Significant hits in our Proteomic Data from DIA-MS
 
 Data source:
 
@@ -36,47 +44,54 @@ A significant hit in our study is a protein whose abundance had a \|Log~2~ Fold 
 ```{r}
 # Load in our data
 proteomic <- read.csv("trimmed_proteomic_Data.csv")
+glimpse(proteomic)
 ```
 
-Data Dictionary #1
+### Proteomic Data Dictionary
 
 ```{r}
+proteomic.dictionary <- read.csv("Proteomic_data_dictionary.csv")
+knitr::kable(proteomic.dictionary)
 ```
+
+## List of Hsp90 Interactions
 
 2.  Supporting data/information publicly available on *Saccharomyces Genome Database ([SGD](https://yeastgenome.org/ "Saccharomyces Genome Database main page"))*
 
 -   List of currently known protein **physical** interactors of Hsp90 (Both [Hsc82](https://yeastgenome.org/locus/S000004798/interaction "List of Hsc82 genetic and physical interactors") and [Hsp82](https://yeastgenome.org/locus/S000006161/interaction "List of Hsp82 genetic and physical interactors") isoforms)
 -   List of currently known protein **genetic** interactors of Hsp90 (Both [Hsc82](https://yeastgenome.org/locus/S000004798/interaction "List of Hsc82 genetic and physical interactors") and [Hsp82](https://yeastgenome.org/locus/S000006161/interaction "List of Hsp82 genetic and physical interactors") isoforms)
--   Hits from our data analyzed by [Gene Ontology (GO) Slim Mapper](https://yeastgenome.org/goSlimMapper "Gene Ontology tool to classify and group genes/proteins") \# Visualization
 
 ```{r}
-
 Hsp90.Interactors <- read.csv("SGD_All_interactions_Hsp90_with_Refs_trimmed.csv", header = TRUE, stringsAsFactors = FALSE)
-
+glimpse(Hsp90.Interactors)
 ```
 
-Data Dictionary #2
+### Hsp90 Interaction Dictionary
+
+```{r}
+Hsp90.Interactors.dictionary <- read.csv("SGD_Hsp90_interactions_dictionary.csv")
+knitr::kable(Hsp90.Interactors.dictionary)
+```
+
+## GO Slim Mapper results
+
+Hits from our data analyzed by [Gene Ontology (GO) Slim Mapper](https://yeastgenome.org/goSlimMapper "Gene Ontology tool to classify and group genes/proteins")
 
 ```{r}
 GO.terms <- read.table(file = "GO Slim Mapper Results.txt", header = TRUE, sep = "\t", stringsAsFactors = FALSE)
+glimpse(GO.terms)
 ```
 
-Data Dictionary #3
+### GO Slim Mapper results Dictionary
 
 ```{r}
+Go.dictionary <- read.csv("GO_process_results_dictionary.csv")
+knitr::kable(proteomic.dictionary)
 ```
 
 # Visualizations
 
 ## Figure 1
-
-```{r}
-#| message: false
-#| warning: false
-library(igraph)
-library(tidyr)
-library(viridis)
-```
 
 ```{r}
 #| warning: false
@@ -134,6 +149,10 @@ g <- add_edges(g, edges = edges)
 
 ###
 
+# Now add the nodes for proteins that were either not in the top 5 enriched processes or could not be annotated to a GO process at all.
+
+###
+
 # Assign node colors based on physical, genetic, both (mixed), interaction with Hsp90 or neither (unknown)
 
 proteomic$Interaction <- "Unknown"
@@ -155,20 +174,6 @@ V(g)$color <- c(colors.process,
                 rep("white", 9)
                 )
 V(g)$color[23] <- "#35B779FF"
-
-### 
-#colors2 <- viridis(n = 9, option = "D", alpha = .25, begin = 0, end = 1, direction = -1)
-
-# E(g)$color <- c(rep(colors2[1], degree(g,1)),
-#                 rep(colors2[2], degree(g,2)),
-#                 rep(colors2[3], degree(g,3)),
-#                 rep(colors2[4], degree(g,4)),
-#                 rep(colors2[5], degree(g,5)),
-#                 rep(colors2[6], degree(g,6)),
-#                 rep(colors2[7], degree(g,7)),
-#                 rep(colors2[8], degree(g,8)),
-#                 rep(colors2[9], degree(g,9))
-#                 )
 
 ###
 
@@ -201,12 +206,49 @@ legend("bottomleft", legend= V(g)$name[1:5], title = "GO Process", cex = .75, pc
 
 ### NODES
 
-Since our objective is to construct a protein interaction network, intuitively our nodes will be our significant hits found in our study. However, we must also include our experimental variables, in this case single point mutations in the Hsp90 chaperone.
+Here we have 3 classes or groups of nodes:
+
+1.  Our 9 different Hsc82 mutations
+2.  The top 5 most enriched cellular processes given by Gene Ontology Slim Mapper tool
+3.  86 different proteins/genes that were annotated to one or more of the top cellular processes *and* protein abundance was significantly affected in one or more Hsc82 mutants
+
+Node labels were removed for network clarity, with exception of mutant nodes. The GO process terms were moved to a legend and color was used to identify the GO terms in the figure. The focus of the figure was to identify potential processes, not individual proteins, that may be affected by one or more Hsc82 mutant, therefore labels for individual proteins were removed.
+
+Node colors were picked in consideration for color blind individuals using the "Viridis" color package.
+
+In an effort to help reduce cognitive demand, the node shapes and sizes were adjusted to help visually separate the node classes and direct the viewer from the outer layer of the network, towards the center with increasing detail. Node shape for the mutations were removed and labels were left as the main focus of our study revolves around these mutations. The GO terms were designated as circles and size is larger compared to the individual proteins which were designated as squares. Overall, the increase in shape size moving outward from the center gives a sense of hierarchy of importance.
+
+By focusing on the top 5 enriched GO processes, the classic hairball problem is avoided and we can show with visual clarity the cellular processes that would most likely be considered for follow-up experiments or studies.
 
 ### EDGES
 
-Now we must establish the relationship between these nodes. Starting with the relationship between our protein hits and experimental variables (Hsp90 mutants). These proteins were found to have a significant change in abundance when at least one mutant Hsp90 is expressed as the sole source of Hsp90.
+Genes/proteins annotated to given GO terms by GO Slim mapper had edges drawn between the protein and the corresponding GO term(s). A few proteins, were annotated to more than one cellular process.
 
-### Layout
+Edges were drawn between proteins and Hsc82 mutations if the protein's abundance was significantly affected by an Hsc82 mutation. Some proteins were affected by more than one mutation and therefore have multiple edges.
 
-# Conlusions
+### LAYOUT
+
+An initial network was made consisting of GO terms and proteins, after which the Fruchterman-Reingold force directed algorithm was employed and the GO term enrichments were used as edge weights.
+
+Afterwards, the Hsc82 mutant nodes were manually added around the perimeter of the initial network to avoid mutant nodes from influencing the force directed graph and avoid a network hairball.
+
+# Conclusions
+
+```{r}
+plot(g,
+     layout = rbind(layout, mutants[1:9,1:2]),
+     margin = -.8, # allow the network to use up more of the margin
+     vertex.label.cex = 1,
+     vertex.label.font = 2, # Bold
+     vertex.label.color= "black",
+     edge_arrow_mode = 0,
+     vertex.color = V(g)$color,
+     xlim=c(-5, 1.75), ylim=c(-2, 2) # Increase the plot size to help accommodate the network
+)
+
+legend("topleft", legend=unique(proteomic$Interaction), fill=unique(V(g)$color)[6:91], title = "Hsp90 Interaction Type", cex = .75)
+
+legend("bottomleft", legend= V(g)$name[1:5], title = "GO Process", cex = .75, pch = 21, pt.cex = 2, pt.bg = V(g)$color[1:5], pt.lwd = 0.5)
+```
+
+Preliminary network analysis reveals

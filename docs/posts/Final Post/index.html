@@ -237,17 +237,26 @@ div.csl-indent {
 
 
 
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(igraph)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(viridis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 <section id="the-preamble" class="level1">
 <h1>The Preamble</h1>
 <p>The focus of my research is the study of Hsp90 molecular chaperone. Over the decades we come to realize this chaperone sits as a major hub of protein-protein interactions <span class="citation" data-cites="Gopinath2014 Zhao2005a Rizzolo2019">(<a href="#ref-Gopinath2014" role="doc-biblioref">Gopinath et al. 2014</a>; <a href="#ref-Zhao2005a" role="doc-biblioref">Zhao et al. 2005</a>; <a href="#ref-Rizzolo2019" role="doc-biblioref">Rizzolo and Houry 2019</a>)</span> in which it regulates the folding, activity, and degradation of its clients.</p>
-<p>The current study expands the preliminary proteomic analysis previously done in yeast by us<span class="citation" data-cites="Hohrman2021">(<a href="#ref-Hohrman2021" role="doc-biblioref">Hohrman et al. 2021</a>)</span>, here we use quantitative proteomic analysis to compare extracts from yeast expressing wild-type yeast Hsp90 to nine different mutants. Our results demonstrate that the mutants elicit varied proteomic responses, even though the cells were harvested at temperatures that do not significantly affect growth. Overall, our results suggest:</p>
-<ol type="1">
-<li><p>It is possible to selectively inhibit Hsp90 function <em>in vivo</em>, and</p></li>
-<li><p>Identifies <strong>cellular processes</strong> and/or likely <strong>clients</strong> that may be differentially affected by Hsc82 mutation.</p></li>
-</ol>
+<p>The current study expands the preliminary proteomic analysis previously done in yeast by us<span class="citation" data-cites="Hohrman2021">(<a href="#ref-Hohrman2021" role="doc-biblioref">Hohrman et al. 2021</a>)</span>, here we use quantitative proteomic analysis to compare extracts from yeast expressing wild-type yeast Hsp90 to nine different mutants. Our results demonstrate that the mutants elicit varied proteomic responses, even though the cells were harvested at temperatures that do not significantly affect growth. Overall, our results suggests:</p>
+<ul>
+<li><strong>cellular processes</strong> that may be differentially affected by Hsc82 mutation.</li>
+</ul>
 </section>
 <section id="data" class="level1">
 <h1>Data</h1>
+<section id="significant-hits-in-our-proteomic-data-from-dia-ms" class="level2">
+<h2 class="anchored" data-anchor-id="significant-hits-in-our-proteomic-data-from-dia-ms">Significant hits in our Proteomic Data from DIA-MS</h2>
 <p>Data source:</p>
 <ol type="1">
 <li>Main data used in this analysis are the results of Data Independent Acquisition Mass Spectrometry (DIA-MS) experiments, a technique for quantitative proteomics. This is the crux of our study. For brevity, the data has been pre-filtered for significant hits of interest for analysis.</li>
@@ -256,39 +265,237 @@ div.csl-indent {
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load in our data</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>proteomic <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"trimmed_proteomic_Data.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load in our data</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>proteomic <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"trimmed_proteomic_Data.csv"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(proteomic)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 536
+Columns: 7
+$ Index         &lt;int&gt; 978, 1096, 1948, 2981, 3981, 4064, 4084, 4153, 4177, 590~
+$ Systemic.name &lt;chr&gt; "YBR082C", "YBR102C", "YCL047C", "YDL181W", "YDR214W", "~
+$ contrast      &lt;chr&gt; "A583T", "A583T", "A583T", "A583T", "A583T", "A583T", "A~
+$ UniprotID     &lt;chr&gt; "P15731", "P38261", "P25576", "P01097", "Q12449", "Q0494~
+$ Gene          &lt;chr&gt; "UBC4", "EXO84", "POF1", "INH1", "AHA1", "RTN1", "FMN1",~
+$ logFC         &lt;dbl&gt; 2.800538, 1.707334, -5.045534, -1.636702, -1.893020, -1.~
+$ P.Value       &lt;dbl&gt; 1.777647e-03, 2.010339e-02, 3.890000e-05, 2.590000e-06, ~</code></pre>
 </div>
-<p>Data Dictionary #1</p>
+</div>
+<section id="proteomic-data-dictionary" class="level3">
+<h3 class="anchored" data-anchor-id="proteomic-data-dictionary">Proteomic Data Dictionary</h3>
 <div class="cell">
-
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>proteomic.dictionary <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"Proteomic_data_dictionary.csv"</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(proteomic.dictionary)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<table class="table table-sm table-striped">
+<colgroup>
+<col style="width: 7%">
+<col style="width: 92%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Attribute</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Index</td>
+<td style="text-align: left;">Old indexing from the original entire data set, artifact from “write.csv” function</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Systemic.name</td>
+<td style="text-align: left;">Unique identifiers for genes in yeast</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">contrast</td>
+<td style="text-align: left;">Our single point mutations in Hsc82 isoform; This is sometimes referred to as our ‘experimental conditions’</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">UniprotID</td>
+<td style="text-align: left;">Unique identifiers for genes</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Gene</td>
+<td style="text-align: left;">Gene symbol; symbols to genes by researchers and voted on by committees</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">logFC</td>
+<td style="text-align: left;">Log Fold Change in protein abundance in mutant sample over wild type sample; Log base 2; negative values signify increase in abundance, positive values is decreased abundance.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">P.Value</td>
+<td style="text-align: left;">corrected P value using Bonferroni correction</td>
+</tr>
+</tbody>
+</table>
 </div>
+</div>
+</section>
+</section>
+<section id="list-of-hsp90-interactions" class="level2">
+<h2 class="anchored" data-anchor-id="list-of-hsp90-interactions">List of Hsp90 Interactions</h2>
 <ol start="2" type="1">
 <li>Supporting data/information publicly available on <em>Saccharomyces Genome Database (<a href="https://yeastgenome.org/" title="Saccharomyces Genome Database main page">SGD</a>)</em></li>
 </ol>
 <ul>
 <li>List of currently known protein <strong>physical</strong> interactors of Hsp90 (Both <a href="https://yeastgenome.org/locus/S000004798/interaction" title="List of Hsc82 genetic and physical interactors">Hsc82</a> and <a href="https://yeastgenome.org/locus/S000006161/interaction" title="List of Hsp82 genetic and physical interactors">Hsp82</a> isoforms)</li>
 <li>List of currently known protein <strong>genetic</strong> interactors of Hsp90 (Both <a href="https://yeastgenome.org/locus/S000004798/interaction" title="List of Hsc82 genetic and physical interactors">Hsc82</a> and <a href="https://yeastgenome.org/locus/S000006161/interaction" title="List of Hsp82 genetic and physical interactors">Hsp82</a> isoforms)</li>
-<li>Hits from our data analyzed by <a href="https://yeastgenome.org/goSlimMapper" title="Gene Ontology tool to classify and group genes/proteins">Gene Ontology (GO) Slim Mapper</a> # Visualization</li>
 </ul>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>Hsp90.Interactors <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"SGD_All_interactions_Hsp90_with_Refs_trimmed.csv"</span>, <span class="at">header =</span> <span class="cn">TRUE</span>, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>Hsp90.Interactors <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"SGD_All_interactions_Hsp90_with_Refs_trimmed.csv"</span>, <span class="at">header =</span> <span class="cn">TRUE</span>, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(Hsp90.Interactors)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 4,990
+Columns: 7
+$ TYPE                  &lt;chr&gt; "Genetic", "Genetic", "Genetic", "Genetic", "Gen~
+$ HSP90                 &lt;chr&gt; "HSC82", "HSC82", "HSC82", "HSC82", "HSC82", "HS~
+$ HSP90.Systematic.Name &lt;chr&gt; "YMR186W", "YMR186W", "YMR186W", "YMR186W", "YMR~
+$ Gene                  &lt;chr&gt; "AAH1", "AAR2", "AAR2", "ABD1", "ABD1", "ABD1", ~
+$ Systemic.Name         &lt;chr&gt; "YNL141W", "YBL074C", "YBL074C", "YBR236C", "YBR~
+$ Source                &lt;chr&gt; "BioGRID", "BioGRID", "BioGRID", "BioGRID", "Bio~
+$ Reference             &lt;chr&gt; "Choi J, et al. (2017) PMID:28520786", "Costanzo~</code></pre>
 </div>
-<p>Data Dictionary #2</p>
+</div>
+<section id="hsp90-interaction-dictionary" class="level3">
+<h3 class="anchored" data-anchor-id="hsp90-interaction-dictionary">Hsp90 Interaction Dictionary</h3>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>GO.terms <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="at">file =</span> <span class="st">"GO Slim Mapper Results.txt"</span>, <span class="at">header =</span> <span class="cn">TRUE</span>, <span class="at">sep =</span> <span class="st">"</span><span class="sc">\t</span><span class="st">"</span>, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>Hsp90.Interactors.dictionary <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"SGD_Hsp90_interactions_dictionary.csv"</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(Hsp90.Interactors.dictionary)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output-display">
+<table class="table table-sm table-striped">
+<colgroup>
+<col style="width: 13%">
+<col style="width: 86%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Attribute</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">TYPE</td>
+<td style="text-align: left;">Type of interaction with either Hsc82 or Hsp82 isoforms of Hsp90; either Genetic or Physical</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">HSP90</td>
+<td style="text-align: left;">Gene symbol for either isoform: Hsc82 or Hsp82</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">HSP90 Systematic Name</td>
+<td style="text-align: left;">Yeast systematic identifier for isoforms Hsc82 or Hsp82naming convention</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Gene</td>
+<td style="text-align: left;">Gene symbol for all genes/proteins currently known to have either genetic or physical interaction with either for Hsp90 isoform.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Systemic Name</td>
+<td style="text-align: left;">Yeast systematic identifiers for all genes/proteins currently known to have either genetic or physical interaction with either for Hsp90 isoform.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Source</td>
+<td style="text-align: left;">Database accessed by SGD to aggregate list</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Reference</td>
+<td style="text-align: left;">References to studies that provided interaction data</td>
+</tr>
+</tbody>
+</table>
 </div>
-<p>Data Dictionary #3</p>
+</div>
+</section>
+</section>
+<section id="go-slim-mapper-results" class="level2">
+<h2 class="anchored" data-anchor-id="go-slim-mapper-results">GO Slim Mapper results</h2>
+<p>Hits from our data analyzed by <a href="https://yeastgenome.org/goSlimMapper" title="Gene Ontology tool to classify and group genes/proteins">Gene Ontology (GO) Slim Mapper</a></p>
 <div class="cell">
-
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>GO.terms <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="at">file =</span> <span class="st">"GO Slim Mapper Results.txt"</span>, <span class="at">header =</span> <span class="cn">TRUE</span>, <span class="at">sep =</span> <span class="st">"</span><span class="sc">\t</span><span class="st">"</span>, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(GO.terms)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 89
+Columns: 9
+$ GOID                  &lt;chr&gt; "GO:0042221", "GO:0006520", "GO:0005975", "GO:00~
+$ TERM                  &lt;chr&gt; "response to chemical", "cellular amino acid met~
+$ NUM_LIST_ANNOTATIONS  &lt;int&gt; 35, 28, 27, 26, 21, 21, 20, 19, 16, 15, 14, 14, ~
+$ LIST_SIZE             &lt;int&gt; 349, 349, 349, 349, 349, 349, 349, 349, 349, 349~
+$ CLUSTER_FREQUENCY     &lt;chr&gt; "10.03%", "8.02%", "7.74%", "7.45%", "6.02%", "6~
+$ TOTAL_NUM_ANNOTATIONS &lt;int&gt; 454, 155, 148, 163, 282, 106, 80, 127, 167, 271,~
+$ POPULATION_SIZE       &lt;int&gt; 6485, 6485, 6485, 6485, 6485, 6485, 6485, 6485, ~
+$ GENOME_FREQUENCY      &lt;chr&gt; "7.00%", "2.39%", "2.28%", "2.51%", "4.35%", "1.~
+$ ANNOTATED_GENES       &lt;chr&gt; "ADD37, AHP1, CTT1, DAK2, DAL81, ECM38, FRA1, GA~</code></pre>
 </div>
+</div>
+<section id="go-slim-mapper-results-dictionary" class="level3">
+<h3 class="anchored" data-anchor-id="go-slim-mapper-results-dictionary">GO Slim Mapper results Dictionary</h3>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>Go.dictionary <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"GO_process_results_dictionary.csv"</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(proteomic.dictionary)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<table class="table table-sm table-striped">
+<colgroup>
+<col style="width: 7%">
+<col style="width: 92%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Attribute</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Index</td>
+<td style="text-align: left;">Old indexing from the original entire data set, artifact from “write.csv” function</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Systemic.name</td>
+<td style="text-align: left;">Unique identifiers for genes in yeast</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">contrast</td>
+<td style="text-align: left;">Our single point mutations in Hsc82 isoform; This is sometimes referred to as our ‘experimental conditions’</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">UniprotID</td>
+<td style="text-align: left;">Unique identifiers for genes</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Gene</td>
+<td style="text-align: left;">Gene symbol; symbols to genes by researchers and voted on by committees</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">logFC</td>
+<td style="text-align: left;">Log Fold Change in protein abundance in mutant sample over wild type sample; Log base 2; negative values signify increase in abundance, positive values is decreased abundance.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">P.Value</td>
+<td style="text-align: left;">corrected P value using Bonferroni correction</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+</section>
 </section>
 <section id="visualizations" class="level1">
 <h1>Visualizations</h1>
@@ -297,150 +504,167 @@ div.csl-indent {
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(igraph)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(viridis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<div class="cell">
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Trim and format the Gene Ontology: Process data</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate GO process enrichment</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>GO.terms<span class="sc">$</span>CLUSTER_FREQUENCY <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">sub</span>(<span class="st">"%"</span>, <span class="st">""</span>, GO.terms<span class="sc">$</span>CLUSTER_FREQUENCY))<span class="sc">/</span><span class="dv">100</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>GO.terms<span class="sc">$</span>GENOME_FREQUENCY <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">sub</span>(<span class="st">"%"</span>, <span class="st">""</span>, GO.terms<span class="sc">$</span>GENOME_FREQUENCY))<span class="sc">/</span><span class="dv">100</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>GO.terms<span class="sc">$</span>Enrichment <span class="ot">&lt;-</span> GO.terms<span class="sc">$</span>CLUSTER_FREQUENCY<span class="sc">/</span>GO.terms<span class="sc">$</span>GENOME_FREQUENCY</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Take top 5 enriched processes that have at least 5 proteins annotated to a cellular process.</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>GO.terms5 <span class="ot">&lt;-</span> GO.terms[GO.terms<span class="sc">$</span>NUM_LIST_ANNOTATIONS <span class="sc">&gt;=</span> <span class="dv">5</span>,]</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>GO.terms5 <span class="ot">&lt;-</span> GO.terms5[<span class="fu">order</span>(GO.terms5<span class="sc">$</span>Enrichment, <span class="at">decreasing =</span> T),]</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>GO.terms5 <span class="ot">&lt;-</span> GO.terms5[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">9</span>,<span class="dv">10</span>)]</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Format for network</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>GO.terms5.split <span class="ot">&lt;-</span> <span class="fu">separate_rows</span>(GO.terms5, ANNOTATED_GENES, <span class="at">sep =</span> <span class="st">", "</span>)</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="do">###</span></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Make initial network</span></span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>vertices <span class="ot">&lt;-</span> <span class="fu">unique</span>(<span class="fu">c</span>(GO.terms5.split<span class="sc">$</span>TERM, GO.terms5.split<span class="sc">$</span>ANNOTATED_GENES))</span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">graph_from_data_frame</span>(GO.terms5.split[,<span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>], <span class="at">directed =</span> F, <span class="at">vertices =</span> vertices)</span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="do">###</span></span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="co"># create layout using force directed algorithm</span></span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>layout <span class="ot">&lt;-</span> <span class="fu">layout_with_fr</span>(g, <span class="at">weights =</span> GO.terms5.split<span class="sc">$</span>Enrichment, <span class="at">coords =</span> <span class="fu">matrix</span>(<span class="at">data =</span> <span class="dv">0</span>, <span class="at">nrow =</span> <span class="dv">91</span>, <span class="at">ncol =</span> <span class="dv">2</span>))</span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a><span class="do">###</span></span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Add mutant nodes </span></span>
-<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>mutants <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="fu">cos</span>(<span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">2</span><span class="sc">*</span>pi, <span class="at">length.out =</span> <span class="dv">10</span>)), </span>
-<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">sin</span>(<span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">2</span><span class="sc">*</span>pi, <span class="at">length.out =</span> <span class="dv">10</span>))), <span class="at">ncol =</span> <span class="dv">2</span>)<span class="sc">*</span><span class="dv">11</span> <span class="co"># Create coordinates for a ring.</span></span>
-<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">add_vertices</span>(g, <span class="dv">9</span>)</span>
-<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>mutant.names <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"R46G"</span>, <span class="st">"G309S"</span>, <span class="st">"S481Y"</span>, <span class="st">"A583T"</span>, <span class="st">"K102E"</span>, <span class="st">"S25P"</span>, <span class="st">"Q380K"</span>, <span class="st">"G424D"</span>, <span class="st">"W296A"</span>)</span>
-<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a><span class="fu">V</span>(g)<span class="sc">$</span>name[<span class="dv">92</span><span class="sc">:</span><span class="dv">100</span>] <span class="ot">&lt;-</span> mutant.names</span>
-<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a><span class="co"># and edges between mutants and proteins/genes</span></span>
-<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>edgelist <span class="ot">&lt;-</span> proteomic[,<span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">5</span>)][proteomic<span class="sc">$</span>Gene <span class="sc">%in%</span> GO.terms5.split<span class="sc">$</span>ANNOTATED_GENES,]</span>
-<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert edge list to indices</span></span>
-<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>edgelist<span class="sc">$</span>from <span class="ot">&lt;-</span> <span class="fu">match</span>(edgelist<span class="sc">$</span>contrast, <span class="fu">V</span>(g)<span class="sc">$</span>name)</span>
-<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>edgelist<span class="sc">$</span>to <span class="ot">&lt;-</span> <span class="fu">match</span>(edgelist<span class="sc">$</span>Gene, <span class="fu">V</span>(g)<span class="sc">$</span>name)</span>
-<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a><span class="co"># create a list of alternating values from 'from' and 'to' columns</span></span>
-<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>edges <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rbind</span>(edgelist<span class="sc">$</span>from, edgelist<span class="sc">$</span>to))</span>
-<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">add_edges</span>(g, <span class="at">edges =</span> edges)</span>
-<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a><span class="do">###</span></span>
-<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a><span class="co"># Assign node colors based on physical, genetic, both (mixed), interaction with Hsp90 or neither (unknown)</span></span>
-<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a>proteomic<span class="sc">$</span>Interaction <span class="ot">&lt;-</span> <span class="st">"Unknown"</span></span>
-<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a>proteomic<span class="sc">$</span>Interaction[proteomic<span class="sc">$</span>Systemic.name <span class="sc">%in%</span> Hsp90.Interactors<span class="sc">$</span>Systemic.Name[Hsp90.Interactors<span class="sc">$</span>TYPE<span class="sc">==</span><span class="st">"Genetic"</span>]] <span class="ot">&lt;-</span> <span class="st">"Genetic"</span></span>
-<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a>proteomic<span class="sc">$</span>Interaction[proteomic<span class="sc">$</span>Systemic.name <span class="sc">%in%</span> Hsp90.Interactors<span class="sc">$</span>Systemic.Name[Hsp90.Interactors<span class="sc">$</span>TYPE<span class="sc">==</span><span class="st">"Physical"</span>]] <span class="ot">&lt;-</span> <span class="st">"Physical"</span></span>
-<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a>proteomic<span class="sc">$</span>Interaction[proteomic<span class="sc">$</span>Systemic.name <span class="sc">%in%</span> Hsp90.Interactors<span class="sc">$</span>Systemic.Name[Hsp90.Interactors<span class="sc">$</span>TYPE<span class="sc">==</span><span class="st">"Physical"</span>] <span class="sc">&amp;</span></span>
-<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a>                        proteomic<span class="sc">$</span>Systemic.name <span class="sc">%in%</span> Hsp90.Interactors<span class="sc">$</span>Systemic.Name[Hsp90.Interactors<span class="sc">$</span>TYPE<span class="sc">==</span><span class="st">"Genetic"</span>]] <span class="ot">&lt;-</span> <span class="st">"Mixed"</span></span>
-<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a><span class="co"># Define color palette for the color blind plebs, just kidding, but not really</span></span>
-<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a>colors <span class="ot">&lt;-</span> <span class="fu">viridis</span>(<span class="at">n =</span> <span class="dv">4</span>, <span class="at">option =</span> <span class="st">"D"</span>, <span class="at">alpha =</span> <span class="dv">1</span>, <span class="at">begin =</span> <span class="dv">0</span>, <span class="at">end =</span> <span class="dv">1</span>, <span class="at">direction =</span> <span class="sc">-</span><span class="dv">1</span>)</span>
-<span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a>colors.process <span class="ot">&lt;-</span> <span class="fu">viridis</span>(<span class="at">n =</span> <span class="dv">5</span>, <span class="at">option =</span> <span class="st">"F"</span>, <span class="at">alpha =</span> <span class="dv">1</span>, <span class="at">begin =</span> <span class="dv">0</span>, <span class="at">end =</span> <span class="dv">1</span>, <span class="at">direction =</span> <span class="sc">-</span><span class="dv">1</span>)</span>
-<span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a>proteomic<span class="sc">$</span>Int.color <span class="ot">&lt;-</span> colors[<span class="fu">match</span>(proteomic<span class="sc">$</span>Interaction, <span class="fu">unique</span>(proteomic<span class="sc">$</span>Interaction))]</span>
-<span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-70"><a href="#cb5-70" aria-hidden="true" tabindex="-1"></a><span class="fu">V</span>(g)<span class="sc">$</span>color <span class="ot">&lt;-</span> <span class="fu">c</span>(colors.process, </span>
-<span id="cb5-71"><a href="#cb5-71" aria-hidden="true" tabindex="-1"></a>                proteomic<span class="sc">$</span>Int.color[<span class="fu">match</span>(<span class="fu">V</span>(g)<span class="sc">$</span>name, proteomic<span class="sc">$</span>Gene)][<span class="dv">6</span><span class="sc">:</span><span class="dv">91</span>],</span>
-<span id="cb5-72"><a href="#cb5-72" aria-hidden="true" tabindex="-1"></a>                <span class="fu">rep</span>(<span class="st">"white"</span>, <span class="dv">9</span>)</span>
-<span id="cb5-73"><a href="#cb5-73" aria-hidden="true" tabindex="-1"></a>                )</span>
-<span id="cb5-74"><a href="#cb5-74" aria-hidden="true" tabindex="-1"></a><span class="fu">V</span>(g)<span class="sc">$</span>color[<span class="dv">23</span>] <span class="ot">&lt;-</span> <span class="st">"#35B779FF"</span></span>
-<span id="cb5-75"><a href="#cb5-75" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-76"><a href="#cb5-76" aria-hidden="true" tabindex="-1"></a><span class="do">### </span></span>
-<span id="cb5-77"><a href="#cb5-77" aria-hidden="true" tabindex="-1"></a><span class="co">#colors2 &lt;- viridis(n = 9, option = "D", alpha = .25, begin = 0, end = 1, direction = -1)</span></span>
-<span id="cb5-78"><a href="#cb5-78" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-79"><a href="#cb5-79" aria-hidden="true" tabindex="-1"></a><span class="co"># E(g)$color &lt;- c(rep(colors2[1], degree(g,1)),</span></span>
-<span id="cb5-80"><a href="#cb5-80" aria-hidden="true" tabindex="-1"></a><span class="co">#                 rep(colors2[2], degree(g,2)),</span></span>
-<span id="cb5-81"><a href="#cb5-81" aria-hidden="true" tabindex="-1"></a><span class="co">#                 rep(colors2[3], degree(g,3)),</span></span>
-<span id="cb5-82"><a href="#cb5-82" aria-hidden="true" tabindex="-1"></a><span class="co">#                 rep(colors2[4], degree(g,4)),</span></span>
-<span id="cb5-83"><a href="#cb5-83" aria-hidden="true" tabindex="-1"></a><span class="co">#                 rep(colors2[5], degree(g,5)),</span></span>
-<span id="cb5-84"><a href="#cb5-84" aria-hidden="true" tabindex="-1"></a><span class="co">#                 rep(colors2[6], degree(g,6)),</span></span>
-<span id="cb5-85"><a href="#cb5-85" aria-hidden="true" tabindex="-1"></a><span class="co">#                 rep(colors2[7], degree(g,7)),</span></span>
-<span id="cb5-86"><a href="#cb5-86" aria-hidden="true" tabindex="-1"></a><span class="co">#                 rep(colors2[8], degree(g,8)),</span></span>
-<span id="cb5-87"><a href="#cb5-87" aria-hidden="true" tabindex="-1"></a><span class="co">#                 rep(colors2[9], degree(g,9))</span></span>
-<span id="cb5-88"><a href="#cb5-88" aria-hidden="true" tabindex="-1"></a><span class="co">#                 )</span></span>
-<span id="cb5-89"><a href="#cb5-89" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-90"><a href="#cb5-90" aria-hidden="true" tabindex="-1"></a><span class="do">###</span></span>
-<span id="cb5-91"><a href="#cb5-91" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-92"><a href="#cb5-92" aria-hidden="true" tabindex="-1"></a><span class="co"># Modify node size, shape, and labels to display</span></span>
-<span id="cb5-93"><a href="#cb5-93" aria-hidden="true" tabindex="-1"></a>term.count <span class="ot">&lt;-</span>  <span class="fu">length</span>(<span class="fu">unique</span>(GO.terms5.split<span class="sc">$</span>TERM))</span>
-<span id="cb5-94"><a href="#cb5-94" aria-hidden="true" tabindex="-1"></a>node.count <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">unique</span>(GO.terms5.split<span class="sc">$</span>ANNOTATED_GENES))</span>
-<span id="cb5-95"><a href="#cb5-95" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-96"><a href="#cb5-96" aria-hidden="true" tabindex="-1"></a><span class="fu">V</span>(g)<span class="sc">$</span>size <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">12</span>, term.count), <span class="fu">rep</span>(<span class="dv">5</span>, node.count), <span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">9</span>))</span>
-<span id="cb5-97"><a href="#cb5-97" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-98"><a href="#cb5-98" aria-hidden="true" tabindex="-1"></a><span class="fu">V</span>(g)<span class="sc">$</span>label <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">""</span>, <span class="dv">91</span>), mutant.names)</span>
-<span id="cb5-99"><a href="#cb5-99" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-100"><a href="#cb5-100" aria-hidden="true" tabindex="-1"></a><span class="fu">V</span>(g)<span class="sc">$</span>shape <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">"circle"</span>, term.count), <span class="fu">rep</span>(<span class="st">"square"</span> , node.count), <span class="fu">rep</span>(<span class="st">"none"</span>, <span class="dv">9</span>))</span>
-<span id="cb5-101"><a href="#cb5-101" aria-hidden="true" tabindex="-1"></a><span class="do">###</span></span>
-<span id="cb5-102"><a href="#cb5-102" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-103"><a href="#cb5-103" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(g,</span>
-<span id="cb5-104"><a href="#cb5-104" aria-hidden="true" tabindex="-1"></a>     <span class="at">layout =</span> <span class="fu">rbind</span>(layout, mutants[<span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>,<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]),</span>
-<span id="cb5-105"><a href="#cb5-105" aria-hidden="true" tabindex="-1"></a>     <span class="at">margin =</span> <span class="sc">-</span>.<span class="dv">8</span>, <span class="co"># allow the network to use up more of the margin</span></span>
-<span id="cb5-106"><a href="#cb5-106" aria-hidden="true" tabindex="-1"></a>     <span class="at">vertex.label.cex =</span> <span class="dv">1</span>,</span>
-<span id="cb5-107"><a href="#cb5-107" aria-hidden="true" tabindex="-1"></a>     <span class="at">vertex.label.font =</span> <span class="dv">2</span>, <span class="co"># Bold</span></span>
-<span id="cb5-108"><a href="#cb5-108" aria-hidden="true" tabindex="-1"></a>     <span class="at">vertex.label.color=</span> <span class="st">"black"</span>,</span>
-<span id="cb5-109"><a href="#cb5-109" aria-hidden="true" tabindex="-1"></a>     <span class="at">edge_arrow_mode =</span> <span class="dv">0</span>,</span>
-<span id="cb5-110"><a href="#cb5-110" aria-hidden="true" tabindex="-1"></a>     <span class="at">vertex.color =</span> <span class="fu">V</span>(g)<span class="sc">$</span>color,</span>
-<span id="cb5-111"><a href="#cb5-111" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="fl">1.75</span>), <span class="at">ylim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>) <span class="co"># Increase the plot size to help accommodate the network</span></span>
-<span id="cb5-112"><a href="#cb5-112" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb5-113"><a href="#cb5-113" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-114"><a href="#cb5-114" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topleft"</span>, <span class="at">legend=</span><span class="fu">unique</span>(proteomic<span class="sc">$</span>Interaction), <span class="at">fill=</span><span class="fu">unique</span>(<span class="fu">V</span>(g)<span class="sc">$</span>color)[<span class="dv">6</span><span class="sc">:</span><span class="dv">91</span>], <span class="at">title =</span> <span class="st">"Hsp90 Interaction Type"</span>, <span class="at">cex =</span> .<span class="dv">75</span>)</span>
-<span id="cb5-115"><a href="#cb5-115" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-116"><a href="#cb5-116" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"bottomleft"</span>, <span class="at">legend=</span> <span class="fu">V</span>(g)<span class="sc">$</span>name[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>], <span class="at">title =</span> <span class="st">"GO Process"</span>, <span class="at">cex =</span> .<span class="dv">75</span>, <span class="at">pch =</span> <span class="dv">21</span>, <span class="at">pt.cex =</span> <span class="dv">2</span>, <span class="at">pt.bg =</span> <span class="fu">V</span>(g)<span class="sc">$</span>color[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>], <span class="at">pt.lwd =</span> <span class="fl">0.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Trim and format the Gene Ontology: Process data</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate GO process enrichment</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>GO.terms<span class="sc">$</span>CLUSTER_FREQUENCY <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">sub</span>(<span class="st">"%"</span>, <span class="st">""</span>, GO.terms<span class="sc">$</span>CLUSTER_FREQUENCY))<span class="sc">/</span><span class="dv">100</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>GO.terms<span class="sc">$</span>GENOME_FREQUENCY <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">sub</span>(<span class="st">"%"</span>, <span class="st">""</span>, GO.terms<span class="sc">$</span>GENOME_FREQUENCY))<span class="sc">/</span><span class="dv">100</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>GO.terms<span class="sc">$</span>Enrichment <span class="ot">&lt;-</span> GO.terms<span class="sc">$</span>CLUSTER_FREQUENCY<span class="sc">/</span>GO.terms<span class="sc">$</span>GENOME_FREQUENCY</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Take top 5 enriched processes that have at least 5 proteins annotated to a cellular process.</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>GO.terms5 <span class="ot">&lt;-</span> GO.terms[GO.terms<span class="sc">$</span>NUM_LIST_ANNOTATIONS <span class="sc">&gt;=</span> <span class="dv">5</span>,]</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>GO.terms5 <span class="ot">&lt;-</span> GO.terms5[<span class="fu">order</span>(GO.terms5<span class="sc">$</span>Enrichment, <span class="at">decreasing =</span> T),]</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>GO.terms5 <span class="ot">&lt;-</span> GO.terms5[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">9</span>,<span class="dv">10</span>)]</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Format for network</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>GO.terms5.split <span class="ot">&lt;-</span> <span class="fu">separate_rows</span>(GO.terms5, ANNOTATED_GENES, <span class="at">sep =</span> <span class="st">", "</span>)</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="do">###</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Make initial network</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>vertices <span class="ot">&lt;-</span> <span class="fu">unique</span>(<span class="fu">c</span>(GO.terms5.split<span class="sc">$</span>TERM, GO.terms5.split<span class="sc">$</span>ANNOTATED_GENES))</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">graph_from_data_frame</span>(GO.terms5.split[,<span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>], <span class="at">directed =</span> F, <span class="at">vertices =</span> vertices)</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a><span class="do">###</span></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a><span class="co"># create layout using force directed algorithm</span></span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>layout <span class="ot">&lt;-</span> <span class="fu">layout_with_fr</span>(g, <span class="at">weights =</span> GO.terms5.split<span class="sc">$</span>Enrichment, <span class="at">coords =</span> <span class="fu">matrix</span>(<span class="at">data =</span> <span class="dv">0</span>, <span class="at">nrow =</span> <span class="dv">91</span>, <span class="at">ncol =</span> <span class="dv">2</span>))</span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a><span class="do">###</span></span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Add mutant nodes </span></span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a>mutants <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="fu">cos</span>(<span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">2</span><span class="sc">*</span>pi, <span class="at">length.out =</span> <span class="dv">10</span>)), </span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">sin</span>(<span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">2</span><span class="sc">*</span>pi, <span class="at">length.out =</span> <span class="dv">10</span>))), <span class="at">ncol =</span> <span class="dv">2</span>)<span class="sc">*</span><span class="dv">11</span> <span class="co"># Create coordinates for a ring.</span></span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">add_vertices</span>(g, <span class="dv">9</span>)</span>
+<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a>mutant.names <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"R46G"</span>, <span class="st">"G309S"</span>, <span class="st">"S481Y"</span>, <span class="st">"A583T"</span>, <span class="st">"K102E"</span>, <span class="st">"S25P"</span>, <span class="st">"Q380K"</span>, <span class="st">"G424D"</span>, <span class="st">"W296A"</span>)</span>
+<span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-37"><a href="#cb11-37" aria-hidden="true" tabindex="-1"></a><span class="fu">V</span>(g)<span class="sc">$</span>name[<span class="dv">92</span><span class="sc">:</span><span class="dv">100</span>] <span class="ot">&lt;-</span> mutant.names</span>
+<span id="cb11-38"><a href="#cb11-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-39"><a href="#cb11-39" aria-hidden="true" tabindex="-1"></a><span class="co"># and edges between mutants and proteins/genes</span></span>
+<span id="cb11-40"><a href="#cb11-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-41"><a href="#cb11-41" aria-hidden="true" tabindex="-1"></a>edgelist <span class="ot">&lt;-</span> proteomic[,<span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">5</span>)][proteomic<span class="sc">$</span>Gene <span class="sc">%in%</span> GO.terms5.split<span class="sc">$</span>ANNOTATED_GENES,]</span>
+<span id="cb11-42"><a href="#cb11-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-43"><a href="#cb11-43" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert edge list to indices</span></span>
+<span id="cb11-44"><a href="#cb11-44" aria-hidden="true" tabindex="-1"></a>edgelist<span class="sc">$</span>from <span class="ot">&lt;-</span> <span class="fu">match</span>(edgelist<span class="sc">$</span>contrast, <span class="fu">V</span>(g)<span class="sc">$</span>name)</span>
+<span id="cb11-45"><a href="#cb11-45" aria-hidden="true" tabindex="-1"></a>edgelist<span class="sc">$</span>to <span class="ot">&lt;-</span> <span class="fu">match</span>(edgelist<span class="sc">$</span>Gene, <span class="fu">V</span>(g)<span class="sc">$</span>name)</span>
+<span id="cb11-46"><a href="#cb11-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-47"><a href="#cb11-47" aria-hidden="true" tabindex="-1"></a><span class="co"># create a list of alternating values from 'from' and 'to' columns</span></span>
+<span id="cb11-48"><a href="#cb11-48" aria-hidden="true" tabindex="-1"></a>edges <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rbind</span>(edgelist<span class="sc">$</span>from, edgelist<span class="sc">$</span>to))</span>
+<span id="cb11-49"><a href="#cb11-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-50"><a href="#cb11-50" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">add_edges</span>(g, <span class="at">edges =</span> edges)</span>
+<span id="cb11-51"><a href="#cb11-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-52"><a href="#cb11-52" aria-hidden="true" tabindex="-1"></a><span class="do">###</span></span>
+<span id="cb11-53"><a href="#cb11-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-54"><a href="#cb11-54" aria-hidden="true" tabindex="-1"></a><span class="co"># Now add the nodes for proteins that were either not in the top 5 enriched processes or could not be annotated to a GO process at all.</span></span>
+<span id="cb11-55"><a href="#cb11-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-56"><a href="#cb11-56" aria-hidden="true" tabindex="-1"></a><span class="do">###</span></span>
+<span id="cb11-57"><a href="#cb11-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-58"><a href="#cb11-58" aria-hidden="true" tabindex="-1"></a><span class="co"># Assign node colors based on physical, genetic, both (mixed), interaction with Hsp90 or neither (unknown)</span></span>
+<span id="cb11-59"><a href="#cb11-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-60"><a href="#cb11-60" aria-hidden="true" tabindex="-1"></a>proteomic<span class="sc">$</span>Interaction <span class="ot">&lt;-</span> <span class="st">"Unknown"</span></span>
+<span id="cb11-61"><a href="#cb11-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-62"><a href="#cb11-62" aria-hidden="true" tabindex="-1"></a>proteomic<span class="sc">$</span>Interaction[proteomic<span class="sc">$</span>Systemic.name <span class="sc">%in%</span> Hsp90.Interactors<span class="sc">$</span>Systemic.Name[Hsp90.Interactors<span class="sc">$</span>TYPE<span class="sc">==</span><span class="st">"Genetic"</span>]] <span class="ot">&lt;-</span> <span class="st">"Genetic"</span></span>
+<span id="cb11-63"><a href="#cb11-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-64"><a href="#cb11-64" aria-hidden="true" tabindex="-1"></a>proteomic<span class="sc">$</span>Interaction[proteomic<span class="sc">$</span>Systemic.name <span class="sc">%in%</span> Hsp90.Interactors<span class="sc">$</span>Systemic.Name[Hsp90.Interactors<span class="sc">$</span>TYPE<span class="sc">==</span><span class="st">"Physical"</span>]] <span class="ot">&lt;-</span> <span class="st">"Physical"</span></span>
+<span id="cb11-65"><a href="#cb11-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-66"><a href="#cb11-66" aria-hidden="true" tabindex="-1"></a>proteomic<span class="sc">$</span>Interaction[proteomic<span class="sc">$</span>Systemic.name <span class="sc">%in%</span> Hsp90.Interactors<span class="sc">$</span>Systemic.Name[Hsp90.Interactors<span class="sc">$</span>TYPE<span class="sc">==</span><span class="st">"Physical"</span>] <span class="sc">&amp;</span></span>
+<span id="cb11-67"><a href="#cb11-67" aria-hidden="true" tabindex="-1"></a>                        proteomic<span class="sc">$</span>Systemic.name <span class="sc">%in%</span> Hsp90.Interactors<span class="sc">$</span>Systemic.Name[Hsp90.Interactors<span class="sc">$</span>TYPE<span class="sc">==</span><span class="st">"Genetic"</span>]] <span class="ot">&lt;-</span> <span class="st">"Mixed"</span></span>
+<span id="cb11-68"><a href="#cb11-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-69"><a href="#cb11-69" aria-hidden="true" tabindex="-1"></a><span class="co"># Define color palette for the color blind plebs, just kidding, but not really</span></span>
+<span id="cb11-70"><a href="#cb11-70" aria-hidden="true" tabindex="-1"></a>colors <span class="ot">&lt;-</span> <span class="fu">viridis</span>(<span class="at">n =</span> <span class="dv">4</span>, <span class="at">option =</span> <span class="st">"D"</span>, <span class="at">alpha =</span> <span class="dv">1</span>, <span class="at">begin =</span> <span class="dv">0</span>, <span class="at">end =</span> <span class="dv">1</span>, <span class="at">direction =</span> <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb11-71"><a href="#cb11-71" aria-hidden="true" tabindex="-1"></a>colors.process <span class="ot">&lt;-</span> <span class="fu">viridis</span>(<span class="at">n =</span> <span class="dv">5</span>, <span class="at">option =</span> <span class="st">"F"</span>, <span class="at">alpha =</span> <span class="dv">1</span>, <span class="at">begin =</span> <span class="dv">0</span>, <span class="at">end =</span> <span class="dv">1</span>, <span class="at">direction =</span> <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb11-72"><a href="#cb11-72" aria-hidden="true" tabindex="-1"></a>proteomic<span class="sc">$</span>Int.color <span class="ot">&lt;-</span> colors[<span class="fu">match</span>(proteomic<span class="sc">$</span>Interaction, <span class="fu">unique</span>(proteomic<span class="sc">$</span>Interaction))]</span>
+<span id="cb11-73"><a href="#cb11-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-74"><a href="#cb11-74" aria-hidden="true" tabindex="-1"></a><span class="fu">V</span>(g)<span class="sc">$</span>color <span class="ot">&lt;-</span> <span class="fu">c</span>(colors.process, </span>
+<span id="cb11-75"><a href="#cb11-75" aria-hidden="true" tabindex="-1"></a>                proteomic<span class="sc">$</span>Int.color[<span class="fu">match</span>(<span class="fu">V</span>(g)<span class="sc">$</span>name, proteomic<span class="sc">$</span>Gene)][<span class="dv">6</span><span class="sc">:</span><span class="dv">91</span>],</span>
+<span id="cb11-76"><a href="#cb11-76" aria-hidden="true" tabindex="-1"></a>                <span class="fu">rep</span>(<span class="st">"white"</span>, <span class="dv">9</span>)</span>
+<span id="cb11-77"><a href="#cb11-77" aria-hidden="true" tabindex="-1"></a>                )</span>
+<span id="cb11-78"><a href="#cb11-78" aria-hidden="true" tabindex="-1"></a><span class="fu">V</span>(g)<span class="sc">$</span>color[<span class="dv">23</span>] <span class="ot">&lt;-</span> <span class="st">"#35B779FF"</span></span>
+<span id="cb11-79"><a href="#cb11-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-80"><a href="#cb11-80" aria-hidden="true" tabindex="-1"></a><span class="do">###</span></span>
+<span id="cb11-81"><a href="#cb11-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-82"><a href="#cb11-82" aria-hidden="true" tabindex="-1"></a><span class="co"># Modify node size, shape, and labels to display</span></span>
+<span id="cb11-83"><a href="#cb11-83" aria-hidden="true" tabindex="-1"></a>term.count <span class="ot">&lt;-</span>  <span class="fu">length</span>(<span class="fu">unique</span>(GO.terms5.split<span class="sc">$</span>TERM))</span>
+<span id="cb11-84"><a href="#cb11-84" aria-hidden="true" tabindex="-1"></a>node.count <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">unique</span>(GO.terms5.split<span class="sc">$</span>ANNOTATED_GENES))</span>
+<span id="cb11-85"><a href="#cb11-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-86"><a href="#cb11-86" aria-hidden="true" tabindex="-1"></a><span class="fu">V</span>(g)<span class="sc">$</span>size <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">12</span>, term.count), <span class="fu">rep</span>(<span class="dv">5</span>, node.count), <span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">9</span>))</span>
+<span id="cb11-87"><a href="#cb11-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-88"><a href="#cb11-88" aria-hidden="true" tabindex="-1"></a><span class="fu">V</span>(g)<span class="sc">$</span>label <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">""</span>, <span class="dv">91</span>), mutant.names)</span>
+<span id="cb11-89"><a href="#cb11-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-90"><a href="#cb11-90" aria-hidden="true" tabindex="-1"></a><span class="fu">V</span>(g)<span class="sc">$</span>shape <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">"circle"</span>, term.count), <span class="fu">rep</span>(<span class="st">"square"</span> , node.count), <span class="fu">rep</span>(<span class="st">"none"</span>, <span class="dv">9</span>))</span>
+<span id="cb11-91"><a href="#cb11-91" aria-hidden="true" tabindex="-1"></a><span class="do">###</span></span>
+<span id="cb11-92"><a href="#cb11-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-93"><a href="#cb11-93" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(g,</span>
+<span id="cb11-94"><a href="#cb11-94" aria-hidden="true" tabindex="-1"></a>     <span class="at">layout =</span> <span class="fu">rbind</span>(layout, mutants[<span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>,<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]),</span>
+<span id="cb11-95"><a href="#cb11-95" aria-hidden="true" tabindex="-1"></a>     <span class="at">margin =</span> <span class="sc">-</span>.<span class="dv">8</span>, <span class="co"># allow the network to use up more of the margin</span></span>
+<span id="cb11-96"><a href="#cb11-96" aria-hidden="true" tabindex="-1"></a>     <span class="at">vertex.label.cex =</span> <span class="dv">1</span>,</span>
+<span id="cb11-97"><a href="#cb11-97" aria-hidden="true" tabindex="-1"></a>     <span class="at">vertex.label.font =</span> <span class="dv">2</span>, <span class="co"># Bold</span></span>
+<span id="cb11-98"><a href="#cb11-98" aria-hidden="true" tabindex="-1"></a>     <span class="at">vertex.label.color=</span> <span class="st">"black"</span>,</span>
+<span id="cb11-99"><a href="#cb11-99" aria-hidden="true" tabindex="-1"></a>     <span class="at">edge_arrow_mode =</span> <span class="dv">0</span>,</span>
+<span id="cb11-100"><a href="#cb11-100" aria-hidden="true" tabindex="-1"></a>     <span class="at">vertex.color =</span> <span class="fu">V</span>(g)<span class="sc">$</span>color,</span>
+<span id="cb11-101"><a href="#cb11-101" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="fl">1.75</span>), <span class="at">ylim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>) <span class="co"># Increase the plot size to help accommodate the network</span></span>
+<span id="cb11-102"><a href="#cb11-102" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb11-103"><a href="#cb11-103" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-104"><a href="#cb11-104" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topleft"</span>, <span class="at">legend=</span><span class="fu">unique</span>(proteomic<span class="sc">$</span>Interaction), <span class="at">fill=</span><span class="fu">unique</span>(<span class="fu">V</span>(g)<span class="sc">$</span>color)[<span class="dv">6</span><span class="sc">:</span><span class="dv">91</span>], <span class="at">title =</span> <span class="st">"Hsp90 Interaction Type"</span>, <span class="at">cex =</span> .<span class="dv">75</span>)</span>
+<span id="cb11-105"><a href="#cb11-105" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-106"><a href="#cb11-106" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"bottomleft"</span>, <span class="at">legend=</span> <span class="fu">V</span>(g)<span class="sc">$</span>name[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>], <span class="at">title =</span> <span class="st">"GO Process"</span>, <span class="at">cex =</span> .<span class="dv">75</span>, <span class="at">pch =</span> <span class="dv">21</span>, <span class="at">pt.cex =</span> <span class="dv">2</span>, <span class="at">pt.bg =</span> <span class="fu">V</span>(g)<span class="sc">$</span>color[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>], <span class="at">pt.lwd =</span> <span class="fl">0.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="index_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <section id="nodes" class="level3">
 <h3 class="anchored" data-anchor-id="nodes">NODES</h3>
-<p>Since our objective is to construct a protein interaction network, intuitively our nodes will be our significant hits found in our study. However, we must also include our experimental variables, in this case single point mutations in the Hsp90 chaperone.</p>
+<p>Here we have 3 classes or groups of nodes:</p>
+<ol type="1">
+<li>Our 9 different Hsc82 mutations</li>
+<li>The top 5 most enriched cellular processes given by Gene Ontology Slim Mapper tool</li>
+<li>86 different proteins/genes that were annotated to one or more of the top cellular processes <em>and</em> protein abundance was significantly affected in one or more Hsc82 mutants</li>
+</ol>
+<p>Node labels were removed for network clarity, with exception of mutant nodes. The GO process terms were moved to a legend and color was used to identify the GO terms in the figure. The focus of the figure was to identify potential processes, not individual proteins, that may be affected by one or more Hsc82 mutant, therefore labels for individual proteins were removed.</p>
+<p>Node colors were picked in consideration for color blind individuals using the “Viridis” color package.</p>
+<p>In an effort to help reduce cognitive demand, the node shapes and sizes were adjusted to help visually separate the node classes and direct the viewer from the outer layer of the network, towards the center with increasing detail. Node shape for the mutations were removed and labels were left as the main focus of our study revolves around these mutations. The GO terms were designated as circles and size is larger compared to the individual proteins which were designated as squares. Overall, the increase in shape size moving outward from the center gives a sense of hierarchy of importance.</p>
+<p>By focusing on the top 5 enriched GO processes, the classic hairball problem is avoided and we can show with visual clarity the cellular processes that would most likely be considered for follow-up experiments or studies.</p>
 </section>
 <section id="edges" class="level3">
 <h3 class="anchored" data-anchor-id="edges">EDGES</h3>
-<p>Now we must establish the relationship between these nodes. Starting with the relationship between our protein hits and experimental variables (Hsp90 mutants). These proteins were found to have a significant change in abundance when at least one mutant Hsp90 is expressed as the sole source of Hsp90.</p>
+<p>Genes/proteins annotated to given GO terms by GO Slim mapper had edges drawn between the protein and the corresponding GO term(s). A few proteins, were annotated to more than one cellular process.</p>
+<p>Edges were drawn between proteins and Hsc82 mutations if the protein’s abundance was significantly affected by an Hsc82 mutation. Some proteins were affected by more than one mutation and therefore have multiple edges.</p>
 </section>
 <section id="layout" class="level3">
-<h3 class="anchored" data-anchor-id="layout">Layout</h3>
+<h3 class="anchored" data-anchor-id="layout">LAYOUT</h3>
+<p>An initial network was made consisting of GO terms and proteins, after which the Fruchterman-Reingold force directed algorithm was employed and the GO term enrichments were used as edge weights.</p>
+<p>Afterwards, the Hsc82 mutant nodes were manually added around the perimeter of the initial network to avoid mutant nodes from influencing the force directed graph and avoid a network hairball.</p>
 </section>
 </section>
 </section>
-<section id="conlusions" class="level1">
-
+<section id="conclusions" class="level1">
+<h1>Conclusions</h1>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(g,</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">layout =</span> <span class="fu">rbind</span>(layout, mutants[<span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>,<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]),</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">margin =</span> <span class="sc">-</span>.<span class="dv">8</span>, <span class="co"># allow the network to use up more of the margin</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">vertex.label.cex =</span> <span class="dv">1</span>,</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">vertex.label.font =</span> <span class="dv">2</span>, <span class="co"># Bold</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">vertex.label.color=</span> <span class="st">"black"</span>,</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">edge_arrow_mode =</span> <span class="dv">0</span>,</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">vertex.color =</span> <span class="fu">V</span>(g)<span class="sc">$</span>color,</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="fl">1.75</span>), <span class="at">ylim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>) <span class="co"># Increase the plot size to help accommodate the network</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topleft"</span>, <span class="at">legend=</span><span class="fu">unique</span>(proteomic<span class="sc">$</span>Interaction), <span class="at">fill=</span><span class="fu">unique</span>(<span class="fu">V</span>(g)<span class="sc">$</span>color)[<span class="dv">6</span><span class="sc">:</span><span class="dv">91</span>], <span class="at">title =</span> <span class="st">"Hsp90 Interaction Type"</span>, <span class="at">cex =</span> .<span class="dv">75</span>)</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"bottomleft"</span>, <span class="at">legend=</span> <span class="fu">V</span>(g)<span class="sc">$</span>name[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>], <span class="at">title =</span> <span class="st">"GO Process"</span>, <span class="at">cex =</span> .<span class="dv">75</span>, <span class="at">pch =</span> <span class="dv">21</span>, <span class="at">pt.cex =</span> <span class="dv">2</span>, <span class="at">pt.bg =</span> <span class="fu">V</span>(g)<span class="sc">$</span>color[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>], <span class="at">pt.lwd =</span> <span class="fl">0.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Preliminary network analysis reveals</p>
 
 
 <!-- -->
@@ -448,7 +672,7 @@ div.csl-indent {
 
 </section>
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">Conlusions</h2><div id="refs" class="references csl-bib-body hanging-indent" role="doc-bibliography">
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="doc-bibliography">
 <div id="ref-Gopinath2014" class="csl-entry" role="doc-biblioentry">
 Gopinath, Rajaneesh Karimpurath, Shu-Ting You, Kun-Yi Chien, Krishna B. S. Swamy, Jau-Song Yu, Scott C. Schuyler, and Jun-Yi Leu. 2014. <span>“The Hsp90-Dependent Proteome Is Conserved and Enriched for Hub Proteins with High Levels of Protein<span></span>Protein Connectivity.”</span> <em>Genome Biology and Evolution</em> 6 (10): 2851–65. <a href="https://doi.org/10.1093/gbe/evu226">https://doi.org/10.1093/gbe/evu226</a>.
 </div>
@@ -646,217 +870,260 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="sourceCode" id="cb6" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "BCB 520 - The Final Project"</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="an">subtitle:</span><span class="co"> "Mutations in Molecular Chaperone: Hsp90 Elicit Different Proteomic Responses"</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: false</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">    echo: true</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Erick Rios"</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "2023-05-03"</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="an">categories:</span><span class="co"> [Portfolio, DataViz, Network, Project, Hsp90, Mutations]</span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="an">image:</span><span class="co"> "yeastbud.png"</span></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> "Network visualization and analysis of proteomic responses to Hsp90 mutation."</span></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="an">code-fold:</span><span class="co"> true</span></span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="an">code-tools:</span><span class="co"> true</span></span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="an">bibliography:</span><span class="co"> references.bib</span></span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a><span class="fu"># The Preamble</span></span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>The focus of my research is the study of Hsp90 molecular chaperone. Over the decades we come to realize this chaperone sits as a major hub of protein-protein interactions <span class="co">[</span><span class="ot">@Gopinath2014; @Zhao2005a; @Rizzolo2019</span><span class="co">]</span> in which it regulates the folding, activity, and degradation of its clients.</span>
-<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>The current study expands the preliminary proteomic analysis previously done in yeast by us<span class="co">[</span><span class="ot">@Hohrman2021</span><span class="co">]</span>, here we use quantitative proteomic analysis to compare extracts from yeast expressing wild-type yeast Hsp90 to nine different mutants. Our results demonstrate that the mutants elicit varied proteomic responses, even though the cells were harvested at temperatures that do not significantly affect growth. Overall, our results suggest:</span>
-<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>It is possible to selectively inhibit Hsp90 function *in vivo*, and</span>
-<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>Identifies **cellular processes** and/or likely **clients** that may be differentially affected by Hsc82 mutation.</span>
-<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a><span class="fu"># Data</span></span>
-<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>Data source:</span>
-<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>Main data used in this analysis are the results of Data Independent Acquisition Mass Spectrometry (DIA-MS) experiments, a technique for quantitative proteomics. This is the crux of our study. For brevity, the data has been pre-filtered for significant hits of interest for analysis.</span>
-<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>A significant hit in our study is a protein whose abundance had a \|Log~2~ Fold Change\| (LogFC) greater than 1.5, relative to wild-type.</span>
-<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a><span class="co"># Load in our data</span></span>
-<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>proteomic <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"trimmed_proteomic_Data.csv"</span>)</span>
-<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>Data Dictionary #1</span>
-<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>Supporting data/information publicly available on *Saccharomyces Genome Database ([SGD](https://yeastgenome.org/ "Saccharomyces Genome Database main page"))*</span>
-<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>List of currently known protein **physical** interactors of Hsp90 (Both <span class="co">[</span><span class="ot">Hsc82</span><span class="co">](https://yeastgenome.org/locus/S000004798/interaction "List of Hsc82 genetic and physical interactors")</span> and <span class="co">[</span><span class="ot">Hsp82</span><span class="co">](https://yeastgenome.org/locus/S000006161/interaction "List of Hsp82 genetic and physical interactors")</span> isoforms)</span>
-<span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>List of currently known protein **genetic** interactors of Hsp90 (Both <span class="co">[</span><span class="ot">Hsc82</span><span class="co">](https://yeastgenome.org/locus/S000004798/interaction "List of Hsc82 genetic and physical interactors")</span> and <span class="co">[</span><span class="ot">Hsp82</span><span class="co">](https://yeastgenome.org/locus/S000006161/interaction "List of Hsp82 genetic and physical interactors")</span> isoforms)</span>
-<span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Hits from our data analyzed by <span class="co">[</span><span class="ot">Gene Ontology (GO) Slim Mapper</span><span class="co">](https://yeastgenome.org/goSlimMapper "Gene Ontology tool to classify and group genes/proteins")</span> <span class="sc">\#</span> Visualization</span>
-<span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-58"><a href="#cb6-58" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb6-59"><a href="#cb6-59" aria-hidden="true" tabindex="-1"></a>Hsp90.Interactors <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"SGD_All_interactions_Hsp90_with_Refs_trimmed.csv"</span>, <span class="at">header =</span> <span class="cn">TRUE</span>, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb6-60"><a href="#cb6-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-61"><a href="#cb6-61" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb6-62"><a href="#cb6-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-63"><a href="#cb6-63" aria-hidden="true" tabindex="-1"></a>Data Dictionary #2</span>
-<span id="cb6-64"><a href="#cb6-64" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-67"><a href="#cb6-67" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb6-68"><a href="#cb6-68" aria-hidden="true" tabindex="-1"></a>GO.terms <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="at">file =</span> <span class="st">"GO Slim Mapper Results.txt"</span>, <span class="at">header =</span> <span class="cn">TRUE</span>, <span class="at">sep =</span> <span class="st">"</span><span class="sc">\t</span><span class="st">"</span>, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb6-69"><a href="#cb6-69" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb6-70"><a href="#cb6-70" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-71"><a href="#cb6-71" aria-hidden="true" tabindex="-1"></a>Data Dictionary #3</span>
-<span id="cb6-72"><a href="#cb6-72" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-75"><a href="#cb6-75" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb6-76"><a href="#cb6-76" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb6-77"><a href="#cb6-77" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-78"><a href="#cb6-78" aria-hidden="true" tabindex="-1"></a><span class="fu"># Visualizations</span></span>
-<span id="cb6-79"><a href="#cb6-79" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-80"><a href="#cb6-80" aria-hidden="true" tabindex="-1"></a><span class="fu">## Figure 1</span></span>
-<span id="cb6-81"><a href="#cb6-81" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-84"><a href="#cb6-84" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb6-85"><a href="#cb6-85" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
-<span id="cb6-86"><a href="#cb6-86" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb6-87"><a href="#cb6-87" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(igraph)</span>
-<span id="cb6-88"><a href="#cb6-88" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
-<span id="cb6-89"><a href="#cb6-89" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(viridis)</span>
-<span id="cb6-90"><a href="#cb6-90" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb6-91"><a href="#cb6-91" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-94"><a href="#cb6-94" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb6-95"><a href="#cb6-95" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb6-96"><a href="#cb6-96" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-97"><a href="#cb6-97" aria-hidden="true" tabindex="-1"></a><span class="do">### Trim and format the Gene Ontology: Process data</span></span>
-<span id="cb6-98"><a href="#cb6-98" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-99"><a href="#cb6-99" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate GO process enrichment</span></span>
-<span id="cb6-100"><a href="#cb6-100" aria-hidden="true" tabindex="-1"></a>GO.terms<span class="sc">$</span>CLUSTER_FREQUENCY <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">sub</span>(<span class="st">"%"</span>, <span class="st">""</span>, GO.terms<span class="sc">$</span>CLUSTER_FREQUENCY))<span class="sc">/</span><span class="dv">100</span></span>
-<span id="cb6-101"><a href="#cb6-101" aria-hidden="true" tabindex="-1"></a>GO.terms<span class="sc">$</span>GENOME_FREQUENCY <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">sub</span>(<span class="st">"%"</span>, <span class="st">""</span>, GO.terms<span class="sc">$</span>GENOME_FREQUENCY))<span class="sc">/</span><span class="dv">100</span></span>
-<span id="cb6-102"><a href="#cb6-102" aria-hidden="true" tabindex="-1"></a>GO.terms<span class="sc">$</span>Enrichment <span class="ot">&lt;-</span> GO.terms<span class="sc">$</span>CLUSTER_FREQUENCY<span class="sc">/</span>GO.terms<span class="sc">$</span>GENOME_FREQUENCY</span>
-<span id="cb6-103"><a href="#cb6-103" aria-hidden="true" tabindex="-1"></a><span class="co"># Take top 5 enriched processes that have at least 5 proteins annotated to a cellular process.</span></span>
-<span id="cb6-104"><a href="#cb6-104" aria-hidden="true" tabindex="-1"></a>GO.terms5 <span class="ot">&lt;-</span> GO.terms[GO.terms<span class="sc">$</span>NUM_LIST_ANNOTATIONS <span class="sc">&gt;=</span> <span class="dv">5</span>,]</span>
-<span id="cb6-105"><a href="#cb6-105" aria-hidden="true" tabindex="-1"></a>GO.terms5 <span class="ot">&lt;-</span> GO.terms5[<span class="fu">order</span>(GO.terms5<span class="sc">$</span>Enrichment, <span class="at">decreasing =</span> T),]</span>
-<span id="cb6-106"><a href="#cb6-106" aria-hidden="true" tabindex="-1"></a>GO.terms5 <span class="ot">&lt;-</span> GO.terms5[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">9</span>,<span class="dv">10</span>)]</span>
-<span id="cb6-107"><a href="#cb6-107" aria-hidden="true" tabindex="-1"></a><span class="co"># Format for network</span></span>
-<span id="cb6-108"><a href="#cb6-108" aria-hidden="true" tabindex="-1"></a>GO.terms5.split <span class="ot">&lt;-</span> <span class="fu">separate_rows</span>(GO.terms5, ANNOTATED_GENES, <span class="at">sep =</span> <span class="st">", "</span>)</span>
-<span id="cb6-109"><a href="#cb6-109" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-110"><a href="#cb6-110" aria-hidden="true" tabindex="-1"></a><span class="do">###</span></span>
-<span id="cb6-111"><a href="#cb6-111" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-112"><a href="#cb6-112" aria-hidden="true" tabindex="-1"></a><span class="co"># Make initial network</span></span>
-<span id="cb6-113"><a href="#cb6-113" aria-hidden="true" tabindex="-1"></a>vertices <span class="ot">&lt;-</span> <span class="fu">unique</span>(<span class="fu">c</span>(GO.terms5.split<span class="sc">$</span>TERM, GO.terms5.split<span class="sc">$</span>ANNOTATED_GENES))</span>
-<span id="cb6-114"><a href="#cb6-114" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">graph_from_data_frame</span>(GO.terms5.split[,<span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>], <span class="at">directed =</span> F, <span class="at">vertices =</span> vertices)</span>
-<span id="cb6-115"><a href="#cb6-115" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-116"><a href="#cb6-116" aria-hidden="true" tabindex="-1"></a><span class="do">###</span></span>
-<span id="cb6-117"><a href="#cb6-117" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-118"><a href="#cb6-118" aria-hidden="true" tabindex="-1"></a><span class="co"># create layout using force directed algorithm</span></span>
-<span id="cb6-119"><a href="#cb6-119" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-120"><a href="#cb6-120" aria-hidden="true" tabindex="-1"></a>layout <span class="ot">&lt;-</span> <span class="fu">layout_with_fr</span>(g, <span class="at">weights =</span> GO.terms5.split<span class="sc">$</span>Enrichment, <span class="at">coords =</span> <span class="fu">matrix</span>(<span class="at">data =</span> <span class="dv">0</span>, <span class="at">nrow =</span> <span class="dv">91</span>, <span class="at">ncol =</span> <span class="dv">2</span>))</span>
-<span id="cb6-121"><a href="#cb6-121" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-122"><a href="#cb6-122" aria-hidden="true" tabindex="-1"></a><span class="do">###</span></span>
-<span id="cb6-123"><a href="#cb6-123" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-124"><a href="#cb6-124" aria-hidden="true" tabindex="-1"></a><span class="co"># Add mutant nodes </span></span>
-<span id="cb6-125"><a href="#cb6-125" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-126"><a href="#cb6-126" aria-hidden="true" tabindex="-1"></a>mutants <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="fu">cos</span>(<span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">2</span><span class="sc">*</span>pi, <span class="at">length.out =</span> <span class="dv">10</span>)), </span>
-<span id="cb6-127"><a href="#cb6-127" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">sin</span>(<span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">2</span><span class="sc">*</span>pi, <span class="at">length.out =</span> <span class="dv">10</span>))), <span class="at">ncol =</span> <span class="dv">2</span>)<span class="sc">*</span><span class="dv">11</span> <span class="co"># Create coordinates for a ring.</span></span>
-<span id="cb6-128"><a href="#cb6-128" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-129"><a href="#cb6-129" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">add_vertices</span>(g, <span class="dv">9</span>)</span>
-<span id="cb6-130"><a href="#cb6-130" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-131"><a href="#cb6-131" aria-hidden="true" tabindex="-1"></a>mutant.names <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"R46G"</span>, <span class="st">"G309S"</span>, <span class="st">"S481Y"</span>, <span class="st">"A583T"</span>, <span class="st">"K102E"</span>, <span class="st">"S25P"</span>, <span class="st">"Q380K"</span>, <span class="st">"G424D"</span>, <span class="st">"W296A"</span>)</span>
-<span id="cb6-132"><a href="#cb6-132" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-133"><a href="#cb6-133" aria-hidden="true" tabindex="-1"></a><span class="fu">V</span>(g)<span class="sc">$</span>name[<span class="dv">92</span><span class="sc">:</span><span class="dv">100</span>] <span class="ot">&lt;-</span> mutant.names</span>
-<span id="cb6-134"><a href="#cb6-134" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-135"><a href="#cb6-135" aria-hidden="true" tabindex="-1"></a><span class="co"># and edges between mutants and proteins/genes</span></span>
-<span id="cb6-136"><a href="#cb6-136" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-137"><a href="#cb6-137" aria-hidden="true" tabindex="-1"></a>edgelist <span class="ot">&lt;-</span> proteomic[,<span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">5</span>)][proteomic<span class="sc">$</span>Gene <span class="sc">%in%</span> GO.terms5.split<span class="sc">$</span>ANNOTATED_GENES,]</span>
-<span id="cb6-138"><a href="#cb6-138" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-139"><a href="#cb6-139" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert edge list to indices</span></span>
-<span id="cb6-140"><a href="#cb6-140" aria-hidden="true" tabindex="-1"></a>edgelist<span class="sc">$</span>from <span class="ot">&lt;-</span> <span class="fu">match</span>(edgelist<span class="sc">$</span>contrast, <span class="fu">V</span>(g)<span class="sc">$</span>name)</span>
-<span id="cb6-141"><a href="#cb6-141" aria-hidden="true" tabindex="-1"></a>edgelist<span class="sc">$</span>to <span class="ot">&lt;-</span> <span class="fu">match</span>(edgelist<span class="sc">$</span>Gene, <span class="fu">V</span>(g)<span class="sc">$</span>name)</span>
-<span id="cb6-142"><a href="#cb6-142" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-143"><a href="#cb6-143" aria-hidden="true" tabindex="-1"></a><span class="co"># create a list of alternating values from 'from' and 'to' columns</span></span>
-<span id="cb6-144"><a href="#cb6-144" aria-hidden="true" tabindex="-1"></a>edges <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rbind</span>(edgelist<span class="sc">$</span>from, edgelist<span class="sc">$</span>to))</span>
-<span id="cb6-145"><a href="#cb6-145" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-146"><a href="#cb6-146" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">add_edges</span>(g, <span class="at">edges =</span> edges)</span>
-<span id="cb6-147"><a href="#cb6-147" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-148"><a href="#cb6-148" aria-hidden="true" tabindex="-1"></a><span class="do">###</span></span>
-<span id="cb6-149"><a href="#cb6-149" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-150"><a href="#cb6-150" aria-hidden="true" tabindex="-1"></a><span class="co"># Assign node colors based on physical, genetic, both (mixed), interaction with Hsp90 or neither (unknown)</span></span>
-<span id="cb6-151"><a href="#cb6-151" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-152"><a href="#cb6-152" aria-hidden="true" tabindex="-1"></a>proteomic<span class="sc">$</span>Interaction <span class="ot">&lt;-</span> <span class="st">"Unknown"</span></span>
-<span id="cb6-153"><a href="#cb6-153" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-154"><a href="#cb6-154" aria-hidden="true" tabindex="-1"></a>proteomic<span class="sc">$</span>Interaction[proteomic<span class="sc">$</span>Systemic.name <span class="sc">%in%</span> Hsp90.Interactors<span class="sc">$</span>Systemic.Name[Hsp90.Interactors<span class="sc">$</span>TYPE<span class="sc">==</span><span class="st">"Genetic"</span>]] <span class="ot">&lt;-</span> <span class="st">"Genetic"</span></span>
-<span id="cb6-155"><a href="#cb6-155" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-156"><a href="#cb6-156" aria-hidden="true" tabindex="-1"></a>proteomic<span class="sc">$</span>Interaction[proteomic<span class="sc">$</span>Systemic.name <span class="sc">%in%</span> Hsp90.Interactors<span class="sc">$</span>Systemic.Name[Hsp90.Interactors<span class="sc">$</span>TYPE<span class="sc">==</span><span class="st">"Physical"</span>]] <span class="ot">&lt;-</span> <span class="st">"Physical"</span></span>
-<span id="cb6-157"><a href="#cb6-157" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-158"><a href="#cb6-158" aria-hidden="true" tabindex="-1"></a>proteomic<span class="sc">$</span>Interaction[proteomic<span class="sc">$</span>Systemic.name <span class="sc">%in%</span> Hsp90.Interactors<span class="sc">$</span>Systemic.Name[Hsp90.Interactors<span class="sc">$</span>TYPE<span class="sc">==</span><span class="st">"Physical"</span>] <span class="sc">&amp;</span></span>
-<span id="cb6-159"><a href="#cb6-159" aria-hidden="true" tabindex="-1"></a>                        proteomic<span class="sc">$</span>Systemic.name <span class="sc">%in%</span> Hsp90.Interactors<span class="sc">$</span>Systemic.Name[Hsp90.Interactors<span class="sc">$</span>TYPE<span class="sc">==</span><span class="st">"Genetic"</span>]] <span class="ot">&lt;-</span> <span class="st">"Mixed"</span></span>
-<span id="cb6-160"><a href="#cb6-160" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-161"><a href="#cb6-161" aria-hidden="true" tabindex="-1"></a><span class="co"># Define color palette for the color blind plebs, just kidding, but not really</span></span>
-<span id="cb6-162"><a href="#cb6-162" aria-hidden="true" tabindex="-1"></a>colors <span class="ot">&lt;-</span> <span class="fu">viridis</span>(<span class="at">n =</span> <span class="dv">4</span>, <span class="at">option =</span> <span class="st">"D"</span>, <span class="at">alpha =</span> <span class="dv">1</span>, <span class="at">begin =</span> <span class="dv">0</span>, <span class="at">end =</span> <span class="dv">1</span>, <span class="at">direction =</span> <span class="sc">-</span><span class="dv">1</span>)</span>
-<span id="cb6-163"><a href="#cb6-163" aria-hidden="true" tabindex="-1"></a>colors.process <span class="ot">&lt;-</span> <span class="fu">viridis</span>(<span class="at">n =</span> <span class="dv">5</span>, <span class="at">option =</span> <span class="st">"F"</span>, <span class="at">alpha =</span> <span class="dv">1</span>, <span class="at">begin =</span> <span class="dv">0</span>, <span class="at">end =</span> <span class="dv">1</span>, <span class="at">direction =</span> <span class="sc">-</span><span class="dv">1</span>)</span>
-<span id="cb6-164"><a href="#cb6-164" aria-hidden="true" tabindex="-1"></a>proteomic<span class="sc">$</span>Int.color <span class="ot">&lt;-</span> colors[<span class="fu">match</span>(proteomic<span class="sc">$</span>Interaction, <span class="fu">unique</span>(proteomic<span class="sc">$</span>Interaction))]</span>
-<span id="cb6-165"><a href="#cb6-165" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-166"><a href="#cb6-166" aria-hidden="true" tabindex="-1"></a><span class="fu">V</span>(g)<span class="sc">$</span>color <span class="ot">&lt;-</span> <span class="fu">c</span>(colors.process, </span>
-<span id="cb6-167"><a href="#cb6-167" aria-hidden="true" tabindex="-1"></a>                proteomic<span class="sc">$</span>Int.color[<span class="fu">match</span>(<span class="fu">V</span>(g)<span class="sc">$</span>name, proteomic<span class="sc">$</span>Gene)][<span class="dv">6</span><span class="sc">:</span><span class="dv">91</span>],</span>
-<span id="cb6-168"><a href="#cb6-168" aria-hidden="true" tabindex="-1"></a>                <span class="fu">rep</span>(<span class="st">"white"</span>, <span class="dv">9</span>)</span>
-<span id="cb6-169"><a href="#cb6-169" aria-hidden="true" tabindex="-1"></a>                )</span>
-<span id="cb6-170"><a href="#cb6-170" aria-hidden="true" tabindex="-1"></a><span class="fu">V</span>(g)<span class="sc">$</span>color[<span class="dv">23</span>] <span class="ot">&lt;-</span> <span class="st">"#35B779FF"</span></span>
-<span id="cb6-171"><a href="#cb6-171" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-172"><a href="#cb6-172" aria-hidden="true" tabindex="-1"></a><span class="do">### </span></span>
-<span id="cb6-173"><a href="#cb6-173" aria-hidden="true" tabindex="-1"></a><span class="co">#colors2 &lt;- viridis(n = 9, option = "D", alpha = .25, begin = 0, end = 1, direction = -1)</span></span>
-<span id="cb6-174"><a href="#cb6-174" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-175"><a href="#cb6-175" aria-hidden="true" tabindex="-1"></a><span class="co"># E(g)$color &lt;- c(rep(colors2[1], degree(g,1)),</span></span>
-<span id="cb6-176"><a href="#cb6-176" aria-hidden="true" tabindex="-1"></a><span class="co">#                 rep(colors2[2], degree(g,2)),</span></span>
-<span id="cb6-177"><a href="#cb6-177" aria-hidden="true" tabindex="-1"></a><span class="co">#                 rep(colors2[3], degree(g,3)),</span></span>
-<span id="cb6-178"><a href="#cb6-178" aria-hidden="true" tabindex="-1"></a><span class="co">#                 rep(colors2[4], degree(g,4)),</span></span>
-<span id="cb6-179"><a href="#cb6-179" aria-hidden="true" tabindex="-1"></a><span class="co">#                 rep(colors2[5], degree(g,5)),</span></span>
-<span id="cb6-180"><a href="#cb6-180" aria-hidden="true" tabindex="-1"></a><span class="co">#                 rep(colors2[6], degree(g,6)),</span></span>
-<span id="cb6-181"><a href="#cb6-181" aria-hidden="true" tabindex="-1"></a><span class="co">#                 rep(colors2[7], degree(g,7)),</span></span>
-<span id="cb6-182"><a href="#cb6-182" aria-hidden="true" tabindex="-1"></a><span class="co">#                 rep(colors2[8], degree(g,8)),</span></span>
-<span id="cb6-183"><a href="#cb6-183" aria-hidden="true" tabindex="-1"></a><span class="co">#                 rep(colors2[9], degree(g,9))</span></span>
-<span id="cb6-184"><a href="#cb6-184" aria-hidden="true" tabindex="-1"></a><span class="co">#                 )</span></span>
-<span id="cb6-185"><a href="#cb6-185" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-186"><a href="#cb6-186" aria-hidden="true" tabindex="-1"></a><span class="do">###</span></span>
-<span id="cb6-187"><a href="#cb6-187" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-188"><a href="#cb6-188" aria-hidden="true" tabindex="-1"></a><span class="co"># Modify node size, shape, and labels to display</span></span>
-<span id="cb6-189"><a href="#cb6-189" aria-hidden="true" tabindex="-1"></a>term.count <span class="ot">&lt;-</span>  <span class="fu">length</span>(<span class="fu">unique</span>(GO.terms5.split<span class="sc">$</span>TERM))</span>
-<span id="cb6-190"><a href="#cb6-190" aria-hidden="true" tabindex="-1"></a>node.count <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">unique</span>(GO.terms5.split<span class="sc">$</span>ANNOTATED_GENES))</span>
-<span id="cb6-191"><a href="#cb6-191" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-192"><a href="#cb6-192" aria-hidden="true" tabindex="-1"></a><span class="fu">V</span>(g)<span class="sc">$</span>size <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">12</span>, term.count), <span class="fu">rep</span>(<span class="dv">5</span>, node.count), <span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">9</span>))</span>
-<span id="cb6-193"><a href="#cb6-193" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-194"><a href="#cb6-194" aria-hidden="true" tabindex="-1"></a><span class="fu">V</span>(g)<span class="sc">$</span>label <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">""</span>, <span class="dv">91</span>), mutant.names)</span>
-<span id="cb6-195"><a href="#cb6-195" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-196"><a href="#cb6-196" aria-hidden="true" tabindex="-1"></a><span class="fu">V</span>(g)<span class="sc">$</span>shape <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">"circle"</span>, term.count), <span class="fu">rep</span>(<span class="st">"square"</span> , node.count), <span class="fu">rep</span>(<span class="st">"none"</span>, <span class="dv">9</span>))</span>
-<span id="cb6-197"><a href="#cb6-197" aria-hidden="true" tabindex="-1"></a><span class="do">###</span></span>
-<span id="cb6-198"><a href="#cb6-198" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-199"><a href="#cb6-199" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(g,</span>
-<span id="cb6-200"><a href="#cb6-200" aria-hidden="true" tabindex="-1"></a>     <span class="at">layout =</span> <span class="fu">rbind</span>(layout, mutants[<span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>,<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]),</span>
-<span id="cb6-201"><a href="#cb6-201" aria-hidden="true" tabindex="-1"></a>     <span class="at">margin =</span> <span class="sc">-</span>.<span class="dv">8</span>, <span class="co"># allow the network to use up more of the margin</span></span>
-<span id="cb6-202"><a href="#cb6-202" aria-hidden="true" tabindex="-1"></a>     <span class="at">vertex.label.cex =</span> <span class="dv">1</span>,</span>
-<span id="cb6-203"><a href="#cb6-203" aria-hidden="true" tabindex="-1"></a>     <span class="at">vertex.label.font =</span> <span class="dv">2</span>, <span class="co"># Bold</span></span>
-<span id="cb6-204"><a href="#cb6-204" aria-hidden="true" tabindex="-1"></a>     <span class="at">vertex.label.color=</span> <span class="st">"black"</span>,</span>
-<span id="cb6-205"><a href="#cb6-205" aria-hidden="true" tabindex="-1"></a>     <span class="at">edge_arrow_mode =</span> <span class="dv">0</span>,</span>
-<span id="cb6-206"><a href="#cb6-206" aria-hidden="true" tabindex="-1"></a>     <span class="at">vertex.color =</span> <span class="fu">V</span>(g)<span class="sc">$</span>color,</span>
-<span id="cb6-207"><a href="#cb6-207" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="fl">1.75</span>), <span class="at">ylim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>) <span class="co"># Increase the plot size to help accommodate the network</span></span>
-<span id="cb6-208"><a href="#cb6-208" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb6-209"><a href="#cb6-209" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-210"><a href="#cb6-210" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topleft"</span>, <span class="at">legend=</span><span class="fu">unique</span>(proteomic<span class="sc">$</span>Interaction), <span class="at">fill=</span><span class="fu">unique</span>(<span class="fu">V</span>(g)<span class="sc">$</span>color)[<span class="dv">6</span><span class="sc">:</span><span class="dv">91</span>], <span class="at">title =</span> <span class="st">"Hsp90 Interaction Type"</span>, <span class="at">cex =</span> .<span class="dv">75</span>)</span>
-<span id="cb6-211"><a href="#cb6-211" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-212"><a href="#cb6-212" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"bottomleft"</span>, <span class="at">legend=</span> <span class="fu">V</span>(g)<span class="sc">$</span>name[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>], <span class="at">title =</span> <span class="st">"GO Process"</span>, <span class="at">cex =</span> .<span class="dv">75</span>, <span class="at">pch =</span> <span class="dv">21</span>, <span class="at">pt.cex =</span> <span class="dv">2</span>, <span class="at">pt.bg =</span> <span class="fu">V</span>(g)<span class="sc">$</span>color[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>], <span class="at">pt.lwd =</span> <span class="fl">0.5</span>)</span>
-<span id="cb6-213"><a href="#cb6-213" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb6-214"><a href="#cb6-214" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-215"><a href="#cb6-215" aria-hidden="true" tabindex="-1"></a><span class="fu">### NODES</span></span>
-<span id="cb6-216"><a href="#cb6-216" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-217"><a href="#cb6-217" aria-hidden="true" tabindex="-1"></a>Since our objective is to construct a protein interaction network, intuitively our nodes will be our significant hits found in our study. However, we must also include our experimental variables, in this case single point mutations in the Hsp90 chaperone.</span>
-<span id="cb6-218"><a href="#cb6-218" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-219"><a href="#cb6-219" aria-hidden="true" tabindex="-1"></a><span class="fu">### EDGES</span></span>
-<span id="cb6-220"><a href="#cb6-220" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-221"><a href="#cb6-221" aria-hidden="true" tabindex="-1"></a>Now we must establish the relationship between these nodes. Starting with the relationship between our protein hits and experimental variables (Hsp90 mutants). These proteins were found to have a significant change in abundance when at least one mutant Hsp90 is expressed as the sole source of Hsp90.</span>
-<span id="cb6-222"><a href="#cb6-222" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-223"><a href="#cb6-223" aria-hidden="true" tabindex="-1"></a><span class="fu">### Layout</span></span>
-<span id="cb6-224"><a href="#cb6-224" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-225"><a href="#cb6-225" aria-hidden="true" tabindex="-1"></a><span class="fu"># Conlusions</span></span>
+<div class="sourceCode" id="cb13" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "BCB 520 - The Final Project"</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="an">subtitle:</span><span class="co"> "Mutations in Molecular Chaperone: Hsp90 Elicit Different Proteomic Responses"</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: false</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co">    echo: true</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Erick Rios"</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "2023-05-03"</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="an">categories:</span><span class="co"> [Portfolio, DataViz, Network, Project, Hsp90, Mutations]</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="an">image:</span><span class="co"> "yeastbud.png"</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> "Network visualization and analysis of proteomic responses to Hsp90 mutation."</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="an">code-fold:</span><span class="co"> true</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="an">code-tools:</span><span class="co"> true</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="an">bibliography:</span><span class="co"> references.bib</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(igraph)</span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(viridis)</span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a><span class="fu"># The Preamble</span></span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a>The focus of my research is the study of Hsp90 molecular chaperone. Over the decades we come to realize this chaperone sits as a major hub of protein-protein interactions <span class="co">[</span><span class="ot">@Gopinath2014; @Zhao2005a; @Rizzolo2019</span><span class="co">]</span> in which it regulates the folding, activity, and degradation of its clients.</span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a>The current study expands the preliminary proteomic analysis previously done in yeast by us<span class="co">[</span><span class="ot">@Hohrman2021</span><span class="co">]</span>, here we use quantitative proteomic analysis to compare extracts from yeast expressing wild-type yeast Hsp90 to nine different mutants. Our results demonstrate that the mutants elicit varied proteomic responses, even though the cells were harvested at temperatures that do not significantly affect growth. Overall, our results suggests:</span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**cellular processes** that may be differentially affected by Hsc82 mutation.</span>
+<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-36"><a href="#cb13-36" aria-hidden="true" tabindex="-1"></a><span class="fu"># Data</span></span>
+<span id="cb13-37"><a href="#cb13-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-38"><a href="#cb13-38" aria-hidden="true" tabindex="-1"></a><span class="fu">## Significant hits in our Proteomic Data from DIA-MS</span></span>
+<span id="cb13-39"><a href="#cb13-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-40"><a href="#cb13-40" aria-hidden="true" tabindex="-1"></a>Data source:</span>
+<span id="cb13-41"><a href="#cb13-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-42"><a href="#cb13-42" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>Main data used in this analysis are the results of Data Independent Acquisition Mass Spectrometry (DIA-MS) experiments, a technique for quantitative proteomics. This is the crux of our study. For brevity, the data has been pre-filtered for significant hits of interest for analysis.</span>
+<span id="cb13-43"><a href="#cb13-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-44"><a href="#cb13-44" aria-hidden="true" tabindex="-1"></a>A significant hit in our study is a protein whose abundance had a \|Log~2~ Fold Change\| (LogFC) greater than 1.5, relative to wild-type.</span>
+<span id="cb13-45"><a href="#cb13-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-48"><a href="#cb13-48" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb13-49"><a href="#cb13-49" aria-hidden="true" tabindex="-1"></a><span class="co"># Load in our data</span></span>
+<span id="cb13-50"><a href="#cb13-50" aria-hidden="true" tabindex="-1"></a>proteomic <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"trimmed_proteomic_Data.csv"</span>)</span>
+<span id="cb13-51"><a href="#cb13-51" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(proteomic)</span>
+<span id="cb13-52"><a href="#cb13-52" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-53"><a href="#cb13-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-54"><a href="#cb13-54" aria-hidden="true" tabindex="-1"></a><span class="fu">### Proteomic Data Dictionary</span></span>
+<span id="cb13-55"><a href="#cb13-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-58"><a href="#cb13-58" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb13-59"><a href="#cb13-59" aria-hidden="true" tabindex="-1"></a>proteomic.dictionary <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"Proteomic_data_dictionary.csv"</span>)</span>
+<span id="cb13-60"><a href="#cb13-60" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(proteomic.dictionary)</span>
+<span id="cb13-61"><a href="#cb13-61" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-62"><a href="#cb13-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-63"><a href="#cb13-63" aria-hidden="true" tabindex="-1"></a><span class="fu">## List of Hsp90 Interactions</span></span>
+<span id="cb13-64"><a href="#cb13-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-65"><a href="#cb13-65" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>Supporting data/information publicly available on *Saccharomyces Genome Database ([SGD](https://yeastgenome.org/ "Saccharomyces Genome Database main page"))*</span>
+<span id="cb13-66"><a href="#cb13-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-67"><a href="#cb13-67" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>List of currently known protein **physical** interactors of Hsp90 (Both <span class="co">[</span><span class="ot">Hsc82</span><span class="co">](https://yeastgenome.org/locus/S000004798/interaction "List of Hsc82 genetic and physical interactors")</span> and <span class="co">[</span><span class="ot">Hsp82</span><span class="co">](https://yeastgenome.org/locus/S000006161/interaction "List of Hsp82 genetic and physical interactors")</span> isoforms)</span>
+<span id="cb13-68"><a href="#cb13-68" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>List of currently known protein **genetic** interactors of Hsp90 (Both <span class="co">[</span><span class="ot">Hsc82</span><span class="co">](https://yeastgenome.org/locus/S000004798/interaction "List of Hsc82 genetic and physical interactors")</span> and <span class="co">[</span><span class="ot">Hsp82</span><span class="co">](https://yeastgenome.org/locus/S000006161/interaction "List of Hsp82 genetic and physical interactors")</span> isoforms)</span>
+<span id="cb13-69"><a href="#cb13-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-72"><a href="#cb13-72" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb13-73"><a href="#cb13-73" aria-hidden="true" tabindex="-1"></a>Hsp90.Interactors <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"SGD_All_interactions_Hsp90_with_Refs_trimmed.csv"</span>, <span class="at">header =</span> <span class="cn">TRUE</span>, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb13-74"><a href="#cb13-74" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(Hsp90.Interactors)</span>
+<span id="cb13-75"><a href="#cb13-75" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-76"><a href="#cb13-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-77"><a href="#cb13-77" aria-hidden="true" tabindex="-1"></a><span class="fu">### Hsp90 Interaction Dictionary</span></span>
+<span id="cb13-78"><a href="#cb13-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-81"><a href="#cb13-81" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb13-82"><a href="#cb13-82" aria-hidden="true" tabindex="-1"></a>Hsp90.Interactors.dictionary <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"SGD_Hsp90_interactions_dictionary.csv"</span>)</span>
+<span id="cb13-83"><a href="#cb13-83" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(Hsp90.Interactors.dictionary)</span>
+<span id="cb13-84"><a href="#cb13-84" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-85"><a href="#cb13-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-86"><a href="#cb13-86" aria-hidden="true" tabindex="-1"></a><span class="fu">## GO Slim Mapper results</span></span>
+<span id="cb13-87"><a href="#cb13-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-88"><a href="#cb13-88" aria-hidden="true" tabindex="-1"></a>Hits from our data analyzed by <span class="co">[</span><span class="ot">Gene Ontology (GO) Slim Mapper</span><span class="co">](https://yeastgenome.org/goSlimMapper "Gene Ontology tool to classify and group genes/proteins")</span></span>
+<span id="cb13-89"><a href="#cb13-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-92"><a href="#cb13-92" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb13-93"><a href="#cb13-93" aria-hidden="true" tabindex="-1"></a>GO.terms <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="at">file =</span> <span class="st">"GO Slim Mapper Results.txt"</span>, <span class="at">header =</span> <span class="cn">TRUE</span>, <span class="at">sep =</span> <span class="st">"</span><span class="sc">\t</span><span class="st">"</span>, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb13-94"><a href="#cb13-94" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(GO.terms)</span>
+<span id="cb13-95"><a href="#cb13-95" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-96"><a href="#cb13-96" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-97"><a href="#cb13-97" aria-hidden="true" tabindex="-1"></a><span class="fu">### GO Slim Mapper results Dictionary</span></span>
+<span id="cb13-98"><a href="#cb13-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-101"><a href="#cb13-101" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb13-102"><a href="#cb13-102" aria-hidden="true" tabindex="-1"></a>Go.dictionary <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"GO_process_results_dictionary.csv"</span>)</span>
+<span id="cb13-103"><a href="#cb13-103" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(proteomic.dictionary)</span>
+<span id="cb13-104"><a href="#cb13-104" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-105"><a href="#cb13-105" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-106"><a href="#cb13-106" aria-hidden="true" tabindex="-1"></a><span class="fu"># Visualizations</span></span>
+<span id="cb13-107"><a href="#cb13-107" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-108"><a href="#cb13-108" aria-hidden="true" tabindex="-1"></a><span class="fu">## Figure 1</span></span>
+<span id="cb13-109"><a href="#cb13-109" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-112"><a href="#cb13-112" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb13-113"><a href="#cb13-113" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb13-114"><a href="#cb13-114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-115"><a href="#cb13-115" aria-hidden="true" tabindex="-1"></a><span class="do">### Trim and format the Gene Ontology: Process data</span></span>
+<span id="cb13-116"><a href="#cb13-116" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-117"><a href="#cb13-117" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate GO process enrichment</span></span>
+<span id="cb13-118"><a href="#cb13-118" aria-hidden="true" tabindex="-1"></a>GO.terms<span class="sc">$</span>CLUSTER_FREQUENCY <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">sub</span>(<span class="st">"%"</span>, <span class="st">""</span>, GO.terms<span class="sc">$</span>CLUSTER_FREQUENCY))<span class="sc">/</span><span class="dv">100</span></span>
+<span id="cb13-119"><a href="#cb13-119" aria-hidden="true" tabindex="-1"></a>GO.terms<span class="sc">$</span>GENOME_FREQUENCY <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">sub</span>(<span class="st">"%"</span>, <span class="st">""</span>, GO.terms<span class="sc">$</span>GENOME_FREQUENCY))<span class="sc">/</span><span class="dv">100</span></span>
+<span id="cb13-120"><a href="#cb13-120" aria-hidden="true" tabindex="-1"></a>GO.terms<span class="sc">$</span>Enrichment <span class="ot">&lt;-</span> GO.terms<span class="sc">$</span>CLUSTER_FREQUENCY<span class="sc">/</span>GO.terms<span class="sc">$</span>GENOME_FREQUENCY</span>
+<span id="cb13-121"><a href="#cb13-121" aria-hidden="true" tabindex="-1"></a><span class="co"># Take top 5 enriched processes that have at least 5 proteins annotated to a cellular process.</span></span>
+<span id="cb13-122"><a href="#cb13-122" aria-hidden="true" tabindex="-1"></a>GO.terms5 <span class="ot">&lt;-</span> GO.terms[GO.terms<span class="sc">$</span>NUM_LIST_ANNOTATIONS <span class="sc">&gt;=</span> <span class="dv">5</span>,]</span>
+<span id="cb13-123"><a href="#cb13-123" aria-hidden="true" tabindex="-1"></a>GO.terms5 <span class="ot">&lt;-</span> GO.terms5[<span class="fu">order</span>(GO.terms5<span class="sc">$</span>Enrichment, <span class="at">decreasing =</span> T),]</span>
+<span id="cb13-124"><a href="#cb13-124" aria-hidden="true" tabindex="-1"></a>GO.terms5 <span class="ot">&lt;-</span> GO.terms5[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">9</span>,<span class="dv">10</span>)]</span>
+<span id="cb13-125"><a href="#cb13-125" aria-hidden="true" tabindex="-1"></a><span class="co"># Format for network</span></span>
+<span id="cb13-126"><a href="#cb13-126" aria-hidden="true" tabindex="-1"></a>GO.terms5.split <span class="ot">&lt;-</span> <span class="fu">separate_rows</span>(GO.terms5, ANNOTATED_GENES, <span class="at">sep =</span> <span class="st">", "</span>)</span>
+<span id="cb13-127"><a href="#cb13-127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-128"><a href="#cb13-128" aria-hidden="true" tabindex="-1"></a><span class="do">###</span></span>
+<span id="cb13-129"><a href="#cb13-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-130"><a href="#cb13-130" aria-hidden="true" tabindex="-1"></a><span class="co"># Make initial network</span></span>
+<span id="cb13-131"><a href="#cb13-131" aria-hidden="true" tabindex="-1"></a>vertices <span class="ot">&lt;-</span> <span class="fu">unique</span>(<span class="fu">c</span>(GO.terms5.split<span class="sc">$</span>TERM, GO.terms5.split<span class="sc">$</span>ANNOTATED_GENES))</span>
+<span id="cb13-132"><a href="#cb13-132" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">graph_from_data_frame</span>(GO.terms5.split[,<span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>], <span class="at">directed =</span> F, <span class="at">vertices =</span> vertices)</span>
+<span id="cb13-133"><a href="#cb13-133" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-134"><a href="#cb13-134" aria-hidden="true" tabindex="-1"></a><span class="do">###</span></span>
+<span id="cb13-135"><a href="#cb13-135" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-136"><a href="#cb13-136" aria-hidden="true" tabindex="-1"></a><span class="co"># create layout using force directed algorithm</span></span>
+<span id="cb13-137"><a href="#cb13-137" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-138"><a href="#cb13-138" aria-hidden="true" tabindex="-1"></a>layout <span class="ot">&lt;-</span> <span class="fu">layout_with_fr</span>(g, <span class="at">weights =</span> GO.terms5.split<span class="sc">$</span>Enrichment, <span class="at">coords =</span> <span class="fu">matrix</span>(<span class="at">data =</span> <span class="dv">0</span>, <span class="at">nrow =</span> <span class="dv">91</span>, <span class="at">ncol =</span> <span class="dv">2</span>))</span>
+<span id="cb13-139"><a href="#cb13-139" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-140"><a href="#cb13-140" aria-hidden="true" tabindex="-1"></a><span class="do">###</span></span>
+<span id="cb13-141"><a href="#cb13-141" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-142"><a href="#cb13-142" aria-hidden="true" tabindex="-1"></a><span class="co"># Add mutant nodes </span></span>
+<span id="cb13-143"><a href="#cb13-143" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-144"><a href="#cb13-144" aria-hidden="true" tabindex="-1"></a>mutants <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="fu">cos</span>(<span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">2</span><span class="sc">*</span>pi, <span class="at">length.out =</span> <span class="dv">10</span>)), </span>
+<span id="cb13-145"><a href="#cb13-145" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">sin</span>(<span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">2</span><span class="sc">*</span>pi, <span class="at">length.out =</span> <span class="dv">10</span>))), <span class="at">ncol =</span> <span class="dv">2</span>)<span class="sc">*</span><span class="dv">11</span> <span class="co"># Create coordinates for a ring.</span></span>
+<span id="cb13-146"><a href="#cb13-146" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-147"><a href="#cb13-147" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">add_vertices</span>(g, <span class="dv">9</span>)</span>
+<span id="cb13-148"><a href="#cb13-148" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-149"><a href="#cb13-149" aria-hidden="true" tabindex="-1"></a>mutant.names <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"R46G"</span>, <span class="st">"G309S"</span>, <span class="st">"S481Y"</span>, <span class="st">"A583T"</span>, <span class="st">"K102E"</span>, <span class="st">"S25P"</span>, <span class="st">"Q380K"</span>, <span class="st">"G424D"</span>, <span class="st">"W296A"</span>)</span>
+<span id="cb13-150"><a href="#cb13-150" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-151"><a href="#cb13-151" aria-hidden="true" tabindex="-1"></a><span class="fu">V</span>(g)<span class="sc">$</span>name[<span class="dv">92</span><span class="sc">:</span><span class="dv">100</span>] <span class="ot">&lt;-</span> mutant.names</span>
+<span id="cb13-152"><a href="#cb13-152" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-153"><a href="#cb13-153" aria-hidden="true" tabindex="-1"></a><span class="co"># and edges between mutants and proteins/genes</span></span>
+<span id="cb13-154"><a href="#cb13-154" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-155"><a href="#cb13-155" aria-hidden="true" tabindex="-1"></a>edgelist <span class="ot">&lt;-</span> proteomic[,<span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">5</span>)][proteomic<span class="sc">$</span>Gene <span class="sc">%in%</span> GO.terms5.split<span class="sc">$</span>ANNOTATED_GENES,]</span>
+<span id="cb13-156"><a href="#cb13-156" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-157"><a href="#cb13-157" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert edge list to indices</span></span>
+<span id="cb13-158"><a href="#cb13-158" aria-hidden="true" tabindex="-1"></a>edgelist<span class="sc">$</span>from <span class="ot">&lt;-</span> <span class="fu">match</span>(edgelist<span class="sc">$</span>contrast, <span class="fu">V</span>(g)<span class="sc">$</span>name)</span>
+<span id="cb13-159"><a href="#cb13-159" aria-hidden="true" tabindex="-1"></a>edgelist<span class="sc">$</span>to <span class="ot">&lt;-</span> <span class="fu">match</span>(edgelist<span class="sc">$</span>Gene, <span class="fu">V</span>(g)<span class="sc">$</span>name)</span>
+<span id="cb13-160"><a href="#cb13-160" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-161"><a href="#cb13-161" aria-hidden="true" tabindex="-1"></a><span class="co"># create a list of alternating values from 'from' and 'to' columns</span></span>
+<span id="cb13-162"><a href="#cb13-162" aria-hidden="true" tabindex="-1"></a>edges <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rbind</span>(edgelist<span class="sc">$</span>from, edgelist<span class="sc">$</span>to))</span>
+<span id="cb13-163"><a href="#cb13-163" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-164"><a href="#cb13-164" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">add_edges</span>(g, <span class="at">edges =</span> edges)</span>
+<span id="cb13-165"><a href="#cb13-165" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-166"><a href="#cb13-166" aria-hidden="true" tabindex="-1"></a><span class="do">###</span></span>
+<span id="cb13-167"><a href="#cb13-167" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-168"><a href="#cb13-168" aria-hidden="true" tabindex="-1"></a><span class="co"># Now add the nodes for proteins that were either not in the top 5 enriched processes or could not be annotated to a GO process at all.</span></span>
+<span id="cb13-169"><a href="#cb13-169" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-170"><a href="#cb13-170" aria-hidden="true" tabindex="-1"></a><span class="do">###</span></span>
+<span id="cb13-171"><a href="#cb13-171" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-172"><a href="#cb13-172" aria-hidden="true" tabindex="-1"></a><span class="co"># Assign node colors based on physical, genetic, both (mixed), interaction with Hsp90 or neither (unknown)</span></span>
+<span id="cb13-173"><a href="#cb13-173" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-174"><a href="#cb13-174" aria-hidden="true" tabindex="-1"></a>proteomic<span class="sc">$</span>Interaction <span class="ot">&lt;-</span> <span class="st">"Unknown"</span></span>
+<span id="cb13-175"><a href="#cb13-175" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-176"><a href="#cb13-176" aria-hidden="true" tabindex="-1"></a>proteomic<span class="sc">$</span>Interaction[proteomic<span class="sc">$</span>Systemic.name <span class="sc">%in%</span> Hsp90.Interactors<span class="sc">$</span>Systemic.Name[Hsp90.Interactors<span class="sc">$</span>TYPE<span class="sc">==</span><span class="st">"Genetic"</span>]] <span class="ot">&lt;-</span> <span class="st">"Genetic"</span></span>
+<span id="cb13-177"><a href="#cb13-177" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-178"><a href="#cb13-178" aria-hidden="true" tabindex="-1"></a>proteomic<span class="sc">$</span>Interaction[proteomic<span class="sc">$</span>Systemic.name <span class="sc">%in%</span> Hsp90.Interactors<span class="sc">$</span>Systemic.Name[Hsp90.Interactors<span class="sc">$</span>TYPE<span class="sc">==</span><span class="st">"Physical"</span>]] <span class="ot">&lt;-</span> <span class="st">"Physical"</span></span>
+<span id="cb13-179"><a href="#cb13-179" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-180"><a href="#cb13-180" aria-hidden="true" tabindex="-1"></a>proteomic<span class="sc">$</span>Interaction[proteomic<span class="sc">$</span>Systemic.name <span class="sc">%in%</span> Hsp90.Interactors<span class="sc">$</span>Systemic.Name[Hsp90.Interactors<span class="sc">$</span>TYPE<span class="sc">==</span><span class="st">"Physical"</span>] <span class="sc">&amp;</span></span>
+<span id="cb13-181"><a href="#cb13-181" aria-hidden="true" tabindex="-1"></a>                        proteomic<span class="sc">$</span>Systemic.name <span class="sc">%in%</span> Hsp90.Interactors<span class="sc">$</span>Systemic.Name[Hsp90.Interactors<span class="sc">$</span>TYPE<span class="sc">==</span><span class="st">"Genetic"</span>]] <span class="ot">&lt;-</span> <span class="st">"Mixed"</span></span>
+<span id="cb13-182"><a href="#cb13-182" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-183"><a href="#cb13-183" aria-hidden="true" tabindex="-1"></a><span class="co"># Define color palette for the color blind plebs, just kidding, but not really</span></span>
+<span id="cb13-184"><a href="#cb13-184" aria-hidden="true" tabindex="-1"></a>colors <span class="ot">&lt;-</span> <span class="fu">viridis</span>(<span class="at">n =</span> <span class="dv">4</span>, <span class="at">option =</span> <span class="st">"D"</span>, <span class="at">alpha =</span> <span class="dv">1</span>, <span class="at">begin =</span> <span class="dv">0</span>, <span class="at">end =</span> <span class="dv">1</span>, <span class="at">direction =</span> <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb13-185"><a href="#cb13-185" aria-hidden="true" tabindex="-1"></a>colors.process <span class="ot">&lt;-</span> <span class="fu">viridis</span>(<span class="at">n =</span> <span class="dv">5</span>, <span class="at">option =</span> <span class="st">"F"</span>, <span class="at">alpha =</span> <span class="dv">1</span>, <span class="at">begin =</span> <span class="dv">0</span>, <span class="at">end =</span> <span class="dv">1</span>, <span class="at">direction =</span> <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb13-186"><a href="#cb13-186" aria-hidden="true" tabindex="-1"></a>proteomic<span class="sc">$</span>Int.color <span class="ot">&lt;-</span> colors[<span class="fu">match</span>(proteomic<span class="sc">$</span>Interaction, <span class="fu">unique</span>(proteomic<span class="sc">$</span>Interaction))]</span>
+<span id="cb13-187"><a href="#cb13-187" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-188"><a href="#cb13-188" aria-hidden="true" tabindex="-1"></a><span class="fu">V</span>(g)<span class="sc">$</span>color <span class="ot">&lt;-</span> <span class="fu">c</span>(colors.process, </span>
+<span id="cb13-189"><a href="#cb13-189" aria-hidden="true" tabindex="-1"></a>                proteomic<span class="sc">$</span>Int.color[<span class="fu">match</span>(<span class="fu">V</span>(g)<span class="sc">$</span>name, proteomic<span class="sc">$</span>Gene)][<span class="dv">6</span><span class="sc">:</span><span class="dv">91</span>],</span>
+<span id="cb13-190"><a href="#cb13-190" aria-hidden="true" tabindex="-1"></a>                <span class="fu">rep</span>(<span class="st">"white"</span>, <span class="dv">9</span>)</span>
+<span id="cb13-191"><a href="#cb13-191" aria-hidden="true" tabindex="-1"></a>                )</span>
+<span id="cb13-192"><a href="#cb13-192" aria-hidden="true" tabindex="-1"></a><span class="fu">V</span>(g)<span class="sc">$</span>color[<span class="dv">23</span>] <span class="ot">&lt;-</span> <span class="st">"#35B779FF"</span></span>
+<span id="cb13-193"><a href="#cb13-193" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-194"><a href="#cb13-194" aria-hidden="true" tabindex="-1"></a><span class="do">###</span></span>
+<span id="cb13-195"><a href="#cb13-195" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-196"><a href="#cb13-196" aria-hidden="true" tabindex="-1"></a><span class="co"># Modify node size, shape, and labels to display</span></span>
+<span id="cb13-197"><a href="#cb13-197" aria-hidden="true" tabindex="-1"></a>term.count <span class="ot">&lt;-</span>  <span class="fu">length</span>(<span class="fu">unique</span>(GO.terms5.split<span class="sc">$</span>TERM))</span>
+<span id="cb13-198"><a href="#cb13-198" aria-hidden="true" tabindex="-1"></a>node.count <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">unique</span>(GO.terms5.split<span class="sc">$</span>ANNOTATED_GENES))</span>
+<span id="cb13-199"><a href="#cb13-199" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-200"><a href="#cb13-200" aria-hidden="true" tabindex="-1"></a><span class="fu">V</span>(g)<span class="sc">$</span>size <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">12</span>, term.count), <span class="fu">rep</span>(<span class="dv">5</span>, node.count), <span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">9</span>))</span>
+<span id="cb13-201"><a href="#cb13-201" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-202"><a href="#cb13-202" aria-hidden="true" tabindex="-1"></a><span class="fu">V</span>(g)<span class="sc">$</span>label <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">""</span>, <span class="dv">91</span>), mutant.names)</span>
+<span id="cb13-203"><a href="#cb13-203" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-204"><a href="#cb13-204" aria-hidden="true" tabindex="-1"></a><span class="fu">V</span>(g)<span class="sc">$</span>shape <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">"circle"</span>, term.count), <span class="fu">rep</span>(<span class="st">"square"</span> , node.count), <span class="fu">rep</span>(<span class="st">"none"</span>, <span class="dv">9</span>))</span>
+<span id="cb13-205"><a href="#cb13-205" aria-hidden="true" tabindex="-1"></a><span class="do">###</span></span>
+<span id="cb13-206"><a href="#cb13-206" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-207"><a href="#cb13-207" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(g,</span>
+<span id="cb13-208"><a href="#cb13-208" aria-hidden="true" tabindex="-1"></a>     <span class="at">layout =</span> <span class="fu">rbind</span>(layout, mutants[<span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>,<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]),</span>
+<span id="cb13-209"><a href="#cb13-209" aria-hidden="true" tabindex="-1"></a>     <span class="at">margin =</span> <span class="sc">-</span>.<span class="dv">8</span>, <span class="co"># allow the network to use up more of the margin</span></span>
+<span id="cb13-210"><a href="#cb13-210" aria-hidden="true" tabindex="-1"></a>     <span class="at">vertex.label.cex =</span> <span class="dv">1</span>,</span>
+<span id="cb13-211"><a href="#cb13-211" aria-hidden="true" tabindex="-1"></a>     <span class="at">vertex.label.font =</span> <span class="dv">2</span>, <span class="co"># Bold</span></span>
+<span id="cb13-212"><a href="#cb13-212" aria-hidden="true" tabindex="-1"></a>     <span class="at">vertex.label.color=</span> <span class="st">"black"</span>,</span>
+<span id="cb13-213"><a href="#cb13-213" aria-hidden="true" tabindex="-1"></a>     <span class="at">edge_arrow_mode =</span> <span class="dv">0</span>,</span>
+<span id="cb13-214"><a href="#cb13-214" aria-hidden="true" tabindex="-1"></a>     <span class="at">vertex.color =</span> <span class="fu">V</span>(g)<span class="sc">$</span>color,</span>
+<span id="cb13-215"><a href="#cb13-215" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="fl">1.75</span>), <span class="at">ylim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>) <span class="co"># Increase the plot size to help accommodate the network</span></span>
+<span id="cb13-216"><a href="#cb13-216" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-217"><a href="#cb13-217" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-218"><a href="#cb13-218" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topleft"</span>, <span class="at">legend=</span><span class="fu">unique</span>(proteomic<span class="sc">$</span>Interaction), <span class="at">fill=</span><span class="fu">unique</span>(<span class="fu">V</span>(g)<span class="sc">$</span>color)[<span class="dv">6</span><span class="sc">:</span><span class="dv">91</span>], <span class="at">title =</span> <span class="st">"Hsp90 Interaction Type"</span>, <span class="at">cex =</span> .<span class="dv">75</span>)</span>
+<span id="cb13-219"><a href="#cb13-219" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-220"><a href="#cb13-220" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"bottomleft"</span>, <span class="at">legend=</span> <span class="fu">V</span>(g)<span class="sc">$</span>name[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>], <span class="at">title =</span> <span class="st">"GO Process"</span>, <span class="at">cex =</span> .<span class="dv">75</span>, <span class="at">pch =</span> <span class="dv">21</span>, <span class="at">pt.cex =</span> <span class="dv">2</span>, <span class="at">pt.bg =</span> <span class="fu">V</span>(g)<span class="sc">$</span>color[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>], <span class="at">pt.lwd =</span> <span class="fl">0.5</span>)</span>
+<span id="cb13-221"><a href="#cb13-221" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-222"><a href="#cb13-222" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-223"><a href="#cb13-223" aria-hidden="true" tabindex="-1"></a><span class="fu">### NODES</span></span>
+<span id="cb13-224"><a href="#cb13-224" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-225"><a href="#cb13-225" aria-hidden="true" tabindex="-1"></a>Here we have 3 classes or groups of nodes:</span>
+<span id="cb13-226"><a href="#cb13-226" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-227"><a href="#cb13-227" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>Our 9 different Hsc82 mutations</span>
+<span id="cb13-228"><a href="#cb13-228" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>The top 5 most enriched cellular processes given by Gene Ontology Slim Mapper tool</span>
+<span id="cb13-229"><a href="#cb13-229" aria-hidden="true" tabindex="-1"></a><span class="ss">3.  </span>86 different proteins/genes that were annotated to one or more of the top cellular processes *and* protein abundance was significantly affected in one or more Hsc82 mutants</span>
+<span id="cb13-230"><a href="#cb13-230" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-231"><a href="#cb13-231" aria-hidden="true" tabindex="-1"></a>Node labels were removed for network clarity, with exception of mutant nodes. The GO process terms were moved to a legend and color was used to identify the GO terms in the figure. The focus of the figure was to identify potential processes, not individual proteins, that may be affected by one or more Hsc82 mutant, therefore labels for individual proteins were removed.</span>
+<span id="cb13-232"><a href="#cb13-232" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-233"><a href="#cb13-233" aria-hidden="true" tabindex="-1"></a>Node colors were picked in consideration for color blind individuals using the "Viridis" color package.</span>
+<span id="cb13-234"><a href="#cb13-234" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-235"><a href="#cb13-235" aria-hidden="true" tabindex="-1"></a>In an effort to help reduce cognitive demand, the node shapes and sizes were adjusted to help visually separate the node classes and direct the viewer from the outer layer of the network, towards the center with increasing detail. Node shape for the mutations were removed and labels were left as the main focus of our study revolves around these mutations. The GO terms were designated as circles and size is larger compared to the individual proteins which were designated as squares. Overall, the increase in shape size moving outward from the center gives a sense of hierarchy of importance.</span>
+<span id="cb13-236"><a href="#cb13-236" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-237"><a href="#cb13-237" aria-hidden="true" tabindex="-1"></a>By focusing on the top 5 enriched GO processes, the classic hairball problem is avoided and we can show with visual clarity the cellular processes that would most likely be considered for follow-up experiments or studies.</span>
+<span id="cb13-238"><a href="#cb13-238" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-239"><a href="#cb13-239" aria-hidden="true" tabindex="-1"></a><span class="fu">### EDGES</span></span>
+<span id="cb13-240"><a href="#cb13-240" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-241"><a href="#cb13-241" aria-hidden="true" tabindex="-1"></a>Genes/proteins annotated to given GO terms by GO Slim mapper had edges drawn between the protein and the corresponding GO term(s). A few proteins, were annotated to more than one cellular process.</span>
+<span id="cb13-242"><a href="#cb13-242" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-243"><a href="#cb13-243" aria-hidden="true" tabindex="-1"></a>Edges were drawn between proteins and Hsc82 mutations if the protein's abundance was significantly affected by an Hsc82 mutation. Some proteins were affected by more than one mutation and therefore have multiple edges.</span>
+<span id="cb13-244"><a href="#cb13-244" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-245"><a href="#cb13-245" aria-hidden="true" tabindex="-1"></a><span class="fu">### LAYOUT</span></span>
+<span id="cb13-246"><a href="#cb13-246" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-247"><a href="#cb13-247" aria-hidden="true" tabindex="-1"></a>An initial network was made consisting of GO terms and proteins, after which the Fruchterman-Reingold force directed algorithm was employed and the GO term enrichments were used as edge weights.</span>
+<span id="cb13-248"><a href="#cb13-248" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-249"><a href="#cb13-249" aria-hidden="true" tabindex="-1"></a>Afterwards, the Hsc82 mutant nodes were manually added around the perimeter of the initial network to avoid mutant nodes from influencing the force directed graph and avoid a network hairball.</span>
+<span id="cb13-250"><a href="#cb13-250" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-251"><a href="#cb13-251" aria-hidden="true" tabindex="-1"></a><span class="fu"># Conclusions</span></span>
+<span id="cb13-252"><a href="#cb13-252" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-255"><a href="#cb13-255" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb13-256"><a href="#cb13-256" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(g,</span>
+<span id="cb13-257"><a href="#cb13-257" aria-hidden="true" tabindex="-1"></a>     <span class="at">layout =</span> <span class="fu">rbind</span>(layout, mutants[<span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>,<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]),</span>
+<span id="cb13-258"><a href="#cb13-258" aria-hidden="true" tabindex="-1"></a>     <span class="at">margin =</span> <span class="sc">-</span>.<span class="dv">8</span>, <span class="co"># allow the network to use up more of the margin</span></span>
+<span id="cb13-259"><a href="#cb13-259" aria-hidden="true" tabindex="-1"></a>     <span class="at">vertex.label.cex =</span> <span class="dv">1</span>,</span>
+<span id="cb13-260"><a href="#cb13-260" aria-hidden="true" tabindex="-1"></a>     <span class="at">vertex.label.font =</span> <span class="dv">2</span>, <span class="co"># Bold</span></span>
+<span id="cb13-261"><a href="#cb13-261" aria-hidden="true" tabindex="-1"></a>     <span class="at">vertex.label.color=</span> <span class="st">"black"</span>,</span>
+<span id="cb13-262"><a href="#cb13-262" aria-hidden="true" tabindex="-1"></a>     <span class="at">edge_arrow_mode =</span> <span class="dv">0</span>,</span>
+<span id="cb13-263"><a href="#cb13-263" aria-hidden="true" tabindex="-1"></a>     <span class="at">vertex.color =</span> <span class="fu">V</span>(g)<span class="sc">$</span>color,</span>
+<span id="cb13-264"><a href="#cb13-264" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="fl">1.75</span>), <span class="at">ylim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>) <span class="co"># Increase the plot size to help accommodate the network</span></span>
+<span id="cb13-265"><a href="#cb13-265" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-266"><a href="#cb13-266" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-267"><a href="#cb13-267" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topleft"</span>, <span class="at">legend=</span><span class="fu">unique</span>(proteomic<span class="sc">$</span>Interaction), <span class="at">fill=</span><span class="fu">unique</span>(<span class="fu">V</span>(g)<span class="sc">$</span>color)[<span class="dv">6</span><span class="sc">:</span><span class="dv">91</span>], <span class="at">title =</span> <span class="st">"Hsp90 Interaction Type"</span>, <span class="at">cex =</span> .<span class="dv">75</span>)</span>
+<span id="cb13-268"><a href="#cb13-268" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-269"><a href="#cb13-269" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"bottomleft"</span>, <span class="at">legend=</span> <span class="fu">V</span>(g)<span class="sc">$</span>name[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>], <span class="at">title =</span> <span class="st">"GO Process"</span>, <span class="at">cex =</span> .<span class="dv">75</span>, <span class="at">pch =</span> <span class="dv">21</span>, <span class="at">pt.cex =</span> <span class="dv">2</span>, <span class="at">pt.bg =</span> <span class="fu">V</span>(g)<span class="sc">$</span>color[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>], <span class="at">pt.lwd =</span> <span class="fl">0.5</span>)</span>
+<span id="cb13-270"><a href="#cb13-270" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-271"><a href="#cb13-271" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-272"><a href="#cb13-272" aria-hidden="true" tabindex="-1"></a>Preliminary network analysis reveals</span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
